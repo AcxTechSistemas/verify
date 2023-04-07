@@ -2,20 +2,21 @@ import 'package:result_dart/result_dart.dart';
 import 'package:verify/app/modules/login/domain/entities/logged_user_info.dart';
 import 'package:verify/app/modules/login/domain/entities/login_credentials_entity.dart';
 import 'package:verify/app/modules/login/domain/errors/login_error.dart';
-import 'package:verify/app/modules/login/domain/repositories/login_with_email_repository.dart';
+import 'package:verify/app/modules/login/domain/repositories/login_repository.dart';
 
-abstract class LoginWithEmailUseCase {
-  Future<Result<LoggedUserInfoEntity, LoginError>> call(
+abstract class LoginUseCase {
+  Future<Result<LoggedUserInfoEntity, LoginError>> loginWithEmail(
     LoginCredentialsEntity loginCredentialsEntity,
   );
+  Future<Result<LoggedUserInfoEntity, LoginError>> loginWithGoogle();
 }
 
-class LoginWithEmailUseCaseImpl implements LoginWithEmailUseCase {
-  final LoginWithEmailRepository _loginWithEmailRepository;
-  LoginWithEmailUseCaseImpl(this._loginWithEmailRepository);
+class LoginUseCaseImpl implements LoginUseCase {
+  final LoginRepository _loginRepository;
+  LoginUseCaseImpl(this._loginRepository);
 
   @override
-  Future<Result<LoggedUserInfoEntity, LoginError>> call(
+  Future<Result<LoggedUserInfoEntity, LoginError>> loginWithEmail(
     LoginCredentialsEntity loginCredentialsEntity,
   ) async {
     if (!loginCredentialsEntity.isValidEmail) {
@@ -24,7 +25,14 @@ class LoginWithEmailUseCaseImpl implements LoginWithEmailUseCase {
       return Failure(ErrorLoginEmail(message: 'invalid-password'));
     }
 
-    final result = _loginWithEmailRepository(loginCredentialsEntity);
+    final result = await _loginRepository.loginWithEmail(
+      loginCredentialsEntity,
+    );
     return result;
+  }
+
+  @override
+  Future<Result<LoggedUserInfoEntity, LoginError>> loginWithGoogle() async {
+    return _loginRepository.loginWithGoogle();
   }
 }
