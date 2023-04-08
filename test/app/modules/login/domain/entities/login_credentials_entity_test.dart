@@ -1,5 +1,3 @@
-@Tags(['domain_login_entity'])
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:verify/app/modules/login/domain/entities/login_credentials_entity.dart';
 

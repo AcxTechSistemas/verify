@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   result_dart: ^1.0.5
   mocktail: ^0.3.0
+  firebase_auth: ^4.4.0
+  google_sign_in: ^6.1.0
 
 dev_dependencies:
   flutter_test:

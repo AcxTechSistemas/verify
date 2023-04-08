@@ -1,5 +1,3 @@
-@Tags(['domain_login_usecase'])
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:verify/app/modules/login/domain/repositories/login_repository.dart';
