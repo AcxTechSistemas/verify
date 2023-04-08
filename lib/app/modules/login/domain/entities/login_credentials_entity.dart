@@ -14,4 +14,8 @@ class LoginCredentialsEntity {
 
   /// Validate Password
   bool get isValidPassword => _password.isNotEmpty && _password.length >= 8;
+
+  String get email => _email;
+
+  String get password => _email;
 }

@@ -5,20 +5,20 @@ import 'package:verify/app/modules/login/domain/entities/logged_user_info.dart';
 import 'package:verify/app/modules/login/domain/entities/login_credentials_entity.dart';
 import 'package:verify/app/modules/login/domain/errors/login_error.dart';
 import 'package:verify/app/modules/login/domain/repositories/login_repository.dart';
-import 'package:verify/app/modules/login/domain/usecase/login_usecase.dart';
+import 'package:verify/app/modules/login/domain/usecase/login_with_email_usecase.dart';
 
 class LoginRepositoryMock extends Mock implements LoginRepository {}
 
 void main() {
   late LoginRepository loginRepository;
-  late LoginUseCase loginUseCase;
+  late LoginWithEmailUseCase loginWithEmailUseCase;
 
   setUp(() {
     loginRepository = LoginRepositoryMock();
-    loginUseCase = LoginUseCaseImpl(loginRepository);
+    loginWithEmailUseCase = LoginWithEmailUseCaseImpl(loginRepository);
   });
 
-  group('LoginUseCase: ', () {
+  group('LoginWithEmailUseCase: ', () {
     test(
       'Should return instance of LoggedUserInfo if login is successful',
       () async {
@@ -33,11 +33,12 @@ void main() {
 
         registerFallbackValue(loginCredentialsEntity);
 
-        when(() => loginRepository.loginWithEmail(any())).thenAnswer(
-          (_) async => Success(expectedResponse),
-        );
+        when(() => loginRepository.loginWithEmail(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+            )).thenAnswer((_) async => Success(expectedResponse));
 
-        final response = await loginUseCase.loginWithEmail(
+        final response = await loginWithEmailUseCase(
           loginCredentialsEntity,
         );
 
@@ -64,11 +65,14 @@ void main() {
         const expectErrorMessage = 'invalid-email';
 
         registerFallbackValue(loginCredentialsEntity);
-        when(() => loginRepository.loginWithEmail(any())).thenAnswer(
+        when(() => loginRepository.loginWithEmail(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+            )).thenAnswer(
           (_) async => Success(expectedResponse),
         );
 
-        final response = await loginUseCase.loginWithEmail(
+        final response = await loginWithEmailUseCase(
           loginCredentialsEntity,
         );
 
@@ -95,11 +99,14 @@ void main() {
         const expectErrorMessage = 'invalid-password';
 
         registerFallbackValue(loginCredentialsEntity);
-        when(() => loginRepository.loginWithEmail(any())).thenAnswer(
+        when(() => loginRepository.loginWithEmail(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+            )).thenAnswer(
           (_) async => Success(expectedResponse),
         );
 
-        final response = await loginUseCase.loginWithEmail(
+        final response = await loginWithEmailUseCase(
           loginCredentialsEntity,
         );
 
@@ -107,39 +114,6 @@ void main() {
 
         expect(result, isNotNull);
         expect(result, isA<ErrorLoginEmail>());
-        expect(result!.message, equals(expectErrorMessage));
-      },
-    );
-    test(
-      'Should return instance of LoggedUserInfo if login is successful',
-      () async {
-        final expectedResponse = LoggedUserInfoEntity(
-          name: 'Antonio',
-          email: 'example@example.com',
-        );
-        when(() => loginRepository.loginWithGoogle())
-            .thenAnswer((_) async => Success(expectedResponse));
-        final response = await loginUseCase.loginWithGoogle();
-
-        final result = response.getOrNull();
-
-        expect(result, isNotNull);
-        expect(result!.email, equals('example@example.com'));
-      },
-    );
-    test(
-      'Should return instance of ErrorLogin if login is successful',
-      () async {
-        const expectErrorMessage = 'invalid-account';
-        when(() => loginRepository.loginWithGoogle()).thenAnswer(
-          (_) async => Failure(ErrorGoogleLogin(message: expectErrorMessage)),
-        );
-
-        final response = await loginUseCase.loginWithGoogle();
-
-        final result = response.exceptionOrNull();
-
-        expect(result, isNotNull);
         expect(result!.message, equals(expectErrorMessage));
       },
     );

@@ -4,19 +4,18 @@ import 'package:verify/app/modules/login/domain/entities/login_credentials_entit
 import 'package:verify/app/modules/login/domain/errors/login_error.dart';
 import 'package:verify/app/modules/login/domain/repositories/login_repository.dart';
 
-abstract class LoginUseCase {
-  Future<Result<LoggedUserInfoEntity, LoginError>> loginWithEmail(
+abstract class LoginWithEmailUseCase {
+  Future<Result<LoggedUserInfoEntity, LoginError>> call(
     LoginCredentialsEntity loginCredentialsEntity,
   );
-  Future<Result<LoggedUserInfoEntity, LoginError>> loginWithGoogle();
 }
 
-class LoginUseCaseImpl implements LoginUseCase {
+class LoginWithEmailUseCaseImpl implements LoginWithEmailUseCase {
   final LoginRepository _loginRepository;
-  LoginUseCaseImpl(this._loginRepository);
+  LoginWithEmailUseCaseImpl(this._loginRepository);
 
   @override
-  Future<Result<LoggedUserInfoEntity, LoginError>> loginWithEmail(
+  Future<Result<LoggedUserInfoEntity, LoginError>> call(
     LoginCredentialsEntity loginCredentialsEntity,
   ) async {
     if (!loginCredentialsEntity.isValidEmail) {
@@ -26,13 +25,9 @@ class LoginUseCaseImpl implements LoginUseCase {
     }
 
     final result = await _loginRepository.loginWithEmail(
-      loginCredentialsEntity,
+      email: loginCredentialsEntity.email,
+      password: loginCredentialsEntity.password,
     );
     return result;
-  }
-
-  @override
-  Future<Result<LoggedUserInfoEntity, LoginError>> loginWithGoogle() async {
-    return _loginRepository.loginWithGoogle();
   }
 }
