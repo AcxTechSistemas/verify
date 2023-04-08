@@ -1,3 +1,5 @@
+@Tags(['login_infra_repository'])
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:verify/app/modules/login/domain/repositories/login_repository.dart';
