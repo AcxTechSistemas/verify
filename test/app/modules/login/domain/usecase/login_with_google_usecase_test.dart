@@ -1,19 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:result_dart/result_dart.dart';
-import 'package:verify/app/modules/login/domain/entities/logged_user_info.dart';
-import 'package:verify/app/modules/login/domain/errors/login_error.dart';
-import 'package:verify/app/modules/login/domain/repositories/login_repository.dart';
-import 'package:verify/app/modules/login/domain/usecase/login_with_google_usecase.dart';
+import 'package:verify/app/features/auth/domain/entities/logged_user_info.dart';
+import 'package:verify/app/features/auth/domain/errors/auth_error.dart';
+import 'package:verify/app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:verify/app/features/auth/domain/usecase/login_with_google_usecase.dart';
 
-class LoginRepositoryMock extends Mock implements LoginRepository {}
+class AuthRepositoryMock extends Mock implements AuthRepository {}
 
 void main() {
-  late LoginRepository loginRepository;
+  late AuthRepository authRepository;
   late LoginWithGoogleUseCase loginWithGoogleUseCase;
   setUp(() {
-    loginRepository = LoginRepositoryMock();
-    loginWithGoogleUseCase = LoginWithGoogleImpl(loginRepository);
+    authRepository = AuthRepositoryMock();
+    loginWithGoogleUseCase = LoginWithGoogleImpl(authRepository);
   });
   group('LoginWithGoogleUseCase: ', () {
     test(
@@ -23,7 +23,7 @@ void main() {
           name: 'Antonio',
           email: 'example@example.com',
         );
-        when(() => loginRepository.loginWithGoogle())
+        when(() => authRepository.loginWithGoogle())
             .thenAnswer((_) async => Success(expectedResponse));
         final response = await loginWithGoogleUseCase();
 
@@ -37,7 +37,7 @@ void main() {
       'Should return instance of ErrorLogin if login is successful',
       () async {
         const expectErrorMessage = 'invalid-account';
-        when(() => loginRepository.loginWithGoogle()).thenAnswer(
+        when(() => authRepository.loginWithGoogle()).thenAnswer(
           (_) async => Failure(ErrorGoogleLogin(message: expectErrorMessage)),
         );
 

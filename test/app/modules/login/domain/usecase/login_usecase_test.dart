@@ -1,21 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:result_dart/result_dart.dart';
-import 'package:verify/app/modules/login/domain/entities/logged_user_info.dart';
-import 'package:verify/app/modules/login/domain/entities/login_credentials_entity.dart';
-import 'package:verify/app/modules/login/domain/errors/login_error.dart';
-import 'package:verify/app/modules/login/domain/repositories/login_repository.dart';
-import 'package:verify/app/modules/login/domain/usecase/login_with_email_usecase.dart';
+import 'package:verify/app/features/auth/domain/entities/logged_user_info.dart';
+import 'package:verify/app/features/auth/domain/entities/login_credentials_entity.dart';
+import 'package:verify/app/features/auth/domain/errors/auth_error.dart';
+import 'package:verify/app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:verify/app/features/auth/domain/usecase/login_with_email_usecase.dart';
 
-class LoginRepositoryMock extends Mock implements LoginRepository {}
+class AuthRepositoryMock extends Mock implements AuthRepository {}
 
 void main() {
-  late LoginRepository loginRepository;
+  late AuthRepository authRepository;
   late LoginWithEmailUseCase loginWithEmailUseCase;
 
   setUp(() {
-    loginRepository = LoginRepositoryMock();
-    loginWithEmailUseCase = LoginWithEmailUseCaseImpl(loginRepository);
+    authRepository = AuthRepositoryMock();
+    loginWithEmailUseCase = LoginWithEmailUseCaseImpl(authRepository);
   });
 
   group('LoginWithEmailUseCase: ', () {
@@ -33,7 +33,7 @@ void main() {
 
         registerFallbackValue(loginCredentialsEntity);
 
-        when(() => loginRepository.loginWithEmail(
+        when(() => authRepository.loginWithEmail(
               email: any(named: 'email'),
               password: any(named: 'password'),
             )).thenAnswer((_) async => Success(expectedResponse));
@@ -65,7 +65,7 @@ void main() {
         const expectErrorMessage = 'invalid-email';
 
         registerFallbackValue(loginCredentialsEntity);
-        when(() => loginRepository.loginWithEmail(
+        when(() => authRepository.loginWithEmail(
               email: any(named: 'email'),
               password: any(named: 'password'),
             )).thenAnswer(
@@ -99,7 +99,7 @@ void main() {
         const expectErrorMessage = 'invalid-password';
 
         registerFallbackValue(loginCredentialsEntity);
-        when(() => loginRepository.loginWithEmail(
+        when(() => authRepository.loginWithEmail(
               email: any(named: 'email'),
               password: any(named: 'password'),
             )).thenAnswer(

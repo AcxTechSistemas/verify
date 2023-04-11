@@ -1,23 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:verify/app/modules/login/domain/repositories/login_repository.dart';
-import 'package:verify/app/modules/login/infra/datasource/login_datasource.dart';
-import 'package:verify/app/modules/login/infra/models/user_model.dart';
-import 'package:verify/app/modules/login/infra/repositories/login_repository_impl.dart';
+import 'package:verify/app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:verify/app/features/auth/infra/datasource/auth_datasource.dart';
+import 'package:verify/app/features/auth/infra/models/user_model.dart';
+import 'package:verify/app/features/auth/infra/repositories/login_repository_impl.dart';
 
-class LoginDataSourceMock extends Mock implements LoginDataSource {}
+class LoginDataSourceMock extends Mock implements AuthDataSource {}
 
 class UserModelMock extends Mock implements UserModel {}
 
 void main() {
-  late LoginRepository loginRepository;
-  late LoginDataSource loginDataSource;
+  late AuthRepository authRepository;
+  late AuthDataSource loginDataSource;
   late UserModelMock userModel;
   const email = 'example@example.com';
   const password = '12345678';
   setUp(() {
     loginDataSource = LoginDataSourceMock();
-    loginRepository = LoginRepositoryImpl(loginDataSource);
+    authRepository = AuthRepositoryImpl(loginDataSource);
     userModel = UserModelMock();
     registerFallbackValue(userModel);
   });
@@ -26,7 +26,7 @@ void main() {
     test('Should call logout method from repository', () async {
       when(() => loginDataSource.logout()).thenAnswer((_) async {});
 
-      await loginRepository.logout();
+      await authRepository.logout();
 
       verify(() => loginDataSource.logout()).called(1);
     });
@@ -37,7 +37,7 @@ void main() {
         (_) async => userModel,
       );
 
-      final user = await loginRepository.loggedUser();
+      final user = await authRepository.loggedUser();
       final result = user.getOrNull();
       expect(result, isNotNull);
     });
@@ -47,7 +47,7 @@ void main() {
           email: any(named: 'email'),
           password: any(named: 'password'))).thenAnswer((_) async => userModel);
 
-      final response = await loginRepository.loginWithEmail(
+      final response = await authRepository.loginWithEmail(
         email: email,
         password: password,
       );
@@ -60,7 +60,7 @@ void main() {
           email: any(named: 'email'),
           password: any(named: 'password'))).thenThrow(Exception());
 
-      final response = await loginRepository.loginWithEmail(
+      final response = await authRepository.loginWithEmail(
         email: email,
         password: password,
       );
@@ -73,7 +73,7 @@ void main() {
       when(() => loginDataSource.loginWithGoogle()).thenAnswer(
         (_) async => userModel,
       );
-      final response = await loginRepository.loginWithGoogle();
+      final response = await authRepository.loginWithGoogle();
 
       final result = response.getOrNull();
       expect(result, isNotNull);
@@ -82,7 +82,7 @@ void main() {
     test('Shoud return UserModel if login with Google is unsuccessful',
         () async {
       when(() => loginDataSource.loginWithGoogle()).thenThrow(Exception());
-      final response = await loginRepository.loginWithGoogle();
+      final response = await authRepository.loginWithGoogle();
 
       final result = response.exceptionOrNull();
       expect(result, isNotNull);
