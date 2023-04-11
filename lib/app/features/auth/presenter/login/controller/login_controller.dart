@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/features/auth/domain/entities/login_credentials_entity.dart';
 import 'package:verify/app/features/auth/domain/usecase/login_with_email_usecase.dart';
 import 'package:verify/app/features/auth/domain/usecase/login_with_google_usecase.dart';
@@ -25,6 +26,10 @@ class LoginController {
     this._loginWithGoogleUseCase,
   );
 
+  void navigateToRegisterPage() {
+    Modular.to.pushReplacementNamed('./register');
+  }
+
   /// [loginWithEmail] Esse método é responsável por chamar o caso de uso
   /// para fazer o login do usuário com email e senha.
   /// Ele cria um objeto LoginCredentialsEntity a partir
@@ -36,10 +41,15 @@ class LoginController {
       email: emailController.text,
       password: passwordController.text,
     );
-    final result = await _loginWithEmailUseCase.call(loginCredentials);
+    final result = await _loginWithEmailUseCase(loginCredentials);
 
     return result.fold(
-      (success) {
+      (user) {
+        if (!user.emailVerified) {
+          _loginStore.loggingInWithEmailInProgress(false);
+          return 'Confirme seu email no link enviado';
+        }
+
         _loginStore.loggingInWithEmailInProgress(false);
         return null;
       },
