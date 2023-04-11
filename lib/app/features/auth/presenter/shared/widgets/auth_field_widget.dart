@@ -5,7 +5,6 @@ class AuthFieldWidget extends StatefulWidget {
   final FocusNode? focusNode;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
   final bool isSecret;
   final TextInputType? keyboardType;
   final void Function()? onEditingComplete;
@@ -13,7 +12,6 @@ class AuthFieldWidget extends StatefulWidget {
     super.key,
     required this.labelText,
     this.validator,
-    this.onChanged,
     this.isSecret = false,
     this.keyboardType,
     this.controller,
@@ -35,7 +33,6 @@ class _AuthFieldWidgetState extends State<AuthFieldWidget> {
       controller: widget.controller,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: widget.validator,
-      onChanged: widget.onChanged,
       obscureText: widget.isSecret ? isObscure : false,
       keyboardType: widget.keyboardType,
       decoration: InputDecoration(

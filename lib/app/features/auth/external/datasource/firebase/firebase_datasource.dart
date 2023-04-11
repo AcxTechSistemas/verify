@@ -26,7 +26,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
     return UserModel(
       email: user.email!,
       name: user.displayName ?? '',
-      validEmail: user.emailVerified,
+      emailVerified: user.emailVerified,
     );
   }
 
@@ -41,11 +41,11 @@ class FirebaseDataSourceImpl implements AuthDataSource {
         password: password,
       );
       final user = result.user!;
-
+      await user.sendEmailVerification();
       return UserModel(
         email: user.email!,
         name: user.displayName ?? '',
-        validEmail: user.emailVerified,
+        emailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
       final errorHandler = FirebaseErrorHandler();
@@ -77,7 +77,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       return UserModel(
         email: user.email!,
         name: user.displayName!,
-        validEmail: user.emailVerified,
+        emailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
       final errorHandler = FirebaseErrorHandler();
@@ -99,10 +99,11 @@ class FirebaseDataSourceImpl implements AuthDataSource {
         password: password,
       );
       final user = credential.user!;
+      await user.sendEmailVerification();
       return UserModel(
         email: user.email!,
         name: user.displayName ?? '',
-        validEmail: user.emailVerified,
+        emailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
       final errorHandler = FirebaseErrorHandler();

@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:verify/app/features/auth/domain/entities/login_credentials_entity.dart';
-import 'package:verify/app/features/auth/domain/usecase/login_with_email_usecase.dart';
+import 'package:verify/app/features/auth/domain/entities/register_credentials_entity.dart';
 import 'package:verify/app/features/auth/domain/usecase/login_with_google_usecase.dart';
-import 'package:verify/app/features/auth/presenter/login/store/login_store.dart';
+import 'package:verify/app/features/auth/domain/usecase/register_with_email_usecase.dart';
+import 'package:verify/app/features/auth/presenter/register/store/register_store.dart';
 import 'package:verify/app/features/auth/utils/email_regex.dart';
 import 'package:verify/app/features/auth/utils/password_regex.dart';
 
-class LoginController {
+class RegisterController {
   // Dependency injection
-  final LoginStore _loginStore;
-  final LoginWithEmailUseCase _loginWithEmailUseCase;
+  final RegisterStore _registerStore;
+  final RegisterWithEmailUseCase _registerWithEmailUseCase;
   final LoginWithGoogleUseCase _loginWithGoogleUseCase;
 
-  // Login page controller variables
+  // Register page controller variables
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final emailFocus = FocusNode();
   final passwordFocus = FocusNode();
+  final confirmPasswordFocus = FocusNode();
 
-  LoginController(
-    this._loginStore,
-    this._loginWithEmailUseCase,
+  RegisterController(
+    this._registerStore,
+    this._registerWithEmailUseCase,
     this._loginWithGoogleUseCase,
   );
 
-  void navigateToRegisterPage() {
-    Modular.to.pushReplacementNamed('./register');
+  void backToLoginPage() {
+    Modular.to.pushReplacementNamed('./login');
   }
 
   /// [loginWithEmail] Esse método é responsável por chamar o caso de uso
@@ -35,26 +37,22 @@ class LoginController {
   /// Ele cria um objeto LoginCredentialsEntity a partir
   /// dos valores dos campos de email e senha no formulário,
   /// chama o caso de uso e retorna uma mensagem de erro se houver falha.
-  Future<String?> loginWithEmail() async {
-    _loginStore.loggingInWithEmailInProgress(true);
-    final loginCredentials = LoginCredentialsEntity(
+  Future<String?> registerWithEmail() async {
+    _registerStore.registeringWithEmailInProgress(true);
+    final registerCredentials = RegisterCredentialsEntity(
       email: emailController.text,
       password: passwordController.text,
+      confirmPassword: confirmPasswordController.text,
     );
-    final result = await _loginWithEmailUseCase(loginCredentials);
+    final result = await _registerWithEmailUseCase(registerCredentials);
 
     return result.fold(
-      (user) {
-        if (!user.emailVerified) {
-          _loginStore.loggingInWithEmailInProgress(false);
-          return 'Confirme seu email no link enviado';
-        }
-
-        _loginStore.loggingInWithEmailInProgress(false);
+      (success) {
+        _registerStore.registeringWithEmailInProgress(false);
         return null;
       },
       (failure) {
-        _loginStore.loggingInWithEmailInProgress(false);
+        _registerStore.registeringWithEmailInProgress(false);
         return failure.message;
       },
     );
@@ -64,16 +62,16 @@ class LoginController {
   /// para fazer o login do usuário com o Google.
   /// Ele chama o caso de uso e retorna uma mensagem de erro se houver falha.
   Future<String?> loginWithGoogle() async {
-    _loginStore.loggingInWithGoogleInProgress(true);
+    _registerStore.registeringWithGoogleInProgress(true);
     final result = await _loginWithGoogleUseCase.call();
 
     return result.fold(
       (success) {
-        _loginStore.loggingInWithGoogleInProgress(false);
+        _registerStore.registeringWithGoogleInProgress(false);
         return null;
       },
       (failure) {
-        _loginStore.loggingInWithGoogleInProgress(false);
+        _registerStore.registeringWithGoogleInProgress(false);
         return failure.message;
       },
     );
@@ -85,9 +83,9 @@ class LoginController {
   /// são válidos ou não.
   void validateFields() {
     if (formKey.currentState != null && formKey.currentState!.validate()) {
-      _loginStore.isValidFields(true);
+      _registerStore.isValidFields(true);
     } else {
-      _loginStore.isValidFields(false);
+      _registerStore.isValidFields(false);
     }
   }
 
@@ -110,6 +108,23 @@ class LoginController {
   String? autoValidatePassword(String? passwordInput) {
     if (passwordRegex.hasMatch(passwordInput ?? '')) {
       return null;
+    } else {
+      return 'Senha deve ter no minimo 8 caracteres';
+    }
+  }
+
+  /// [autoValidateConfirmPassword] Esse método é responsável por validar se o valor
+  /// inserido no campo de confirmacao de senha está em um formato válido.
+  /// e se o campo senha esta igual ao campo confirmação de senha
+  /// Ele é usado pelo formulário para validação automática
+  /// quando o usuário digita o valor.
+  String? autoValidateConfirmPassword(String? confirmPasswordInput) {
+    if (passwordRegex.hasMatch(confirmPasswordInput ?? '')) {
+      if (confirmPasswordInput == passwordController.text) {
+        return null;
+      } else {
+        return 'As senhas estão divergentes';
+      }
     } else {
       return 'Senha deve ter no minimo 8 caracteres';
     }

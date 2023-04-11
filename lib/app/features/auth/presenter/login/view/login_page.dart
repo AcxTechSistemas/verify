@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/features/auth/presenter/login/controller/login_controller.dart';
@@ -5,8 +7,8 @@ import 'package:verify/app/features/auth/presenter/login/store/login_store.dart'
 import 'package:verify/app/features/auth/presenter/shared/widgets/auth_action_button.dart';
 import 'package:verify/app/features/auth/presenter/shared/widgets/auth_field_widget.dart';
 import 'package:verify/app/features/auth/presenter/shared/widgets/auth_header_widget.dart';
-import 'package:verify/app/features/auth/presenter/login/view/widgets/google_sign_in_button_widget.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:verify/app/features/auth/presenter/shared/widgets/google_sign_in_button_widget.dart';
 import 'package:verify/app/shared/widgets/custom_snack_bar.dart';
 
 class LoginPage extends StatefulWidget {
@@ -94,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             const Spacer(),
                             TextButton.icon(
-                              onPressed: () {},
+                              onPressed: controller.navigateToRegisterPage,
                               icon: const Icon(Icons.app_registration_rounded),
                               label: const Text('Cadastre-se'),
                             ),
@@ -114,20 +116,16 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _loginWithEmail() async {
     await controller.loginWithEmail().then((errorMessage) {
-      if (errorMessage == null) {
+      if (errorMessage != null) {
+        var snackBarType = SnackBarType.error;
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          CustomSnackBar(
-            message: 'Login realizado com sucesso!',
-            snackBarType: SnackBarType.success,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).clearSnackBars();
+        if (errorMessage.contains('Confirme seu email no link enviado')) {
+          snackBarType = SnackBarType.info;
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           CustomSnackBar(
             message: errorMessage,
-            snackBarType: SnackBarType.error,
+            snackBarType: snackBarType,
           ),
         );
       }
@@ -137,14 +135,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _loginWithGoogle() async {
     ScaffoldMessenger.of(context).clearSnackBars();
     await controller.loginWithGoogle().then((errorMessage) {
-      if (errorMessage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          CustomSnackBar(
-            message: 'Login realizado com sucesso!',
-            snackBarType: SnackBarType.success,
-          ),
-        );
-      } else {
+      if (errorMessage != null) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           CustomSnackBar(

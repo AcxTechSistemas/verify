@@ -23,7 +23,7 @@ class RegisterCredentialsEntity {
 
   String get email => _email;
 
-  String get password => _email;
+  String get password => _password;
 
-  String get confirmPassword => _password;
+  String get confirmPassword => _confirmPassword;
 }

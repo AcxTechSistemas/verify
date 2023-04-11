@@ -25,6 +25,7 @@ void main() {
         final expectedResponse = LoggedUserInfoEntity(
           name: 'Antonio',
           email: 'example@example.com',
+          emailVerified: false,
         );
         final loginCredentialsEntity = LoginCredentialsEntity(
           email: 'example@example.com',
@@ -55,6 +56,7 @@ void main() {
         final expectedResponse = LoggedUserInfoEntity(
           name: 'Antonio',
           email: 'example@example.com',
+          emailVerified: false,
         );
 
         final loginCredentialsEntity = LoginCredentialsEntity(
@@ -89,6 +91,7 @@ void main() {
         final expectedResponse = LoggedUserInfoEntity(
           name: 'Antonio',
           email: 'example@example.com',
+          emailVerified: false,
         );
 
         final loginCredentialsEntity = LoginCredentialsEntity(
