@@ -1,0 +1,28 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:verify/app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:verify/app/features/auth/domain/usecase/logout_usecase.dart';
+
+class AuthRepositoryMock extends Mock implements AuthRepository {}
+
+void main() {
+  late AuthRepository authRepository;
+  late LogoutUseCase logoutUseCase;
+  setUp(() {
+    authRepository = AuthRepositoryMock();
+    logoutUseCase = LogoutUseCaseImpl(authRepository);
+  });
+
+  group('LogoutUseCase: ', () {
+    test(
+      'Should call logout method from repository',
+      () async {
+        when(() => authRepository.logout()).thenAnswer((_) async {});
+
+        await logoutUseCase();
+
+        verify(() => authRepository.logout()).called(1);
+      },
+    );
+  });
+}

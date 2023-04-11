@@ -25,5 +25,6 @@ Points to consider before introducing a new feature:
 
 # External packages
 
+- equatable: Implement easy and fast comparison of objects
 - result_dart: Multiple return in Failure and Success format.
 - mocktail: For unit tests.
