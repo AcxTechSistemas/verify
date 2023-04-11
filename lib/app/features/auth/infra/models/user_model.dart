@@ -5,7 +5,7 @@ class UserModel extends LoggedUserEntity implements LoggedUserInfoEntity {
   const UserModel({
     required super.email,
     required super.name,
-    required super.validEmail,
+    required super.emailVerified,
   });
 
   LoggedUserEntity toLoggedUser() => this;

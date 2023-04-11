@@ -5,6 +5,7 @@ import 'package:verify/app/features/auth/auth_module.dart';
 import 'package:verify/app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:verify/app/features/auth/domain/usecase/login_with_email_usecase.dart';
 import 'package:verify/app/features/auth/domain/usecase/login_with_google_usecase.dart';
+import 'package:verify/app/features/auth/domain/usecase/register_with_email_usecase.dart';
 import 'package:verify/app/features/auth/external/datasource/firebase/firebase_datasource.dart';
 import 'package:verify/app/features/auth/infra/datasource/auth_datasource.dart';
 import 'package:verify/app/features/auth/infra/repositories/login_repository_impl.dart';
@@ -18,6 +19,9 @@ class AppModule extends Module {
         AutoBind.factory<AuthRepository>(AuthRepositoryImpl.new),
         AutoBind.factory<LoginWithEmailUseCase>(LoginWithEmailUseCaseImpl.new),
         AutoBind.factory<LoginWithGoogleUseCase>(LoginWithGoogleImpl.new),
+        AutoBind.factory<RegisterWithEmailUseCase>(
+          RegisterWithEmailUseCaseImpl.new,
+        ),
       ];
 
   @override

@@ -22,6 +22,7 @@ void main() {
         final expectedResponse = LoggedUserInfoEntity(
           name: 'Antonio',
           email: 'example@example.com',
+          emailVerified: false,
         );
         when(() => authRepository.loginWithGoogle())
             .thenAnswer((_) async => Success(expectedResponse));

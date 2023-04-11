@@ -3,13 +3,13 @@ import 'package:equatable/equatable.dart';
 abstract class LoggedUserEntity extends Equatable {
   final String email;
   final String name;
-  final bool validEmail;
+  final bool emailVerified;
 
   const LoggedUserEntity({
     required this.email,
     required this.name,
-    required this.validEmail,
+    required this.emailVerified,
   });
   @override
-  List<Object?> get props => [email, name];
+  List<Object?> get props => [email, name, emailVerified];
 }

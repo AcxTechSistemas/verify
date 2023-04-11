@@ -54,7 +54,7 @@ void main() {
       equals(UserModel(
         email: 'test@test.com',
         name: 'Test User',
-        validEmail: user.emailVerified,
+        emailVerified: user.emailVerified,
       )),
     );
   });
@@ -67,45 +67,41 @@ void main() {
     expect(future, throwsA(isInstanceOf<ErrorGetLoggedUser>()));
   });
 
-  test('should return UserModel when loginWithEmail succeeds', () async {
+  test(
+      'should throw an ErrorLoginEmail when login fails due to FirebaseAuthException',
+      () async {
     const email = 'test@test.com';
     const password = '123456';
+    final exception = FirebaseAuthException(
+        code: 'invalid-email',
+        message: 'The email address is badly formatted.');
 
-    when(() => userCredential.user).thenReturn(user);
-    when(() => user.email).thenReturn(email);
-    when(() => user.displayName).thenReturn('Test User');
     when(() => firebaseAuth.signInWithEmailAndPassword(
           email: email,
           password: password,
-        )).thenAnswer((_) async => userCredential);
+        )).thenThrow(exception);
 
-    final response =
-        await dataSource.loginWithEmail(email: email, password: password);
+    expect(() => dataSource.loginWithEmail(email: email, password: password),
+        throwsA(isA<ErrorLoginEmail>()));
 
-    expect(
-        response,
-        equals(UserModel(
-          email: email,
-          name: 'Test User',
-          validEmail: user.emailVerified,
-        )));
+    verify(() => firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password)).called(1);
   });
 
-  test('should throw ErrorLoginEmail when loginWithEmail fails', () async {
-    // arrange
+  test('should throw an Exception when login fails due to an unknown error',
+      () async {
     const email = 'test@test.com';
     const password = '123456';
-    final exception = FirebaseException(
-      code: 'ERROR_INVALID_EMAIL',
-      message: 'Invalid email address',
-      plugin: '',
-    );
 
     when(() => firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password)).thenThrow(exception);
+          email: email,
+          password: password,
+        )).thenThrow(Exception('Unknown error'));
 
-    final future = dataSource.loginWithEmail(email: email, password: password);
+    expect(() => dataSource.loginWithEmail(email: email, password: password),
+        throwsException);
 
-    expect(future, throwsA(isInstanceOf<ErrorLoginEmail>()));
+    verify(() => firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password)).called(1);
   });
 }
