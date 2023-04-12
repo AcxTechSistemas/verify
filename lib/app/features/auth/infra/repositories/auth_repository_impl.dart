@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:result_dart/result_dart.dart';
 import 'package:verify/app/features/auth/domain/errors/auth_error.dart';
 import 'package:verify/app/features/auth/domain/entities/logged_user_info.dart';
@@ -47,6 +49,8 @@ class AuthRepositoryImpl implements AuthRepository {
       return Success(user);
     } on ErrorLoginEmail catch (e) {
       return Failure(e);
+    } on ErrorSendingEmailVerification catch (e) {
+      return Failure(e);
     } catch (e) {
       return Failure(ErrorLoginEmail(
         message: 'Ocorreu um erro ao realizar o login. Tente novamente',
@@ -55,8 +59,17 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> logout() async {
-    await _authDataSource.logout();
+  Future<Result<void, AuthError>> logout() async {
+    try {
+      await _authDataSource.logout();
+      return const Success(Void);
+    } on ErrorLogout catch (e) {
+      return Failure(e);
+    } catch (e) {
+      return Failure(ErrorRegisterEmail(
+        message: 'Ocorreu um erro ao criar uma nova conta. Tente novamente',
+      ));
+    }
   }
 
   @override
@@ -72,8 +85,26 @@ class AuthRepositoryImpl implements AuthRepository {
       return Success(user);
     } on ErrorRegisterEmail catch (e) {
       return Failure(e);
+    } on ErrorSendingEmailVerification catch (e) {
+      return Failure(e);
     } catch (e) {
       return Failure(ErrorRegisterEmail(
+        message: 'Ocorreu um erro ao criar uma nova conta. Tente novamente',
+      ));
+    }
+  }
+
+  @override
+  Future<Result<void, AuthError>> sendRecoverInstructions({
+    required String email,
+  }) async {
+    try {
+      await _authDataSource.sendRecoverInstructions(email: email);
+      return const Success(Void);
+    } on ErrorRecoverAccount catch (e) {
+      return Failure(e);
+    } catch (e) {
+      return Failure(ErrorRecoverAccount(
         message: 'Ocorreu um erro ao criar uma nova conta. Tente novamente',
       ));
     }

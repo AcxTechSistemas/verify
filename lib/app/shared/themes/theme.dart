@@ -8,6 +8,7 @@ part 'icon_button_theme.g.dart';
 part 'radio_button_theme.g.dart';
 
 ThemeData get lightTheme => ThemeData(
+      scaffoldBackgroundColor: _lightColorScheme.background,
       radioTheme: _lightRadioTheme,
       colorScheme: _lightColorScheme,
       iconButtonTheme: _lightIconButtonTheme,
@@ -18,6 +19,7 @@ ThemeData get lightTheme => ThemeData(
     );
 
 ThemeData get darkTheme => ThemeData(
+      scaffoldBackgroundColor: _darkColorScheme.background,
       radioTheme: _darkRadioTheme,
       colorScheme: _darkColorScheme,
       iconTheme: _darkIconThemeData,

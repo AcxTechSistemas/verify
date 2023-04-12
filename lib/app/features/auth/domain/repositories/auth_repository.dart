@@ -14,6 +14,9 @@ abstract class AuthRepository {
   });
 
   Future<Result<LoggedUserInfoEntity, AuthError>> loginWithGoogle();
-  Future<void> logout();
+  Future<Result<void, AuthError>> logout();
   Future<Result<LoggedUserInfoEntity, AuthError>> loggedUser();
+  Future<Result<void, AuthError>> sendRecoverInstructions({
+    required String email,
+  });
 }

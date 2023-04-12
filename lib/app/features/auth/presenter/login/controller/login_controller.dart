@@ -8,12 +8,10 @@ import 'package:verify/app/features/auth/utils/email_regex.dart';
 import 'package:verify/app/features/auth/utils/password_regex.dart';
 
 class LoginController {
-  // Dependency injection
   final LoginStore _loginStore;
   final LoginWithEmailUseCase _loginWithEmailUseCase;
   final LoginWithGoogleUseCase _loginWithGoogleUseCase;
 
-  // Login page controller variables
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -26,21 +24,25 @@ class LoginController {
     this._loginWithGoogleUseCase,
   );
 
-  void navigateToRegisterPage() {
+  void goToRegisterPage() {
+    dispose();
     Modular.to.pushReplacementNamed('./register');
   }
 
-  /// [loginWithEmail] Esse método é responsável por chamar o caso de uso
-  /// para fazer o login do usuário com email e senha.
-  /// Ele cria um objeto LoginCredentialsEntity a partir
-  /// dos valores dos campos de email e senha no formulário,
-  /// chama o caso de uso e retorna uma mensagem de erro se houver falha.
+  void goToRecoverAccountPage() {
+    dispose();
+    Modular.to.pushReplacementNamed('./recover');
+  }
+
   Future<String?> loginWithEmail() async {
+    emailFocus.unfocus();
+    passwordFocus.unfocus();
     _loginStore.loggingInWithEmailInProgress(true);
     final loginCredentials = LoginCredentialsEntity(
       email: emailController.text,
       password: passwordController.text,
     );
+
     final result = await _loginWithEmailUseCase(loginCredentials);
 
     return result.fold(
@@ -60,10 +62,9 @@ class LoginController {
     );
   }
 
-  /// [loginWithGoogle] Esse método é responsável por chamar o caso de uso
-  /// para fazer o login do usuário com o Google.
-  /// Ele chama o caso de uso e retorna uma mensagem de erro se houver falha.
   Future<String?> loginWithGoogle() async {
+    emailFocus.unfocus();
+    passwordFocus.unfocus();
     _loginStore.loggingInWithGoogleInProgress(true);
     final result = await _loginWithGoogleUseCase.call();
 
@@ -79,10 +80,6 @@ class LoginController {
     );
   }
 
-  /// validateFields: Esse método é responsável por validar se os campos
-  /// de email e senha no formulário estão preenchidos e em um formato válido.
-  /// Ele atualiza o estado da loja LoginStore indicando se os campos
-  /// são válidos ou não.
   void validateFields() {
     if (formKey.currentState != null && formKey.currentState!.validate()) {
       _loginStore.isValidFields(true);
@@ -91,10 +88,6 @@ class LoginController {
     }
   }
 
-  /// [autoValidateEmail] Esse método é responsável por validar se o valor
-  /// inserido no campo de email está em um formato válido.
-  /// Ele é usado pelo formulário para validação automática quando
-  /// o usuário digita o valor.
   String? autoValidateEmail(String? emailInput) {
     if (emailRegex.hasMatch(emailInput ?? '')) {
       return null;
@@ -103,15 +96,19 @@ class LoginController {
     }
   }
 
-  /// [autoValidatePassword] Esse método é responsável por validar se o valor
-  /// inserido no campo de senha está em um formato válido.
-  /// Ele é usado pelo formulário para validação automática
-  /// quando o usuário digita o valor.
   String? autoValidatePassword(String? passwordInput) {
     if (passwordRegex.hasMatch(passwordInput ?? '')) {
       return null;
     } else {
       return 'Senha deve ter no minimo 8 caracteres';
     }
+  }
+
+  void dispose() {
+    emailController.text = '';
+    passwordController.text = '';
+    _loginStore.isValidFields(false);
+    _loginStore.loggingInWithEmailInProgress(false);
+    _loginStore.loggingInWithGoogleInProgress(false);
   }
 }
