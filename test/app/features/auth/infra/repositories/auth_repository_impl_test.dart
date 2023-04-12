@@ -3,7 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:verify/app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:verify/app/features/auth/infra/datasource/auth_datasource.dart';
 import 'package:verify/app/features/auth/infra/models/user_model.dart';
-import 'package:verify/app/features/auth/infra/repositories/login_repository_impl.dart';
+import 'package:verify/app/features/auth/infra/repositories/auth_repository_impl.dart';
 
 class LoginDataSourceMock extends Mock implements AuthDataSource {}
 
@@ -11,29 +11,29 @@ class UserModelMock extends Mock implements UserModel {}
 
 void main() {
   late AuthRepository authRepository;
-  late AuthDataSource loginDataSource;
+  late AuthDataSource authDataSource;
   late UserModelMock userModel;
   const email = 'example@example.com';
   const password = '12345678';
   setUp(() {
-    loginDataSource = LoginDataSourceMock();
-    authRepository = AuthRepositoryImpl(loginDataSource);
+    authDataSource = LoginDataSourceMock();
+    authRepository = AuthRepositoryImpl(authDataSource);
     userModel = UserModelMock();
     registerFallbackValue(userModel);
   });
 
-  group('LoginRepository: ', () {
+  group('AuthRepository: ', () {
     test('Should call logout method from repository', () async {
-      when(() => loginDataSource.logout()).thenAnswer((_) async {});
+      when(() => authDataSource.logout()).thenAnswer((_) async {});
 
       await authRepository.logout();
 
-      verify(() => loginDataSource.logout()).called(1);
+      verify(() => authDataSource.logout()).called(1);
     });
 
     test('Should return a UserModel when retrieving current logged in user',
         () async {
-      when(() => loginDataSource.currentUser()).thenAnswer(
+      when(() => authDataSource.currentUser()).thenAnswer(
         (_) async => userModel,
       );
 
@@ -43,7 +43,7 @@ void main() {
     });
 
     test('Shoud return UserModel if login with email is successful', () async {
-      when(() => loginDataSource.loginWithEmail(
+      when(() => authDataSource.loginWithEmail(
           email: any(named: 'email'),
           password: any(named: 'password'))).thenAnswer((_) async => userModel);
 
@@ -56,7 +56,7 @@ void main() {
       expect(result, isNotNull);
     });
     test('Shoud return Failure if login with email is unsuccessful', () async {
-      when(() => loginDataSource.loginWithEmail(
+      when(() => authDataSource.loginWithEmail(
           email: any(named: 'email'),
           password: any(named: 'password'))).thenThrow(Exception());
 
@@ -70,7 +70,7 @@ void main() {
     });
 
     test('Shoud return UserModel if login with Google is successful', () async {
-      when(() => loginDataSource.loginWithGoogle()).thenAnswer(
+      when(() => authDataSource.loginWithGoogle()).thenAnswer(
         (_) async => userModel,
       );
       final response = await authRepository.loginWithGoogle();
@@ -81,11 +81,20 @@ void main() {
 
     test('Shoud return UserModel if login with Google is unsuccessful',
         () async {
-      when(() => loginDataSource.loginWithGoogle()).thenThrow(Exception());
+      when(() => authDataSource.loginWithGoogle()).thenThrow(Exception());
       final response = await authRepository.loginWithGoogle();
 
       final result = response.exceptionOrNull();
       expect(result, isNotNull);
+    });
+    test('Verify called sendRecoverInstructions', () async {
+      when(() => authDataSource.sendRecoverInstructions(
+          email: any(named: 'email'))).thenAnswer((_) async {});
+
+      await authRepository.sendRecoverInstructions(email: email);
+
+      verify(() => authDataSource.sendRecoverInstructions(
+          email: any(named: 'email'))).called(1);
     });
   });
 }

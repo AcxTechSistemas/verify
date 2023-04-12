@@ -41,7 +41,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
         password: password,
       );
       final user = result.user!;
-      await user.sendEmailVerification();
+      await _sendEmailVerification(user);
       return UserModel(
         email: user.email!,
         name: user.displayName ?? '',
@@ -99,6 +99,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
         password: password,
       );
       final user = credential.user!;
+      await _sendEmailVerification(user);
       await user.sendEmailVerification();
       return UserModel(
         email: user.email!,
@@ -111,13 +112,54 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       throw ErrorRegisterEmail(message: errorMessage);
     } catch (e) {
       throw Exception(
-          'Ocorreu um erro ao criar uma nova conta. Tente novamente');
+        'Ocorreu um erro ao criar uma nova conta. Tente novamente',
+      );
     }
   }
 
   @override
   Future<void> logout() async {
-    await _googleSignIn.signOut();
-    await _firebaseAuth.signOut();
+    try {
+      await _googleSignIn.signOut();
+      await _firebaseAuth.signOut();
+    } on FirebaseAuthException catch (e) {
+      final errorHandler = FirebaseErrorHandler();
+      final errorMessage = errorHandler(e);
+      throw ErrorLogout(message: errorMessage);
+    } catch (e) {
+      throw Exception(
+        'Ocorreu um erro ao deslogar, tente novamente',
+      );
+    }
+  }
+
+  @override
+  Future<void> sendRecoverInstructions({required String email}) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      final errorHandler = FirebaseErrorHandler();
+      final errorMessage = errorHandler(e);
+      throw ErrorRecoverAccount(message: errorMessage);
+    } catch (e) {
+      throw Exception(
+        'Ocorreu um erro ao recuperar sua conta. Tente novamente',
+      );
+    }
+  }
+
+  Future<void> _sendEmailVerification(User user) async {
+    try {
+      await user.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      final errorHandler = FirebaseErrorHandler();
+      final errorMessage = errorHandler(e);
+      throw ErrorSendingEmailVerification(message: errorMessage);
+    } catch (e) {
+      throw ErrorSendingEmailVerification(
+        message:
+            'Ocorreu um erro ao enviar o email de verificação, Tente novamente mais tarde',
+      );
+    }
   }
 }

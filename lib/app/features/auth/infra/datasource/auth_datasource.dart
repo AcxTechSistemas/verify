@@ -12,4 +12,5 @@ abstract class AuthDataSource {
   });
   Future<UserModel> loginWithGoogle();
   Future<void> logout();
+  Future<void> sendRecoverInstructions({required String email});
 }

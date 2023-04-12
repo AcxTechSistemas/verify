@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:result_dart/result_dart.dart';
 import 'package:verify/app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:verify/app/features/auth/domain/usecase/logout_usecase.dart';
 
@@ -17,7 +20,9 @@ void main() {
     test(
       'Should call logout method from repository',
       () async {
-        when(() => authRepository.logout()).thenAnswer((_) async {});
+        when(() => authRepository.logout()).thenAnswer(
+          (_) async => const Success(Void),
+        );
 
         await logoutUseCase();
 

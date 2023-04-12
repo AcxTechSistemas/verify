@@ -97,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const Spacer(),
                           TextButton.icon(
-                            onPressed: controller.backToLoginPage,
+                            onPressed: controller.goToLoginPage,
                             icon: const Icon(Icons.arrow_back),
                             label: const Text('Voltar ao login'),
                           ),

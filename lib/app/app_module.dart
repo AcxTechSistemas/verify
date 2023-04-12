@@ -5,10 +5,11 @@ import 'package:verify/app/features/auth/auth_module.dart';
 import 'package:verify/app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:verify/app/features/auth/domain/usecase/login_with_email_usecase.dart';
 import 'package:verify/app/features/auth/domain/usecase/login_with_google_usecase.dart';
+import 'package:verify/app/features/auth/domain/usecase/recover_account_usecase.dart';
 import 'package:verify/app/features/auth/domain/usecase/register_with_email_usecase.dart';
 import 'package:verify/app/features/auth/external/datasource/firebase/firebase_datasource.dart';
 import 'package:verify/app/features/auth/infra/datasource/auth_datasource.dart';
-import 'package:verify/app/features/auth/infra/repositories/login_repository_impl.dart';
+import 'package:verify/app/features/auth/infra/repositories/auth_repository_impl.dart';
 
 class AppModule extends Module {
   @override
@@ -22,6 +23,7 @@ class AppModule extends Module {
         AutoBind.factory<RegisterWithEmailUseCase>(
           RegisterWithEmailUseCaseImpl.new,
         ),
+        AutoBind.factory<RecoverAccountUseCase>(RecoverAccountUseCaseImpl.new),
       ];
 
   @override

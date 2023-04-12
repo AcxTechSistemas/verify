@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/features/auth/presenter/login/controller/login_controller.dart';
@@ -69,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                             Row(
                               children: [
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: controller.goToRecoverAccountPage,
                                   child: const Text('Esqueceu a senha?'),
                                 ),
                                 const Spacer(),
@@ -96,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             const Spacer(),
                             TextButton.icon(
-                              onPressed: controller.navigateToRegisterPage,
+                              onPressed: controller.goToRegisterPage,
                               icon: const Icon(Icons.app_registration_rounded),
                               label: const Text('Cadastre-se'),
                             ),

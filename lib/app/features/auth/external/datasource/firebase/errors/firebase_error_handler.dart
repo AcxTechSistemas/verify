@@ -104,7 +104,8 @@ enum FirebaseErrorType {
   ),
   unknown(
     errorCode: 'unknown',
-    message: 'Um erro desconhecido ocorreu',
+    message:
+        'Ocorreu um erro ao realizar a solicitação, Tente novamente mais tarde',
   );
 
   const FirebaseErrorType({

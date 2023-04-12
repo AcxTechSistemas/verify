@@ -8,12 +8,10 @@ import 'package:verify/app/features/auth/utils/email_regex.dart';
 import 'package:verify/app/features/auth/utils/password_regex.dart';
 
 class RegisterController {
-  // Dependency injection
   final RegisterStore _registerStore;
   final RegisterWithEmailUseCase _registerWithEmailUseCase;
   final LoginWithGoogleUseCase _loginWithGoogleUseCase;
 
-  // Register page controller variables
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -28,16 +26,15 @@ class RegisterController {
     this._loginWithGoogleUseCase,
   );
 
-  void backToLoginPage() {
+  void goToLoginPage() {
+    dispose();
     Modular.to.pushReplacementNamed('./login');
   }
 
-  /// [loginWithEmail] Esse método é responsável por chamar o caso de uso
-  /// para fazer o login do usuário com email e senha.
-  /// Ele cria um objeto LoginCredentialsEntity a partir
-  /// dos valores dos campos de email e senha no formulário,
-  /// chama o caso de uso e retorna uma mensagem de erro se houver falha.
   Future<String?> registerWithEmail() async {
+    emailFocus.unfocus();
+    passwordFocus.unfocus();
+    confirmPasswordFocus.unfocus();
     _registerStore.registeringWithEmailInProgress(true);
     final registerCredentials = RegisterCredentialsEntity(
       email: emailController.text,
@@ -47,9 +44,9 @@ class RegisterController {
     final result = await _registerWithEmailUseCase(registerCredentials);
 
     return result.fold(
-      (success) {
+      (user) {
         _registerStore.registeringWithEmailInProgress(false);
-        return null;
+        return 'Confirme seu email no link enviado';
       },
       (failure) {
         _registerStore.registeringWithEmailInProgress(false);
@@ -58,10 +55,10 @@ class RegisterController {
     );
   }
 
-  /// [loginWithGoogle] Esse método é responsável por chamar o caso de uso
-  /// para fazer o login do usuário com o Google.
-  /// Ele chama o caso de uso e retorna uma mensagem de erro se houver falha.
   Future<String?> loginWithGoogle() async {
+    emailFocus.unfocus();
+    passwordFocus.unfocus();
+    confirmPasswordFocus.unfocus();
     _registerStore.registeringWithGoogleInProgress(true);
     final result = await _loginWithGoogleUseCase.call();
 
@@ -77,10 +74,6 @@ class RegisterController {
     );
   }
 
-  /// validateFields: Esse método é responsável por validar se os campos
-  /// de email e senha no formulário estão preenchidos e em um formato válido.
-  /// Ele atualiza o estado da loja LoginStore indicando se os campos
-  /// são válidos ou não.
   void validateFields() {
     if (formKey.currentState != null && formKey.currentState!.validate()) {
       _registerStore.isValidFields(true);
@@ -89,10 +82,6 @@ class RegisterController {
     }
   }
 
-  /// [autoValidateEmail] Esse método é responsável por validar se o valor
-  /// inserido no campo de email está em um formato válido.
-  /// Ele é usado pelo formulário para validação automática quando
-  /// o usuário digita o valor.
   String? autoValidateEmail(String? emailInput) {
     if (emailRegex.hasMatch(emailInput ?? '')) {
       return null;
@@ -101,10 +90,6 @@ class RegisterController {
     }
   }
 
-  /// [autoValidatePassword] Esse método é responsável por validar se o valor
-  /// inserido no campo de senha está em um formato válido.
-  /// Ele é usado pelo formulário para validação automática
-  /// quando o usuário digita o valor.
   String? autoValidatePassword(String? passwordInput) {
     if (passwordRegex.hasMatch(passwordInput ?? '')) {
       return null;
@@ -113,11 +98,6 @@ class RegisterController {
     }
   }
 
-  /// [autoValidateConfirmPassword] Esse método é responsável por validar se o valor
-  /// inserido no campo de confirmacao de senha está em um formato válido.
-  /// e se o campo senha esta igual ao campo confirmação de senha
-  /// Ele é usado pelo formulário para validação automática
-  /// quando o usuário digita o valor.
   String? autoValidateConfirmPassword(String? confirmPasswordInput) {
     if (passwordRegex.hasMatch(confirmPasswordInput ?? '')) {
       if (confirmPasswordInput == passwordController.text) {
@@ -128,5 +108,14 @@ class RegisterController {
     } else {
       return 'Senha deve ter no minimo 8 caracteres';
     }
+  }
+
+  void dispose() {
+    emailController.text = '';
+    passwordController.text = '';
+    confirmPasswordController.text = '';
+    _registerStore.isValidFields(false);
+    _registerStore.registeringWithEmailInProgress(false);
+    _registerStore.registeringWithGoogleInProgress(false);
   }
 }

@@ -2,6 +2,22 @@ abstract class AuthError {
   String get message;
 }
 
+class ErrorSendingEmailVerification extends AuthError {
+  @override
+  final String message;
+  ErrorSendingEmailVerification({
+    required this.message,
+  });
+}
+
+class ErrorRecoverAccount extends AuthError {
+  @override
+  final String message;
+  ErrorRecoverAccount({
+    required this.message,
+  });
+}
+
 class ErrorGoogleLogin extends AuthError {
   @override
   final String message;
