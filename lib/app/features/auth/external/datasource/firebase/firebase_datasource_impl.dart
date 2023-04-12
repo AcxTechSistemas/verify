@@ -10,9 +10,11 @@ import 'package:verify/app/features/auth/infra/models/user_model.dart';
 class FirebaseDataSourceImpl implements AuthDataSource {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final FirebaseErrorHandler _firebaseErrorHandler;
   FirebaseDataSourceImpl(
     this._firebaseAuth,
     this._googleSignIn,
+    this._firebaseErrorHandler,
   );
 
   @override
@@ -48,8 +50,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
         emailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
-      final errorHandler = FirebaseErrorHandler();
-      final errorMessage = errorHandler(e);
+      final errorMessage = _firebaseErrorHandler(e);
       throw ErrorLoginEmail(message: errorMessage);
     } catch (e) {
       throw Exception('Ocorreu um erro ao realizar o login. Tente novamente');
@@ -80,8 +81,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
         emailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
-      final errorHandler = FirebaseErrorHandler();
-      final errorMessage = errorHandler(e);
+      final errorMessage = _firebaseErrorHandler(e);
       throw ErrorGoogleLogin(message: errorMessage);
     } catch (e) {
       throw Exception('Ocorreu um erro ao realizar o login. Tente novamente');
@@ -107,8 +107,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
         emailVerified: user.emailVerified,
       );
     } on FirebaseAuthException catch (e) {
-      final errorHandler = FirebaseErrorHandler();
-      final errorMessage = errorHandler(e);
+      final errorMessage = _firebaseErrorHandler(e);
       throw ErrorRegisterEmail(message: errorMessage);
     } catch (e) {
       throw Exception(
@@ -123,8 +122,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       await _googleSignIn.signOut();
       await _firebaseAuth.signOut();
     } on FirebaseAuthException catch (e) {
-      final errorHandler = FirebaseErrorHandler();
-      final errorMessage = errorHandler(e);
+      final errorMessage = _firebaseErrorHandler(e);
       throw ErrorLogout(message: errorMessage);
     } catch (e) {
       throw Exception(
@@ -138,8 +136,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
-      final errorHandler = FirebaseErrorHandler();
-      final errorMessage = errorHandler(e);
+      final errorMessage = _firebaseErrorHandler(e);
       throw ErrorRecoverAccount(message: errorMessage);
     } catch (e) {
       throw Exception(
@@ -152,8 +149,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
     try {
       await user.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
-      final errorHandler = FirebaseErrorHandler();
-      final errorMessage = errorHandler(e);
+      final errorMessage = _firebaseErrorHandler(e);
       throw ErrorSendingEmailVerification(message: errorMessage);
     } catch (e) {
       throw ErrorSendingEmailVerification(

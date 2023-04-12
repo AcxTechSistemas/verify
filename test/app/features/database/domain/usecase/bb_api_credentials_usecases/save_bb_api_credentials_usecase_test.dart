@@ -3,23 +3,23 @@ import 'dart:ffi';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:result_dart/result_dart.dart';
-import 'package:verify/app/features/database/local_database/domain/entities/bb_api_credentials_entity.dart';
-import 'package:verify/app/features/database/local_database/domain/errors/api_credentials_error.dart';
-import 'package:verify/app/features/database/local_database/domain/repository/local_database_repository.dart';
-import 'package:verify/app/features/database/local_database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
+import 'package:verify/app/features/database/domain/entities/bb_api_credentials_entity.dart';
+import 'package:verify/app/features/database/domain/errors/api_credentials_error.dart';
+import 'package:verify/app/features/database/domain/repository/api_credentials_repository.dart';
+import 'package:verify/app/features/database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
 
-class MockLocalDataBaseRepository extends Mock
-    implements LocalDataBaseRepository {}
+class MockApiCredentialsRepository extends Mock
+    implements ApiCredentialsRepository {}
 
 void main() {
   late SaveBBApiCredentialsUseCase saveBBApiCredentialsUseCase;
-  late LocalDataBaseRepository localDataBaseRepository;
+  late ApiCredentialsRepository apiCredentialsRepository;
   late BBApiCredentialsEntity bbApiCredentialsEntity;
 
   setUp(() {
-    localDataBaseRepository = MockLocalDataBaseRepository();
+    apiCredentialsRepository = MockApiCredentialsRepository();
     saveBBApiCredentialsUseCase = SaveBBApiCredentialsUseCaseImpl(
-      localDataBaseRepository,
+      apiCredentialsRepository,
     );
     bbApiCredentialsEntity = BBApiCredentialsEntity(
       applicationDeveloperKey: '',
@@ -31,7 +31,7 @@ void main() {
 
   group('SaveBBApiCredentialsUseCase: ', () {
     test('Verify called saveBBApiCredentials and return Success', () async {
-      when(() => localDataBaseRepository.saveBBApiCredentials(
+      when(() => apiCredentialsRepository.saveBBApiCredentials(
             bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity'),
           )).thenAnswer((_) async => const Success(Void));
 
@@ -39,7 +39,7 @@ void main() {
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
 
-      verify(() => localDataBaseRepository.saveBBApiCredentials(
+      verify(() => apiCredentialsRepository.saveBBApiCredentials(
               bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
           .called(1);
 
@@ -52,7 +52,7 @@ void main() {
       );
 
       when(
-        () => localDataBaseRepository.saveBBApiCredentials(
+        () => apiCredentialsRepository.saveBBApiCredentials(
             bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')),
       ).thenAnswer((_) async => Failure(apiCredentialsError));
 
@@ -62,7 +62,7 @@ void main() {
 
       expect(response.isError(), true);
 
-      verify(() => localDataBaseRepository.saveBBApiCredentials(
+      verify(() => apiCredentialsRepository.saveBBApiCredentials(
               bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
           .called(1);
 

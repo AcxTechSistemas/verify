@@ -5,5 +5,7 @@ abstract class UserPreferencesError {
 class UserThemePreferenceError extends UserPreferencesError {
   @override
   final String message;
-  UserThemePreferenceError(this.message);
+  UserThemePreferenceError({
+    required this.message,
+  });
 }

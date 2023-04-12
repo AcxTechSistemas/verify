@@ -3,13 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:verify/app/features/auth/domain/errors/auth_error.dart';
-import 'package:verify/app/features/auth/external/datasource/firebase/firebase_datasource.dart';
+import 'package:verify/app/features/auth/external/datasource/firebase/errors/firebase_error_handler.dart';
+import 'package:verify/app/features/auth/external/datasource/firebase/firebase_datasource_impl.dart';
 import 'package:verify/app/features/auth/infra/datasource/auth_datasource.dart';
 import 'package:verify/app/features/auth/infra/models/user_model.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
+
+class MockFirebaseErrorHandler extends Mock implements FirebaseErrorHandler {}
 
 class MockUser extends Mock implements User {}
 
@@ -18,23 +21,22 @@ class MockUserCredential extends Mock implements UserCredential {}
 void main() {
   late MockFirebaseAuth firebaseAuth;
 
-  ///
   late MockGoogleSignIn googleSignIn;
+  late FirebaseErrorHandler firebaseErrorHandler;
 
-  ///
   late AuthDataSource dataSource;
   late MockUser user;
 
   setUpAll(() {
+    firebaseErrorHandler = MockFirebaseErrorHandler();
     firebaseAuth = MockFirebaseAuth();
 
-    ///
     googleSignIn = MockGoogleSignIn();
 
-    ///
     dataSource = FirebaseDataSourceImpl(
       firebaseAuth,
       googleSignIn,
+      firebaseErrorHandler,
     );
     user = MockUser();
   });
@@ -79,6 +81,10 @@ void main() {
             email: email,
             password: password,
           )).thenThrow(exception);
+
+      when(() => firebaseErrorHandler(exception)).thenReturn(
+        'The email address is badly formatted.',
+      );
 
       expect(() => dataSource.loginWithEmail(email: email, password: password),
           throwsA(isA<ErrorLoginEmail>()));

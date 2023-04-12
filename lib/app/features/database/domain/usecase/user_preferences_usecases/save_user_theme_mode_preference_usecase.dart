@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:result_dart/result_dart.dart';
-import 'package:verify/app/features/database/local_database/domain/errors/user_preferences_error.dart';
-import 'package:verify/app/features/database/local_database/domain/repository/local_database_repository.dart';
+import 'package:verify/app/features/database/domain/errors/user_preferences_error.dart';
+import 'package:verify/app/features/database/domain/repository/user_preferences_repository.dart';
 
 abstract class SaveUserThemeModePreferencesUseCase {
   Future<Result<void, UserPreferencesError>> call({
@@ -11,14 +11,14 @@ abstract class SaveUserThemeModePreferencesUseCase {
 
 class SaveUserThemeModePreferencesUseCaseImpl
     implements SaveUserThemeModePreferencesUseCase {
-  final LocalDataBaseRepository _localDataBaseRepository;
+  final UserPreferencesRepository _userPreferencesRepository;
 
-  SaveUserThemeModePreferencesUseCaseImpl(this._localDataBaseRepository);
+  SaveUserThemeModePreferencesUseCaseImpl(this._userPreferencesRepository);
   @override
   Future<Result<void, UserPreferencesError>> call({
     required ThemeMode themeMode,
   }) async {
-    return await _localDataBaseRepository.saveUserThemePreference(
+    return await _userPreferencesRepository.saveUserThemePreference(
       themeMode: themeMode,
     );
   }

@@ -3,23 +3,23 @@ import 'dart:ffi';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:result_dart/result_dart.dart';
-import 'package:verify/app/features/database/local_database/domain/entities/sicoob_api_credentials_entity.dart';
-import 'package:verify/app/features/database/local_database/domain/errors/api_credentials_error.dart';
-import 'package:verify/app/features/database/local_database/domain/repository/local_database_repository.dart';
-import 'package:verify/app/features/database/local_database/domain/usecase/sicoob_api_credentials_usecases/save_sicoob_api_credentials_usecase.dart';
+import 'package:verify/app/features/database/domain/entities/sicoob_api_credentials_entity.dart';
+import 'package:verify/app/features/database/domain/errors/api_credentials_error.dart';
+import 'package:verify/app/features/database/domain/repository/api_credentials_repository.dart';
+import 'package:verify/app/features/database/domain/usecase/sicoob_api_credentials_usecases/save_sicoob_api_credentials_usecase.dart';
 
-class MockLocalDataBaseRepository extends Mock
-    implements LocalDataBaseRepository {}
+class MockApiCredentialsRepository extends Mock
+    implements ApiCredentialsRepository {}
 
 void main() {
   late SaveSicoobApiCredentialsUseCase saveSicoobApiCredentialsUseCase;
-  late LocalDataBaseRepository localDataBaseRepository;
+  late ApiCredentialsRepository apiCredentialsRepository;
   late SicoobApiCredentialsEntity sicoobApiCredentialsEntity;
 
   setUp(() {
-    localDataBaseRepository = MockLocalDataBaseRepository();
+    apiCredentialsRepository = MockApiCredentialsRepository();
     saveSicoobApiCredentialsUseCase = SaveSicoobApiCredentialsUseCaseImpl(
-      localDataBaseRepository,
+      apiCredentialsRepository,
     );
     sicoobApiCredentialsEntity = SicoobApiCredentialsEntity(
       certificateBase64String: '',
@@ -32,7 +32,7 @@ void main() {
 
   group('SaveSicoobApiCredentialsUseCase: ', () {
     test('Verify called saveSicoobApiCredentials and return Success', () async {
-      when(() => localDataBaseRepository.saveSicoobApiCredentials(
+      when(() => apiCredentialsRepository.saveSicoobApiCredentials(
               sicoobApiCredentialsEntity:
                   any(named: 'sicoobApiCredentialsEntity')))
           .thenAnswer((_) async => const Success(Void));
@@ -43,7 +43,7 @@ void main() {
 
       expect(response.isSuccess(), true);
 
-      verify(() => localDataBaseRepository.saveSicoobApiCredentials(
+      verify(() => apiCredentialsRepository.saveSicoobApiCredentials(
           sicoobApiCredentialsEntity:
               any(named: 'sicoobApiCredentialsEntity'))).called(1);
     });
@@ -53,7 +53,7 @@ void main() {
         message: 'Error Saving Credentials',
       );
 
-      when(() => localDataBaseRepository.saveSicoobApiCredentials(
+      when(() => apiCredentialsRepository.saveSicoobApiCredentials(
               sicoobApiCredentialsEntity:
                   any(named: 'sicoobApiCredentialsEntity')))
           .thenAnswer((_) async => Failure(apiCredentialsError));
@@ -64,7 +64,7 @@ void main() {
 
       expect(response.isError(), true);
 
-      verify(() => localDataBaseRepository.saveSicoobApiCredentials(
+      verify(() => apiCredentialsRepository.saveSicoobApiCredentials(
           sicoobApiCredentialsEntity:
               any(named: 'sicoobApiCredentialsEntity'))).called(1);
 

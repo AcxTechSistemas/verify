@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:verify/app/core/send_logs_to_web.dart';
+import 'package:verify/app/core/register_error.dart';
 
 enum FirebaseErrorType {
   emailAlreadyInUse(
@@ -118,7 +116,9 @@ enum FirebaseErrorType {
 }
 
 class FirebaseErrorHandler {
-  late SendLogsToWeb _sendLogsToWeb;
+  final RegisterError _registerError;
+  FirebaseErrorHandler(this._registerError);
+
   String call(FirebaseAuthException e) {
     final errorType = FirebaseErrorType.values
         .where((error) => e.code == error.errorCode)
@@ -128,14 +128,7 @@ class FirebaseErrorHandler {
     final type = errorType;
     final authError =
         'type: $type code: $errorCode HandleMessage: $errorMessage firebaseMessage: ${e.message}';
-    _registerAuthError(authError);
+    _registerError(authError);
     return errorMessage;
-  }
-
-  void _registerAuthError(String authError) {
-    final error = ' AuthError: $authError';
-    _sendLogsToWeb = SendLogsToDiscordChannel();
-    _sendLogsToWeb(error);
-    log(error);
   }
 }

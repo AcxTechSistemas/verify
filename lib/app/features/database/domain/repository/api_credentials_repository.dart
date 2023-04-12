@@ -1,21 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:result_dart/result_dart.dart';
-import 'package:verify/app/features/database/local_database/domain/entities/bb_api_credentials_entity.dart';
-import 'package:verify/app/features/database/local_database/domain/entities/sicoob_api_credentials_entity.dart';
-import 'package:verify/app/features/database/local_database/domain/errors/api_credentials_error.dart';
-import 'package:verify/app/features/database/local_database/domain/errors/user_preferences_error.dart';
+import 'package:verify/app/features/database/domain/entities/bb_api_credentials_entity.dart';
+import 'package:verify/app/features/database/domain/entities/sicoob_api_credentials_entity.dart';
+import 'package:verify/app/features/database/domain/errors/api_credentials_error.dart';
 
-abstract class LocalDataBaseRepository {
-  // User Preferences
-  Future<Result<void, UserPreferencesError>> saveUserThemePreference({
-    required ThemeMode themeMode,
-  });
-  Future<Result<void, UserPreferencesError>> updateUserThemePreference({
-    required ThemeMode themeMode,
-  });
-  Future<Result<ThemeMode, UserPreferencesError>> readUserThemePreference();
-  Future<Result<void, UserPreferencesError>> deleteUserThemePreference();
-
+abstract class ApiCredentialsRepository {
   // SicoobApiCredentials
   Future<Result<void, ApiCredentialsError>> saveSicoobApiCredentials({
     required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
