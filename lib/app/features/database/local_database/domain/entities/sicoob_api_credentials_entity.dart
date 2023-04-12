@@ -4,10 +4,10 @@ class SicoobApiCredentialsEntity {
   final String certificateBase64String;
   final bool isFavorite;
 
-  SicoobApiCredentialsEntity(
-    this.clientID,
-    this.certificatePassword,
-    this.certificateBase64String,
-    this.isFavorite,
-  );
+  SicoobApiCredentialsEntity({
+    required this.clientID,
+    required this.certificatePassword,
+    required this.certificateBase64String,
+    required this.isFavorite,
+  });
 }

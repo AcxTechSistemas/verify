@@ -7,21 +7,33 @@ import 'package:verify/app/features/database/local_database/domain/errors/user_p
 
 abstract class LocalDataBaseRepository {
   // User Preferences
-  Future<Result<void, UserPreferencesError>> saveUserThemePreference();
-  Future<Result<void, UserPreferencesError>> updateUserThemePreference();
+  Future<Result<void, UserPreferencesError>> saveUserThemePreference({
+    required ThemeMode themeMode,
+  });
+  Future<Result<void, UserPreferencesError>> updateUserThemePreference({
+    required ThemeMode themeMode,
+  });
   Future<Result<ThemeMode, UserPreferencesError>> readUserThemePreference();
   Future<Result<void, UserPreferencesError>> deleteUserThemePreference();
 
   // SicoobApiCredentials
-  Future<Result<void, ApiCredentialsError>> saveSicoobApiCredentials();
-  Future<Result<void, ApiCredentialsError>> updateSicoobApiCredentials();
+  Future<Result<void, ApiCredentialsError>> saveSicoobApiCredentials({
+    required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
+  });
+  Future<Result<void, ApiCredentialsError>> updateSicoobApiCredentials({
+    required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
+  });
   Future<Result<SicoobApiCredentialsEntity, ApiCredentialsError>>
       readSicoobApiCredentials();
   Future<Result<void, ApiCredentialsError>> removeSicoobApiCredentials();
 
   // BBApiCredentials
-  Future<Result<void, ApiCredentialsError>> saveBBApiCredentials();
-  Future<Result<void, ApiCredentialsError>> updateBBApiCredentials();
+  Future<Result<void, ApiCredentialsError>> saveBBApiCredentials({
+    required BBApiCredentialsEntity bbApiCredentialsEntity,
+  });
+  Future<Result<void, ApiCredentialsError>> updateBBApiCredentials({
+    required BBApiCredentialsEntity bbApiCredentialsEntity,
+  });
   Future<Result<BBApiCredentialsEntity, ApiCredentialsError>>
       readBBApiCredentials();
   Future<Result<void, ApiCredentialsError>> removeBBApiCredentials();

@@ -3,9 +3,9 @@ class BBApiCredentialsEntity {
   final String basicKey;
   final bool isFavorite;
 
-  BBApiCredentialsEntity(
-    this.applicationDeveloperKey,
-    this.basicKey,
-    this.isFavorite,
-  );
+  BBApiCredentialsEntity({
+    required this.applicationDeveloperKey,
+    required this.basicKey,
+    required this.isFavorite,
+  });
 }
