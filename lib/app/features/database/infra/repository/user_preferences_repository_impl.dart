@@ -8,15 +8,22 @@ import 'package:verify/app/features/database/infra/datasource/user_preferences_d
 
 class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
   final UserPreferencesDataSource _userPreferencesDataSource;
+
   UserPreferencesRepositoryImpl(this._userPreferencesDataSource);
+
   @override
-  Future<Result<void, UserPreferencesError>> deleteUserThemePreference() async {
+  Future<Result<void, UserPreferencesError>> saveUserThemePreference({
+    required ThemeMode themeMode,
+  }) async {
     try {
-      await _userPreferencesDataSource.deleteUserThemePreference();
+      await _userPreferencesDataSource.saveUserThemePreference(
+        themeMode: themeMode,
+      );
       return const Success(Void);
     } catch (e) {
       return Failure(UserThemePreferenceError(
-        message: 'Não foi possivel remover seu tema favorito. Tente novamente',
+        message:
+            'Não foi possivel salvar sua preferencia de tema. Tente novamente',
       ));
     }
   }
@@ -31,23 +38,7 @@ class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
     } catch (e) {
       return Failure(UserThemePreferenceError(
         message:
-            'Não foi possivel recuperar seu tema favorito. Tente novamente',
-      ));
-    }
-  }
-
-  @override
-  Future<Result<void, UserPreferencesError>> saveUserThemePreference({
-    required ThemeMode themeMode,
-  }) async {
-    try {
-      await _userPreferencesDataSource.saveUserThemePreference(
-        themeMode: themeMode,
-      );
-      return const Success(Void);
-    } catch (e) {
-      return Failure(UserThemePreferenceError(
-        message: 'Não foi possivel salvar seu tema favorito. Tente novamente',
+            'Não foi possivel recuperar sua preferencia de tema. Tente novamente',
       ));
     }
   }
@@ -64,7 +55,20 @@ class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
     } catch (e) {
       return Failure(UserThemePreferenceError(
         message:
-            'Não foi possivel atualizar seu tema favorito. Tente novamente',
+            'Não foi possivel atualizar sua preferencia de tema. Tente novamente',
+      ));
+    }
+  }
+
+  @override
+  Future<Result<void, UserPreferencesError>> deleteUserThemePreference() async {
+    try {
+      await _userPreferencesDataSource.deleteUserThemePreference();
+      return const Success(Void);
+    } catch (e) {
+      return Failure(UserThemePreferenceError(
+        message:
+            'Não foi possivel remover sua preferencia de tema. Tente novamente',
       ));
     }
   }
