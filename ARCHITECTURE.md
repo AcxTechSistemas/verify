@@ -25,6 +25,15 @@ Points to consider before introducing a new feature:
 
 # External packages
 
-- equatable: Implement easy and fast comparison of objects
-- result_dart: Multiple return in Failure and Success format.
-- mocktail: For unit tests.
+- flutter_modular: A module-based architecture framework for Flutter
+- firebase_auth: A Flutter package that provides Firebase Authentication integration
+- google_sign_in: A Flutter plugin for Google Sign-In integration
+- firebase_core: A Flutter plugin that provides Firebase Core functionality
+- equatable: A Dart package for simple and efficient value equality checks
+- result_dart: A Dart package for returning results in a standardized Failure or Success format
+- mocktail: A Dart package for creating mock objects during unit tests
+- mobx: A state-management library for Dart and Flutter
+- flutter_mobx: A Flutter integration of the mobx state-management library
+- flutter_svg: A Flutter plugin for rendering SVG files
+- google_fonts: A Flutter package for easy integration of Google Fonts
+- build_runner: A command-line tool for generating code and running tasks in a Dart package
