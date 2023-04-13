@@ -44,6 +44,7 @@ void main() {
   group('FirebaseDatasource: ', () {
     test('should return UserModel when currentUser succeeds', () async {
       when(() => firebaseAuth.currentUser).thenReturn(user);
+      when(() => user.uid).thenReturn('userID');
       when(() => user.email).thenReturn('test@test.com');
       when(() => user.displayName).thenReturn('Test User');
       when(() => user.emailVerified).thenReturn(true);
@@ -53,6 +54,7 @@ void main() {
       expect(
         result,
         equals(UserModel(
+          id: 'userID',
           email: 'test@test.com',
           name: 'Test User',
           emailVerified: user.emailVerified,

@@ -32,14 +32,17 @@ void main() {
   group('SaveBBApiCredentialsUseCase: ', () {
     test('Verify called saveBBApiCredentials and return Success', () async {
       when(() => apiCredentialsRepository.saveBBApiCredentials(
+            id: any(named: 'id'),
             bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity'),
           )).thenAnswer((_) async => const Success(Void));
 
       final response = await saveBBApiCredentialsUseCase(
+        id: 'userID',
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
 
       verify(() => apiCredentialsRepository.saveBBApiCredentials(
+              id: any(named: 'id'),
               bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
           .called(1);
 
@@ -53,16 +56,19 @@ void main() {
 
       when(
         () => apiCredentialsRepository.saveBBApiCredentials(
+            id: any(named: 'id'),
             bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')),
       ).thenAnswer((_) async => Failure(apiCredentialsError));
 
       final response = await saveBBApiCredentialsUseCase(
+        id: 'userID',
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
 
       expect(response.isError(), true);
 
       verify(() => apiCredentialsRepository.saveBBApiCredentials(
+              id: any(named: 'id'),
               bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
           .called(1);
 

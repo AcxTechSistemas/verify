@@ -12,10 +12,12 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   ApiCredentialsRepositoryImpl(this._apiCredentialsDataSource);
   @override
   Future<Result<BBApiCredentialsEntity, ApiCredentialsError>>
-      readBBApiCredentials() async {
+      readBBApiCredentials({
+    required String id,
+  }) async {
     try {
       final bbApiCredential =
-          await _apiCredentialsDataSource.readBBApiCredentials();
+          await _apiCredentialsDataSource.readBBApiCredentials(id: id);
       return Success(bbApiCredential);
     } on ErrorReadingApiCredentials catch (e) {
       return Failure(e);
@@ -31,10 +33,12 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<SicoobApiCredentialsEntity, ApiCredentialsError>>
-      readSicoobApiCredentials() async {
+      readSicoobApiCredentials({
+    required String id,
+  }) async {
     try {
       final sicoobApiCredential =
-          await _apiCredentialsDataSource.readSicoobApiCredentials();
+          await _apiCredentialsDataSource.readSicoobApiCredentials(id: id);
       return Success(sicoobApiCredential);
     } on ErrorReadingApiCredentials catch (e) {
       return Failure(e);
@@ -46,9 +50,11 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   }
 
   @override
-  Future<Result<void, ApiCredentialsError>> removeBBApiCredentials() async {
+  Future<Result<void, ApiCredentialsError>> removeBBApiCredentials({
+    required String id,
+  }) async {
     try {
-      await _apiCredentialsDataSource.deleteBBApiCredentials();
+      await _apiCredentialsDataSource.deleteBBApiCredentials(id: id);
       return const Success(Void);
     } on ErrorRemovingApiCredentials catch (e) {
       return Failure(e);
@@ -60,9 +66,11 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   }
 
   @override
-  Future<Result<void, ApiCredentialsError>> removeSicoobApiCredentials() async {
+  Future<Result<void, ApiCredentialsError>> removeSicoobApiCredentials({
+    required String id,
+  }) async {
     try {
-      await _apiCredentialsDataSource.deleteSicoobApiCredentials();
+      await _apiCredentialsDataSource.deleteSicoobApiCredentials(id: id);
       return const Success(Void);
     } on ErrorRemovingApiCredentials catch (e) {
       return Failure(e);
@@ -75,10 +83,12 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<void, ApiCredentialsError>> saveBBApiCredentials({
+    required String id,
     required BBApiCredentialsEntity bbApiCredentialsEntity,
   }) async {
     try {
       await _apiCredentialsDataSource.saveBBApiCredentials(
+        id: id,
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
       return const Success(Void);
@@ -93,10 +103,12 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<void, ApiCredentialsError>> saveSicoobApiCredentials({
+    required String id,
     required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
   }) async {
     try {
       await _apiCredentialsDataSource.saveSicoobApiCredentials(
+        id: id,
         sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
       );
       return const Success(Void);
@@ -111,10 +123,12 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<void, ApiCredentialsError>> updateBBApiCredentials({
+    required String id,
     required BBApiCredentialsEntity bbApiCredentialsEntity,
   }) async {
     try {
       await _apiCredentialsDataSource.updateBBApiCredentials(
+        id: id,
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
       return const Success(Void);
@@ -130,10 +144,12 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<void, ApiCredentialsError>> updateSicoobApiCredentials({
+    required String id,
     required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
   }) async {
     try {
       await _apiCredentialsDataSource.updateSicoobApiCredentials(
+        id: id,
         sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
       );
       return const Success(Void);

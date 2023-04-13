@@ -5,6 +5,7 @@ import 'package:verify/app/features/database/domain/repository/api_credentials_r
 
 abstract class SaveSicoobApiCredentialsUseCase {
   Future<Result<void, ApiCredentialsError>> call({
+    required String id,
     required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
   });
 }
@@ -16,9 +17,11 @@ class SaveSicoobApiCredentialsUseCaseImpl
 
   @override
   Future<Result<void, ApiCredentialsError>> call({
+    required String id,
     required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
   }) async {
     return await _apiCredentialsRepository.saveSicoobApiCredentials(
+      id: id,
       sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
     );
   }

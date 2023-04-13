@@ -33,19 +33,23 @@ void main() {
   group('SaveSicoobApiCredentialsUseCase: ', () {
     test('Verify called saveSicoobApiCredentials and return Success', () async {
       when(() => apiCredentialsRepository.saveSicoobApiCredentials(
+              id: any(named: 'id'),
               sicoobApiCredentialsEntity:
                   any(named: 'sicoobApiCredentialsEntity')))
           .thenAnswer((_) async => const Success(Void));
 
       final response = await saveSicoobApiCredentialsUseCase(
+        id: 'userID',
         sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
       );
 
       expect(response.isSuccess(), true);
 
       verify(() => apiCredentialsRepository.saveSicoobApiCredentials(
-          sicoobApiCredentialsEntity:
-              any(named: 'sicoobApiCredentialsEntity'))).called(1);
+            id: any(named: 'id'),
+            sicoobApiCredentialsEntity:
+                any(named: 'sicoobApiCredentialsEntity'),
+          )).called(1);
     });
 
     test('Should return ApiCredentialsError on failure', () async {
@@ -54,17 +58,20 @@ void main() {
       );
 
       when(() => apiCredentialsRepository.saveSicoobApiCredentials(
+              id: any(named: 'id'),
               sicoobApiCredentialsEntity:
                   any(named: 'sicoobApiCredentialsEntity')))
           .thenAnswer((_) async => Failure(apiCredentialsError));
 
       final response = await saveSicoobApiCredentialsUseCase(
+        id: 'userID',
         sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
       );
 
       expect(response.isError(), true);
 
       verify(() => apiCredentialsRepository.saveSicoobApiCredentials(
+          id: any(named: 'id'),
           sicoobApiCredentialsEntity:
               any(named: 'sicoobApiCredentialsEntity'))).called(1);
 

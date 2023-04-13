@@ -5,6 +5,7 @@ import 'package:verify/app/features/database/domain/repository/api_credentials_r
 
 abstract class SaveBBApiCredentialsUseCase {
   Future<Result<void, ApiCredentialsError>> call({
+    required String id,
     required BBApiCredentialsEntity bbApiCredentialsEntity,
   });
 }
@@ -15,9 +16,11 @@ class SaveBBApiCredentialsUseCaseImpl implements SaveBBApiCredentialsUseCase {
 
   @override
   Future<Result<void, ApiCredentialsError>> call({
+    required String id,
     required BBApiCredentialsEntity bbApiCredentialsEntity,
   }) async {
     return await _apiCredentialsRepository.saveBBApiCredentials(
+      id: id,
       bbApiCredentialsEntity: bbApiCredentialsEntity,
     );
   }

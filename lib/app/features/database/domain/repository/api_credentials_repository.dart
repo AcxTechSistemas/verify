@@ -6,23 +6,35 @@ import 'package:verify/app/features/database/domain/errors/api_credentials_error
 abstract class ApiCredentialsRepository {
   // SicoobApiCredentials
   Future<Result<void, ApiCredentialsError>> saveSicoobApiCredentials({
+    required String id,
     required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
   });
   Future<Result<void, ApiCredentialsError>> updateSicoobApiCredentials({
+    required String id,
     required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
   });
   Future<Result<SicoobApiCredentialsEntity, ApiCredentialsError>>
-      readSicoobApiCredentials();
-  Future<Result<void, ApiCredentialsError>> removeSicoobApiCredentials();
+      readSicoobApiCredentials({
+    required String id,
+  });
+  Future<Result<void, ApiCredentialsError>> removeSicoobApiCredentials({
+    required String id,
+  });
 
   // BBApiCredentials
   Future<Result<void, ApiCredentialsError>> saveBBApiCredentials({
+    required String id,
     required BBApiCredentialsEntity bbApiCredentialsEntity,
   });
   Future<Result<void, ApiCredentialsError>> updateBBApiCredentials({
+    required String id,
     required BBApiCredentialsEntity bbApiCredentialsEntity,
   });
   Future<Result<BBApiCredentialsEntity, ApiCredentialsError>>
-      readBBApiCredentials();
-  Future<Result<void, ApiCredentialsError>> removeBBApiCredentials();
+      readBBApiCredentials({
+    required String id,
+  });
+  Future<Result<void, ApiCredentialsError>> removeBBApiCredentials({
+    required String id,
+  });
 }
