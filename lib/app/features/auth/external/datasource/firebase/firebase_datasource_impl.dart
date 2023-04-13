@@ -26,6 +26,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
     }
 
     return UserModel(
+      id: user.uid,
       email: user.email!,
       name: user.displayName ?? '',
       emailVerified: user.emailVerified,
@@ -45,6 +46,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       final user = result.user!;
       await _sendEmailVerification(user);
       return UserModel(
+        id: user.uid,
         email: user.email!,
         name: user.displayName ?? '',
         emailVerified: user.emailVerified,
@@ -76,6 +78,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       final user = userCredential.user!;
 
       return UserModel(
+        id: user.uid,
         email: user.email!,
         name: user.displayName!,
         emailVerified: user.emailVerified,
@@ -102,6 +105,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       await _sendEmailVerification(user);
       await user.sendEmailVerification();
       return UserModel(
+        id: user.uid,
         email: user.email!,
         name: user.displayName ?? '',
         emailVerified: user.emailVerified,
