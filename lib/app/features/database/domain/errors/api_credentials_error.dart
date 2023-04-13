@@ -1,4 +1,4 @@
-abstract class ApiCredentialsError {
+abstract class ApiCredentialsError implements Exception {
   String get message;
 }
 

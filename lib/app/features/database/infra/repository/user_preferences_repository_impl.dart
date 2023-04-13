@@ -20,6 +20,8 @@ class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
         themeMode: themeMode,
       );
       return const Success(Void);
+    } on UserThemePreferenceError catch (e) {
+      return Failure(e);
     } catch (e) {
       return Failure(UserThemePreferenceError(
         message:
@@ -35,6 +37,8 @@ class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
       final userThemeMode =
           await _userPreferencesDataSource.readUserThemePreference();
       return Success(userThemeMode);
+    } on UserThemePreferenceError catch (e) {
+      return Failure(e);
     } catch (e) {
       return Failure(UserThemePreferenceError(
         message:
@@ -52,6 +56,8 @@ class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
         themeMode: themeMode,
       );
       return const Success(Void);
+    } on UserThemePreferenceError catch (e) {
+      return Failure(e);
     } catch (e) {
       return Failure(UserThemePreferenceError(
         message:
@@ -65,6 +71,8 @@ class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
     try {
       await _userPreferencesDataSource.deleteUserThemePreference();
       return const Success(Void);
+    } on UserThemePreferenceError catch (e) {
+      return Failure(e);
     } catch (e) {
       return Failure(UserThemePreferenceError(
         message:

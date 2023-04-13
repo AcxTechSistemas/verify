@@ -1,4 +1,4 @@
-abstract class AuthError {
+abstract class AuthError implements Exception {
   String get message;
 }
 
