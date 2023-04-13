@@ -27,6 +27,9 @@ void main() {
     );
     bbApiCredentialsModel = MockBBApiCredentialsModel();
     sicoobApiCredentialsModel = MockSicoobApiCredentialsModel();
+
+    registerFallbackValue(bbApiCredentialsModel);
+    registerFallbackValue(sicoobApiCredentialsModel);
   });
 
   group('ApiCredentialsRepositoryImpl: ', () {
@@ -84,6 +87,68 @@ void main() {
             'Ocorreu um erro ao remover as credenciais do Banco do Brasil';
         final response =
             await apiCredentialsRepository.removeBBApiCredentials();
+        final result = response.exceptionOrNull();
+        expect(result, isNotNull);
+        expect(result!.message, equals(expectedResponse));
+      });
+      test('Should return success on saveBBApiCredentials', () async {
+        when(() => apiCredentialsDataSource.saveBBApiCredentials(
+                bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
+            .thenAnswer((_) async {});
+
+        final response = await apiCredentialsRepository.saveBBApiCredentials(
+          bbApiCredentialsEntity: bbApiCredentialsModel,
+        );
+
+        verify(() => apiCredentialsDataSource.saveBBApiCredentials(
+            bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')));
+
+        expect(response.isSuccess(), true);
+      });
+
+      test('Should return ErrorSavingApiCredentials on saveBBApiCredentials',
+          () async {
+        when(() => apiCredentialsDataSource.saveBBApiCredentials(
+                bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
+            .thenThrow(Exception());
+        const expectedResponse =
+            'Ocorreu um erro ao salvar as credenciais do Banco do Brasil';
+        final response = await apiCredentialsRepository.saveBBApiCredentials(
+          bbApiCredentialsEntity: bbApiCredentialsModel,
+        );
+
+        final result = response.exceptionOrNull();
+        expect(result, isNotNull);
+        expect(result!.message, equals(expectedResponse));
+      });
+
+      test('Should return success on updateBBApiCredentials', () async {
+        when(
+          () => apiCredentialsDataSource.updateBBApiCredentials(
+              bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')),
+        ).thenAnswer((_) async {});
+
+        final response = await apiCredentialsRepository.updateBBApiCredentials(
+          bbApiCredentialsEntity: bbApiCredentialsModel,
+        );
+        verify(() => apiCredentialsDataSource.updateBBApiCredentials(
+            bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')));
+
+        expect(response.isSuccess(), true);
+      });
+      test('Should return ErrorUpdateApiCredentials on updateBBApiCredentials',
+          () async {
+        when(
+          () => apiCredentialsDataSource.updateBBApiCredentials(
+              bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')),
+        ).thenThrow(Exception());
+        const expectedResponse =
+            'Ocorreu um erro ao atualizar as credenciais do Banco do Brasil';
+
+        final response = await apiCredentialsRepository.updateBBApiCredentials(
+          bbApiCredentialsEntity: bbApiCredentialsModel,
+        );
+
         final result = response.exceptionOrNull();
         expect(result, isNotNull);
         expect(result!.message, equals(expectedResponse));
@@ -147,6 +212,80 @@ void main() {
             'Ocorreu um erro ao remover as credenciais do Sicoob';
         final response =
             await apiCredentialsRepository.removeSicoobApiCredentials();
+        final result = response.exceptionOrNull();
+        expect(result, isNotNull);
+        expect(result!.message, equals(expectedResponse));
+      });
+      test('Should return success on saveSicoobApiCredentials', () async {
+        when(
+          () => apiCredentialsDataSource.saveSicoobApiCredentials(
+              sicoobApiCredentialsEntity:
+                  any(named: 'sicoobApiCredentialsEntity')),
+        ).thenAnswer((_) async {});
+
+        final response =
+            await apiCredentialsRepository.saveSicoobApiCredentials(
+          sicoobApiCredentialsEntity: sicoobApiCredentialsModel,
+        );
+
+        verify(() => apiCredentialsDataSource.saveSicoobApiCredentials(
+            sicoobApiCredentialsEntity:
+                any(named: 'sicoobApiCredentialsEntity')));
+
+        expect(response.isSuccess(), true);
+      });
+
+      test(
+          'Should return ErrorSavingApiCredentials on saveSicoobApiCredentials',
+          () async {
+        when(
+          () => apiCredentialsDataSource.saveSicoobApiCredentials(
+              sicoobApiCredentialsEntity:
+                  any(named: 'sicoobApiCredentialsEntity')),
+        ).thenThrow(Exception());
+        const expectedResponse =
+            'Ocorreu um erro ao salvar as credenciais do Sicoob';
+        final response =
+            await apiCredentialsRepository.saveSicoobApiCredentials(
+          sicoobApiCredentialsEntity: sicoobApiCredentialsModel,
+        );
+
+        final result = response.exceptionOrNull();
+        expect(result, isNotNull);
+        expect(result!.message, equals(expectedResponse));
+      });
+      test('Should return success on updateSicoobApiCredentials', () async {
+        when(
+          () => apiCredentialsDataSource.updateSicoobApiCredentials(
+              sicoobApiCredentialsEntity:
+                  any(named: 'sicoobApiCredentialsEntity')),
+        ).thenAnswer((_) async {});
+
+        final response =
+            await apiCredentialsRepository.updateSicoobApiCredentials(
+          sicoobApiCredentialsEntity: sicoobApiCredentialsModel,
+        );
+        verify(() => apiCredentialsDataSource.updateSicoobApiCredentials(
+            sicoobApiCredentialsEntity:
+                any(named: 'sicoobApiCredentialsEntity')));
+
+        expect(response.isSuccess(), true);
+      });
+      test('Should return ErrorUpdateApiCredentials on updateBBApiCredentials',
+          () async {
+        when(
+          () => apiCredentialsDataSource.updateSicoobApiCredentials(
+              sicoobApiCredentialsEntity:
+                  any(named: 'sicoobApiCredentialsEntity')),
+        ).thenThrow(Exception());
+        const expectedResponse =
+            'Ocorreu um erro ao atualizar as credenciais do Sicoob';
+
+        final response =
+            await apiCredentialsRepository.updateSicoobApiCredentials(
+          sicoobApiCredentialsEntity: sicoobApiCredentialsModel,
+        );
+
         final result = response.exceptionOrNull();
         expect(result, isNotNull);
         expect(result!.message, equals(expectedResponse));
