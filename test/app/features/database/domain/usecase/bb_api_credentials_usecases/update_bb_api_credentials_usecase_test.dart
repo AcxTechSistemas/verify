@@ -6,19 +6,19 @@ import 'package:result_dart/result_dart.dart';
 import 'package:verify/app/features/database/domain/entities/bb_api_credentials_entity.dart';
 import 'package:verify/app/features/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/features/database/domain/repository/api_credentials_repository.dart';
-import 'package:verify/app/features/database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
+import 'package:verify/app/features/database/domain/usecase/bb_api_credentials_usecases/update_bb_api_credentials_usecase.dart';
 
 class MockApiCredentialsRepository extends Mock
     implements ApiCredentialsRepository {}
 
 void main() {
-  late SaveBBApiCredentialsUseCase saveBBApiCredentialsUseCase;
+  late UpdateBBApiCredentialsUseCase updateBBApiCredentialsUseCase;
   late ApiCredentialsRepository apiCredentialsRepository;
   late BBApiCredentialsEntity bbApiCredentialsEntity;
 
   setUp(() {
     apiCredentialsRepository = MockApiCredentialsRepository();
-    saveBBApiCredentialsUseCase = SaveBBApiCredentialsUseCaseImpl(
+    updateBBApiCredentialsUseCase = UpdateBBApiCredentialsUseCaseImpl(
       apiCredentialsRepository,
     );
     bbApiCredentialsEntity = BBApiCredentialsEntity(
@@ -29,19 +29,19 @@ void main() {
     registerFallbackValue(bbApiCredentialsEntity);
   });
 
-  group('SaveBBApiCredentialsUseCase: ', () {
+  group('UpdateBBApiCredentialsUseCase: ', () {
     test('Should return success on saveBBApiCredentials', () async {
-      when(() => apiCredentialsRepository.saveBBApiCredentials(
+      when(() => apiCredentialsRepository.updateBBApiCredentials(
             id: any(named: 'id'),
             bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity'),
           )).thenAnswer((_) async => const Success(Void));
 
-      final response = await saveBBApiCredentialsUseCase(
+      final response = await updateBBApiCredentialsUseCase(
         id: 'userID',
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
 
-      verify(() => apiCredentialsRepository.saveBBApiCredentials(
+      verify(() => apiCredentialsRepository.updateBBApiCredentials(
               id: any(named: 'id'),
               bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
           .called(1);
@@ -56,19 +56,19 @@ void main() {
       );
 
       when(
-        () => apiCredentialsRepository.saveBBApiCredentials(
+        () => apiCredentialsRepository.updateBBApiCredentials(
             id: any(named: 'id'),
             bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')),
       ).thenAnswer((_) async => Failure(apiCredentialsError));
 
-      final response = await saveBBApiCredentialsUseCase(
+      final response = await updateBBApiCredentialsUseCase(
         id: 'userID',
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
 
       expect(response.isError(), true);
 
-      verify(() => apiCredentialsRepository.saveBBApiCredentials(
+      verify(() => apiCredentialsRepository.updateBBApiCredentials(
               id: any(named: 'id'),
               bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
           .called(1);
