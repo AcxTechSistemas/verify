@@ -22,7 +22,6 @@ void main() {
       userPreferencesRepository,
     );
     themeMode = ThemeMode.dark;
-
     registerFallbackValue(themeMode);
   });
 
