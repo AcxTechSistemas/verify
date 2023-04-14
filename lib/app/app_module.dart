@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:verify/app/core/register_error.dart';
+import 'package:verify/app/core/register_log.dart';
 import 'package:verify/app/core/send_logs_to_web.dart';
 import 'package:verify/app/features/auth/auth_module.dart';
 import 'package:verify/app/features/auth/domain/repositories/auth_repository.dart';
@@ -30,7 +30,7 @@ class AppModule extends Module {
         AutoBind.factory<RecoverAccountUseCase>(RecoverAccountUseCaseImpl.new),
         //Error Handler
         AutoBind.instance<SendLogsToWeb>(SendLogsToDiscordChannel()),
-        AutoBind.factory<RegisterError>(RegisterErrorImpl.new),
+        AutoBind.factory<RegisterLog>(RegisterLogImpl.new),
         AutoBind.factory<FirebaseAuthErrorHandler>(
             FirebaseAuthErrorHandler.new),
       ];

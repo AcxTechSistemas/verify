@@ -1,8 +1,8 @@
 abstract class SendLogsToWeb {
-  void call(String message);
+  Future<void> call(Object e);
 }
 
 class SendLogsToDiscordChannel implements SendLogsToWeb {
   @override
-  void call(String message) {}
+  Future<void> call(Object e) async {}
 }

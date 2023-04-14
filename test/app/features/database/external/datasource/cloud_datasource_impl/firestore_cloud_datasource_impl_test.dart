@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:verify/app/core/register_error.dart';
+import 'package:verify/app/core/register_log.dart';
+import 'package:verify/app/core/send_logs_to_web.dart';
 import 'package:verify/app/features/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/features/database/external/datasource/cloud_datasource_impl/errors/firebase_firestore_error_handler.dart';
 import 'package:verify/app/features/database/external/datasource/cloud_datasource_impl/firestore_cloud_datasource_impl.dart';
@@ -17,7 +18,9 @@ class MockCollectionReference extends Mock
 
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 
-class MockRegisterError extends Mock implements RegisterError {}
+class MockRegisterLog extends Mock implements RegisterLog {}
+
+class MockSendLogsToWeb extends Mock implements SendLogsToWeb {}
 
 void main() {
   late FireStoreCloudDataSourceImpl fireStoreCloudDataSource;
@@ -25,22 +28,28 @@ void main() {
   late MockCollectionReference collectionMock;
   late MockDocumentReference documentMock;
   late FirebaseFirestoreErrorHandler firebaseFirestoreErrorHandler;
-  late RegisterError registerError;
+  late RegisterLog registerLog;
+  late SendLogsToWeb sendLogsToWeb;
 
   setUp(() {
     firestoreMock = MockFirebaseFirestore();
     collectionMock = MockCollectionReference();
     documentMock = MockDocumentReference();
-    firebaseFirestoreErrorHandler =
-        FirebaseFirestoreErrorHandler(MockRegisterError());
+    registerLog = MockRegisterLog();
+    sendLogsToWeb = MockSendLogsToWeb();
+    firebaseFirestoreErrorHandler = FirebaseFirestoreErrorHandler(
+      registerLog,
+      sendLogsToWeb,
+    );
 
-    registerError = MockRegisterError();
     fireStoreCloudDataSource = FireStoreCloudDataSourceImpl(
       firestoreMock,
       firebaseFirestoreErrorHandler,
-      registerError,
+      registerLog,
+      sendLogsToWeb,
     );
 
+    when(() => sendLogsToWeb(any())).thenAnswer((_) async {});
     when(() => firestoreMock.collection(any())).thenReturn(collectionMock);
     when(() => collectionMock.doc(any())).thenReturn(documentMock);
   });
@@ -74,7 +83,7 @@ void main() {
           message: 'asd',
           plugin: 'as',
         );
-        when(() => registerError(any())).thenAnswer((_) async {});
+        when(() => registerLog(any())).thenAnswer((_) async {});
         when(() => documentMock.set(any())).thenThrow(exception);
         const id = '123';
         const applicationDeveloperKey = 'appDevKey';

@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:verify/app/core/register_error.dart';
+import 'package:verify/app/core/register_log.dart';
+import 'package:verify/app/core/send_logs_to_web.dart';
 import 'package:verify/app/features/auth/domain/errors/auth_error.dart';
 import 'package:verify/app/features/auth/external/datasource/firebase/errors/firebase_auth_error_handler.dart';
 import 'package:verify/app/features/auth/external/datasource/firebase/firebase_datasource_impl.dart';
@@ -20,7 +21,9 @@ class MockUser extends Mock implements User {}
 
 class MockUserCredential extends Mock implements UserCredential {}
 
-class MockRegisterError extends Mock implements RegisterError {}
+class MockRegisterLog extends Mock implements RegisterLog {}
+
+class MockSendLogsToWeb extends Mock implements SendLogsToWeb {}
 
 void main() {
   late MockFirebaseAuth firebaseAuth;
@@ -30,7 +33,8 @@ void main() {
 
   late AuthDataSource dataSource;
   late MockUser user;
-  late RegisterError registerError;
+  late RegisterLog registerLog;
+  late SendLogsToWeb sendLogsToWeb;
 
   setUpAll(() {
     firebaseErrorHandler = MockFirebaseErrorHandler();
@@ -38,14 +42,17 @@ void main() {
 
     googleSignIn = MockGoogleSignIn();
 
-    registerError = MockRegisterError();
+    registerLog = MockRegisterLog();
+    sendLogsToWeb = MockSendLogsToWeb();
     dataSource = FirebaseDataSourceImpl(
       firebaseAuth,
       googleSignIn,
       firebaseErrorHandler,
-      registerError,
+      registerLog,
+      sendLogsToWeb,
     );
     user = MockUser();
+    when(() => sendLogsToWeb(any())).thenAnswer((_) async {});
   });
 
   group('FirebaseDatasource: ', () {

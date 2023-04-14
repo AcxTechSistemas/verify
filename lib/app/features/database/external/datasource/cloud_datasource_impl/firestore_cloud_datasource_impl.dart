@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:verify/app/core/register_error.dart';
+import 'package:verify/app/core/register_log.dart';
+import 'package:verify/app/core/send_logs_to_web.dart';
 import 'package:verify/app/features/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/features/database/external/datasource/cloud_datasource_impl/errors/firebase_firestore_error_handler.dart';
 import 'package:verify/app/features/database/infra/datasource/api_credentials_datasource.dart';
@@ -9,12 +10,14 @@ import 'package:verify/app/features/database/infra/models/bb_api_credentials_mod
 class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
   final FirebaseFirestore _firestore;
   final FirebaseFirestoreErrorHandler _firebaseFirestoreErrorHandler;
-  final RegisterError _registerError;
+  final RegisterLog _registerLog;
+  final SendLogsToWeb _sendLogsToWeb;
 
   FireStoreCloudDataSourceImpl(
     this._firestore,
     this._firebaseFirestoreErrorHandler,
-    this._registerError,
+    this._registerLog,
+    this._sendLogsToWeb,
   );
   @override
   Future<void> saveBBApiCredentials({
@@ -37,7 +40,8 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
       final errorMessage = await _firebaseFirestoreErrorHandler(e);
       throw ErrorSavingApiCredentials(message: errorMessage);
     } catch (e) {
-      _registerError(e);
+      await _sendLogsToWeb(e);
+      _registerLog(e);
       throw ErrorSavingApiCredentials(
         message: 'Ocorreu um erro ao salvar os dados. tente novamente',
       );

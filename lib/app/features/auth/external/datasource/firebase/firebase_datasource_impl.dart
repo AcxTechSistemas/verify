@@ -1,7 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:verify/app/core/register_error.dart';
+import 'package:verify/app/core/register_log.dart';
+import 'package:verify/app/core/send_logs_to_web.dart';
 
 import 'package:verify/app/features/auth/domain/errors/auth_error.dart';
 import 'package:verify/app/features/auth/external/datasource/firebase/errors/firebase_auth_error_handler.dart';
@@ -12,12 +13,14 @@ class FirebaseDataSourceImpl implements AuthDataSource {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final FirebaseAuthErrorHandler _firebaseAuthErrorHandler;
-  final RegisterError _registerError;
+  final RegisterLog _registerLog;
+  final SendLogsToWeb _sendLogsToWeb;
   FirebaseDataSourceImpl(
     this._firebaseAuth,
     this._googleSignIn,
     this._firebaseAuthErrorHandler,
-    this._registerError,
+    this._registerLog,
+    this._sendLogsToWeb,
   );
 
   @override
@@ -58,7 +61,8 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       final errorMessage = await _firebaseAuthErrorHandler(e);
       throw ErrorLoginEmail(message: errorMessage);
     } catch (e) {
-      _registerError(e);
+      await _sendLogsToWeb(e);
+      _registerLog(e);
       throw Exception('Ocorreu um erro ao realizar o login. Tente novamente');
     }
   }
@@ -91,7 +95,8 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       final errorMessage = await _firebaseAuthErrorHandler(e);
       throw ErrorGoogleLogin(message: errorMessage);
     } catch (e) {
-      _registerError(e);
+      await _sendLogsToWeb(e);
+      _registerLog(e);
       throw Exception('Ocorreu um erro ao realizar o login. Tente novamente');
     }
   }
@@ -119,7 +124,8 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       final errorMessage = await _firebaseAuthErrorHandler(e);
       throw ErrorRegisterEmail(message: errorMessage);
     } catch (e) {
-      _registerError(e);
+      await _sendLogsToWeb(e);
+      _registerLog(e);
       throw Exception(
         'Ocorreu um erro ao criar uma nova conta. Tente novamente',
       );
@@ -135,7 +141,8 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       final errorMessage = await _firebaseAuthErrorHandler(e);
       throw ErrorLogout(message: errorMessage);
     } catch (e) {
-      _registerError(e);
+      await _sendLogsToWeb(e);
+      _registerLog(e);
       throw Exception(
         'Ocorreu um erro ao deslogar, tente novamente',
       );
@@ -150,7 +157,8 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       final errorMessage = await _firebaseAuthErrorHandler(e);
       throw ErrorRecoverAccount(message: errorMessage);
     } catch (e) {
-      _registerError(e);
+      await _sendLogsToWeb(e);
+      _registerLog(e);
       throw Exception(
         'Ocorreu um erro ao recuperar sua conta. Tente novamente',
       );
@@ -164,7 +172,8 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       final errorMessage = await _firebaseAuthErrorHandler(e);
       throw ErrorSendingEmailVerification(message: errorMessage);
     } catch (e) {
-      _registerError(e);
+      await _sendLogsToWeb(e);
+      _registerLog(e);
       throw ErrorSendingEmailVerification(
         message:
             'Ocorreu um erro ao enviar o email de verificação, Tente novamente mais tarde',

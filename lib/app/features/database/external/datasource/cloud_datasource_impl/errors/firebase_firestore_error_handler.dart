@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:verify/app/core/register_error.dart';
+import 'package:verify/app/core/register_log.dart';
+import 'package:verify/app/core/send_logs_to_web.dart';
 
 enum FirebaseErrorType {
   invalidArgument(
@@ -51,8 +52,12 @@ enum FirebaseErrorType {
 }
 
 class FirebaseFirestoreErrorHandler {
-  final RegisterError _registerError;
-  FirebaseFirestoreErrorHandler(this._registerError);
+  final RegisterLog _registerLog;
+  final SendLogsToWeb _sendLogsToWeb;
+  FirebaseFirestoreErrorHandler(
+    this._registerLog,
+    this._sendLogsToWeb,
+  );
 
   Future<String> call(FirebaseException e) async {
     late FirebaseErrorType errorType;
@@ -62,6 +67,7 @@ class FirebaseFirestoreErrorHandler {
           .where((error) => e.code == error.errorCode)
           .single;
     } catch (e) {
+      _sendLogsToWeb(e);
       errorType = FirebaseErrorType.unknown;
     }
 
@@ -70,7 +76,7 @@ class FirebaseFirestoreErrorHandler {
     final type = errorType;
     final authError =
         'type: $type code: $errorCode HandleMessage: $errorMessage firebaseException: $e';
-    _registerError(authError);
+    _registerLog(authError);
     return errorMessage;
   }
 }

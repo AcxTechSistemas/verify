@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:verify/app/core/register_error.dart';
+import 'package:verify/app/core/register_log.dart';
+import 'package:verify/app/core/send_logs_to_web.dart';
 
 enum FirebaseErrorType {
   emailAlreadyInUse(
@@ -116,8 +117,12 @@ enum FirebaseErrorType {
 }
 
 class FirebaseAuthErrorHandler {
-  final RegisterError _registerError;
-  FirebaseAuthErrorHandler(this._registerError);
+  final RegisterLog _registerLog;
+  final SendLogsToWeb _sendLogsToWeb;
+  FirebaseAuthErrorHandler(
+    this._registerLog,
+    this._sendLogsToWeb,
+  );
 
   Future<String> call(FirebaseAuthException e) async {
     late FirebaseErrorType errorType;
@@ -126,6 +131,7 @@ class FirebaseAuthErrorHandler {
           .where((error) => e.code == error.errorCode)
           .single;
     } catch (e) {
+      await _sendLogsToWeb(e);
       errorType = FirebaseErrorType.unknown;
     }
     final errorCode = errorType.errorCode;
@@ -133,7 +139,7 @@ class FirebaseAuthErrorHandler {
     final type = errorType;
     final authError =
         'type: $type code: $errorCode HandleMessage: $errorMessage firebaseException: $e';
-    _registerError(authError);
+    _registerLog(authError);
     return errorMessage;
   }
 }
