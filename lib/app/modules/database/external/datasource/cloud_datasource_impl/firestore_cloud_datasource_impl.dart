@@ -40,7 +40,7 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
       await _firestore
           .collection(id)
           .doc(DocumentName.bbApiCredential.name)
-          .set(bbCredentials.toMap(), SetOptions(merge: true));
+          .set(bbCredentials.toMap());
     } on FirebaseException catch (e) {
       final errorMessage = await _firebaseFirestoreErrorHandler(e);
       throw ErrorSavingApiCredentials(message: errorMessage);
@@ -54,7 +54,7 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
   }
 
   @override
-  Future<BBApiCredentialsModel> readBBApiCredentials({
+  Future<BBApiCredentialsModel?> readBBApiCredentials({
     required String id,
   }) async {
     try {
@@ -74,10 +74,10 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
             isFavorite: isFavorite,
           );
         } else {
-          throw FirebaseException(code: 'empty-documment-data', plugin: '');
+          return null;
         }
       } else {
-        throw FirebaseException(code: 'documment-not-found', plugin: '');
+        return null;
       }
     } on FirebaseException catch (e) {
       final errorMessage = await _firebaseFirestoreErrorHandler(e);
@@ -98,12 +98,26 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
     required String basicKey,
     required bool isFavorite,
   }) async {
-    await saveBBApiCredentials(
-      id: id,
+    final bbCredentials = BBApiCredentialsModel(
       applicationDeveloperKey: applicationDeveloperKey,
       basicKey: basicKey,
       isFavorite: isFavorite,
     );
+    try {
+      await _firestore
+          .collection(id)
+          .doc(DocumentName.bbApiCredential.name)
+          .update(bbCredentials.toMap());
+    } on FirebaseException catch (e) {
+      final errorMessage = await _firebaseFirestoreErrorHandler(e);
+      throw ErrorUpdateApiCredentials(message: errorMessage);
+    } catch (e) {
+      await _sendLogsToWeb(e);
+      _registerLog(e);
+      throw ErrorUpdateApiCredentials(
+        message: 'Ocorreu um erro ao atualizar os dados. Tente novamente',
+      );
+    }
   }
 
   @override
@@ -145,7 +159,7 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
       await _firestore
           .collection(id)
           .doc(DocumentName.sicoobApiCredential.name)
-          .set(sicoobCredentials.toMap(), SetOptions(merge: true));
+          .set(sicoobCredentials.toMap());
     } on FirebaseException catch (e) {
       final errorMessage = await _firebaseFirestoreErrorHandler(e);
       throw ErrorSavingApiCredentials(message: errorMessage);
@@ -159,7 +173,7 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
   }
 
   @override
-  Future<SicoobApiCredentialsModel> readSicoobApiCredentials({
+  Future<SicoobApiCredentialsModel?> readSicoobApiCredentials({
     required String id,
   }) async {
     try {
@@ -181,10 +195,10 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
             isFavorite: isFavorite,
           );
         } else {
-          throw FirebaseException(code: 'empty-documment-data', plugin: '');
+          return null;
         }
       } else {
-        throw FirebaseException(code: 'documment-not-found', plugin: '');
+        return null;
       }
     } on FirebaseException catch (e) {
       final errorMessage = await _firebaseFirestoreErrorHandler(e);
@@ -206,13 +220,27 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
     required String certificateBase64String,
     required bool isFavorite,
   }) async {
-    await saveSicoobApiCredentials(
-      id: id,
+    final sicoobCredentials = SicoobApiCredentialsModel(
       clientID: clientID,
-      certificatePassword: certificatePassword,
       certificateBase64String: certificateBase64String,
+      certificatePassword: certificatePassword,
       isFavorite: isFavorite,
     );
+    try {
+      await _firestore
+          .collection(id)
+          .doc(DocumentName.bbApiCredential.name)
+          .update(sicoobCredentials.toMap());
+    } on FirebaseException catch (e) {
+      final errorMessage = await _firebaseFirestoreErrorHandler(e);
+      throw ErrorUpdateApiCredentials(message: errorMessage);
+    } catch (e) {
+      await _sendLogsToWeb(e);
+      _registerLog(e);
+      throw ErrorUpdateApiCredentials(
+        message: 'Ocorreu um erro ao atualizar os dados. Tente novamente',
+      );
+    }
   }
 
   @override

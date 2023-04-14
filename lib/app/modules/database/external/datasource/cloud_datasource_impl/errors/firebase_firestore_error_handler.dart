@@ -9,7 +9,7 @@ enum FirebaseErrorType {
   ),
   emptyDocummentData(
     errorCode: 'empty-documment-data',
-    message: 'Os dados estão vazios ou nao definidos',
+    message: 'Não existe dados para a solicitacao',
   ),
   invalidArgument(
     errorCode: 'invalid-argument',

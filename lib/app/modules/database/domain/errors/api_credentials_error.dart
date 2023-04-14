@@ -2,6 +2,12 @@ abstract class ApiCredentialsError implements Exception {
   String get message;
 }
 
+class EmptyApiCredentials extends ApiCredentialsError {
+  @override
+  final String message;
+  EmptyApiCredentials({required this.message});
+}
+
 class ErrorSavingApiCredentials extends ApiCredentialsError {
   @override
   final String message;

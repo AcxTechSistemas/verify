@@ -17,7 +17,7 @@ abstract class ApiCredentialsDataSource {
     required String certificateBase64String,
     required bool isFavorite,
   });
-  Future<SicoobApiCredentialsModel> readSicoobApiCredentials({
+  Future<SicoobApiCredentialsModel?> readSicoobApiCredentials({
     required String id,
   });
   Future<void> deleteSicoobApiCredentials({
@@ -37,7 +37,7 @@ abstract class ApiCredentialsDataSource {
     required String basicKey,
     required bool isFavorite,
   });
-  Future<BBApiCredentialsModel> readBBApiCredentials({
+  Future<BBApiCredentialsModel?> readBBApiCredentials({
     required String id,
   });
   Future<void> deleteBBApiCredentials({

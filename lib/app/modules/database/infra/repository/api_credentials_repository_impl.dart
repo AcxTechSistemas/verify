@@ -43,7 +43,13 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
     try {
       final bbApiCredential =
           await _apiCredentialsDataSource.readBBApiCredentials(id: id);
-      return Success(bbApiCredential);
+      if (bbApiCredential != null) {
+        return Success(bbApiCredential);
+      } else {
+        return Failure(EmptyApiCredentials(
+          message: 'Credenciais não existem na nuvem',
+        ));
+      }
     } on ErrorReadingApiCredentials catch (e) {
       return Failure(e);
     } catch (e) {
@@ -131,7 +137,14 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
     try {
       final sicoobApiCredential =
           await _apiCredentialsDataSource.readSicoobApiCredentials(id: id);
-      return Success(sicoobApiCredential);
+
+      if (sicoobApiCredential != null) {
+        return Success(sicoobApiCredential);
+      } else {
+        return Failure(EmptyApiCredentials(
+          message: 'Credenciais não existem na nuvem',
+        ));
+      }
     } on ErrorReadingApiCredentials catch (e) {
       return Failure(e);
     } catch (e) {
