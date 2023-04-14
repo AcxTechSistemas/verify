@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:verify/app/core/register_error.dart';
 import 'package:verify/app/features/auth/domain/errors/auth_error.dart';
-import 'package:verify/app/features/auth/external/datasource/firebase/errors/firebase_error_handler.dart';
+import 'package:verify/app/features/auth/external/datasource/firebase/errors/firebase_auth_error_handler.dart';
 import 'package:verify/app/features/auth/external/datasource/firebase/firebase_datasource_impl.dart';
 import 'package:verify/app/features/auth/infra/datasource/auth_datasource.dart';
 import 'package:verify/app/features/auth/infra/models/user_model.dart';
@@ -12,20 +13,24 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
 
-class MockFirebaseErrorHandler extends Mock implements FirebaseErrorHandler {}
+class MockFirebaseErrorHandler extends Mock
+    implements FirebaseAuthErrorHandler {}
 
 class MockUser extends Mock implements User {}
 
 class MockUserCredential extends Mock implements UserCredential {}
 
+class MockRegisterError extends Mock implements RegisterError {}
+
 void main() {
   late MockFirebaseAuth firebaseAuth;
 
   late MockGoogleSignIn googleSignIn;
-  late FirebaseErrorHandler firebaseErrorHandler;
+  late FirebaseAuthErrorHandler firebaseErrorHandler;
 
   late AuthDataSource dataSource;
   late MockUser user;
+  late RegisterError registerError;
 
   setUpAll(() {
     firebaseErrorHandler = MockFirebaseErrorHandler();
@@ -33,10 +38,12 @@ void main() {
 
     googleSignIn = MockGoogleSignIn();
 
+    registerError = MockRegisterError();
     dataSource = FirebaseDataSourceImpl(
       firebaseAuth,
       googleSignIn,
       firebaseErrorHandler,
+      registerError,
     );
     user = MockUser();
   });
@@ -84,8 +91,8 @@ void main() {
             password: password,
           )).thenThrow(exception);
 
-      when(() => firebaseErrorHandler(exception)).thenReturn(
-        'The email address is badly formatted.',
+      when(() => firebaseErrorHandler(exception)).thenAnswer(
+        (_) async => 'The email address is badly formatted.',
       );
 
       expect(() => dataSource.loginWithEmail(email: email, password: password),

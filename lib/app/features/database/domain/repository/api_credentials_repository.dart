@@ -7,11 +7,17 @@ abstract class ApiCredentialsRepository {
   // SicoobApiCredentials
   Future<Result<void, ApiCredentialsError>> saveSicoobApiCredentials({
     required String id,
-    required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
+    required String clientID,
+    required String certificatePassword,
+    required String certificateBase64String,
+    required bool isFavorite,
   });
   Future<Result<void, ApiCredentialsError>> updateSicoobApiCredentials({
     required String id,
-    required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
+    required String clientID,
+    required String certificatePassword,
+    required String certificateBase64String,
+    required bool isFavorite,
   });
   Future<Result<SicoobApiCredentialsEntity, ApiCredentialsError>>
       readSicoobApiCredentials({
@@ -24,11 +30,15 @@ abstract class ApiCredentialsRepository {
   // BBApiCredentials
   Future<Result<void, ApiCredentialsError>> saveBBApiCredentials({
     required String id,
-    required BBApiCredentialsEntity bbApiCredentialsEntity,
+    required String applicationDeveloperKey,
+    required String basicKey,
+    required bool isFavorite,
   });
   Future<Result<void, ApiCredentialsError>> updateBBApiCredentials({
     required String id,
-    required BBApiCredentialsEntity bbApiCredentialsEntity,
+    required String applicationDeveloperKey,
+    required String basicKey,
+    required bool isFavorite,
   });
   Future<Result<BBApiCredentialsEntity, ApiCredentialsError>>
       readBBApiCredentials({

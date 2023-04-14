@@ -32,11 +32,15 @@ void main() {
 
   group('SaveSicoobApiCredentialsUseCase: ', () {
     test('Should return success on saveSicoobApiCredentials', () async {
-      when(() => apiCredentialsRepository.saveSicoobApiCredentials(
-              id: any(named: 'id'),
-              sicoobApiCredentialsEntity:
-                  any(named: 'sicoobApiCredentialsEntity')))
-          .thenAnswer((_) async => const Success(Void));
+      when(
+        () => apiCredentialsRepository.saveSicoobApiCredentials(
+          id: any(named: 'id'),
+          clientID: any(named: 'clientID'),
+          certificateBase64String: any(named: 'certificateBase64String'),
+          certificatePassword: any(named: 'certificatePassword'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
+      ).thenAnswer((_) async => const Success(Void));
 
       final response = await saveSicoobApiCredentialsUseCase(
         id: 'userID',
@@ -45,11 +49,15 @@ void main() {
 
       expect(response.isSuccess(), true);
 
-      verify(() => apiCredentialsRepository.saveSicoobApiCredentials(
-            id: any(named: 'id'),
-            sicoobApiCredentialsEntity:
-                any(named: 'sicoobApiCredentialsEntity'),
-          )).called(1);
+      verify(
+        () => apiCredentialsRepository.saveSicoobApiCredentials(
+          id: any(named: 'id'),
+          clientID: any(named: 'clientID'),
+          certificateBase64String: any(named: 'certificateBase64String'),
+          certificatePassword: any(named: 'certificatePassword'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
+      ).called(1);
     });
 
     test('Should return ApiCredentialsError on saveSicoobApiCredentials',
@@ -58,11 +66,15 @@ void main() {
         message: 'Error Saving Credentials',
       );
 
-      when(() => apiCredentialsRepository.saveSicoobApiCredentials(
-              id: any(named: 'id'),
-              sicoobApiCredentialsEntity:
-                  any(named: 'sicoobApiCredentialsEntity')))
-          .thenAnswer((_) async => Failure(apiCredentialsError));
+      when(
+        () => apiCredentialsRepository.saveSicoobApiCredentials(
+          id: any(named: 'id'),
+          clientID: any(named: 'clientID'),
+          certificateBase64String: any(named: 'certificateBase64String'),
+          certificatePassword: any(named: 'certificatePassword'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
+      ).thenAnswer((_) async => Failure(apiCredentialsError));
 
       final response = await saveSicoobApiCredentialsUseCase(
         id: 'userID',
@@ -71,10 +83,15 @@ void main() {
 
       expect(response.isError(), true);
 
-      verify(() => apiCredentialsRepository.saveSicoobApiCredentials(
+      verify(
+        () => apiCredentialsRepository.saveSicoobApiCredentials(
           id: any(named: 'id'),
-          sicoobApiCredentialsEntity:
-              any(named: 'sicoobApiCredentialsEntity'))).called(1);
+          clientID: any(named: 'clientID'),
+          certificateBase64String: any(named: 'certificateBase64String'),
+          certificatePassword: any(named: 'certificatePassword'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
+      ).called(1);
 
       final result = response.exceptionOrNull();
 

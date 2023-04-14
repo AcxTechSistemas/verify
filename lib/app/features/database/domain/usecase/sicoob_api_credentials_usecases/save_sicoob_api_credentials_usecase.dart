@@ -22,7 +22,10 @@ class SaveSicoobApiCredentialsUseCaseImpl
   }) async {
     return await _apiCredentialsRepository.saveSicoobApiCredentials(
       id: id,
-      sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
+      clientID: sicoobApiCredentialsEntity.clientID,
+      certificateBase64String: sicoobApiCredentialsEntity.clientID,
+      certificatePassword: sicoobApiCredentialsEntity.certificatePassword,
+      isFavorite: sicoobApiCredentialsEntity.isFavorite,
     );
   }
 }

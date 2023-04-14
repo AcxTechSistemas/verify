@@ -115,19 +115,24 @@ enum FirebaseErrorType {
   final String errorCode;
 }
 
-class FirebaseErrorHandler {
+class FirebaseAuthErrorHandler {
   final RegisterError _registerError;
-  FirebaseErrorHandler(this._registerError);
+  FirebaseAuthErrorHandler(this._registerError);
 
-  String call(FirebaseAuthException e) {
-    final errorType = FirebaseErrorType.values
-        .where((error) => e.code == error.errorCode)
-        .single;
+  Future<String> call(FirebaseAuthException e) async {
+    late FirebaseErrorType errorType;
+    try {
+      errorType = FirebaseErrorType.values
+          .where((error) => e.code == error.errorCode)
+          .single;
+    } catch (e) {
+      errorType = FirebaseErrorType.unknown;
+    }
     final errorCode = errorType.errorCode;
     final errorMessage = errorType.message;
     final type = errorType;
     final authError =
-        'type: $type code: $errorCode HandleMessage: $errorMessage firebaseMessage: ${e.message}';
+        'type: $type code: $errorCode HandleMessage: $errorMessage firebaseException: $e';
     _registerError(authError);
     return errorMessage;
   }

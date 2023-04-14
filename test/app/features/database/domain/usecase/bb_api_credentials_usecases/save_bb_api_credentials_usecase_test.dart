@@ -33,7 +33,9 @@ void main() {
     test('Should return success on saveBBApiCredentials', () async {
       when(() => apiCredentialsRepository.saveBBApiCredentials(
             id: any(named: 'id'),
-            bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity'),
+            applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+            basicKey: any(named: 'basicKey'),
+            isFavorite: any(named: 'isFavorite'),
           )).thenAnswer((_) async => const Success(Void));
 
       final response = await saveBBApiCredentialsUseCase(
@@ -42,9 +44,11 @@ void main() {
       );
 
       verify(() => apiCredentialsRepository.saveBBApiCredentials(
-              id: any(named: 'id'),
-              bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
-          .called(1);
+            id: any(named: 'id'),
+            applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+            basicKey: any(named: 'basicKey'),
+            isFavorite: any(named: 'isFavorite'),
+          )).called(1);
 
       expect(response.isSuccess(), true);
     });
@@ -57,8 +61,11 @@ void main() {
 
       when(
         () => apiCredentialsRepository.saveBBApiCredentials(
-            id: any(named: 'id'),
-            bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')),
+          id: any(named: 'id'),
+          applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+          basicKey: any(named: 'basicKey'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
       ).thenAnswer((_) async => Failure(apiCredentialsError));
 
       final response = await saveBBApiCredentialsUseCase(
@@ -68,10 +75,14 @@ void main() {
 
       expect(response.isError(), true);
 
-      verify(() => apiCredentialsRepository.saveBBApiCredentials(
-              id: any(named: 'id'),
-              bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
-          .called(1);
+      verify(
+        () => apiCredentialsRepository.saveBBApiCredentials(
+          id: any(named: 'id'),
+          applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+          basicKey: any(named: 'basicKey'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
+      ).called(1);
 
       final result = response.exceptionOrNull();
 

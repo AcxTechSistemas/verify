@@ -10,6 +10,31 @@ import 'package:verify/app/features/database/infra/datasource/api_credentials_da
 class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   final ApiCredentialsDataSource _apiCredentialsDataSource;
   ApiCredentialsRepositoryImpl(this._apiCredentialsDataSource);
+
+  @override
+  Future<Result<void, ApiCredentialsError>> saveBBApiCredentials({
+    required String id,
+    required String applicationDeveloperKey,
+    required String basicKey,
+    required bool isFavorite,
+  }) async {
+    try {
+      await _apiCredentialsDataSource.saveBBApiCredentials(
+        id: id,
+        applicationDeveloperKey: applicationDeveloperKey,
+        basicKey: basicKey,
+        isFavorite: isFavorite,
+      );
+      return const Success(Void);
+    } on ErrorSavingApiCredentials catch (e) {
+      return Failure(e);
+    } catch (e) {
+      return Failure(ErrorSavingApiCredentials(
+        message: 'Ocorreu um erro ao salvar as credenciais do Banco do Brasil',
+      ));
+    }
+  }
+
   @override
   Future<Result<BBApiCredentialsEntity, ApiCredentialsError>>
       readBBApiCredentials({
@@ -32,19 +57,26 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   }
 
   @override
-  Future<Result<SicoobApiCredentialsEntity, ApiCredentialsError>>
-      readSicoobApiCredentials({
+  Future<Result<void, ApiCredentialsError>> updateBBApiCredentials({
     required String id,
+    required String applicationDeveloperKey,
+    required String basicKey,
+    required bool isFavorite,
   }) async {
     try {
-      final sicoobApiCredential =
-          await _apiCredentialsDataSource.readSicoobApiCredentials(id: id);
-      return Success(sicoobApiCredential);
-    } on ErrorReadingApiCredentials catch (e) {
+      await _apiCredentialsDataSource.updateBBApiCredentials(
+        id: id,
+        applicationDeveloperKey: applicationDeveloperKey,
+        basicKey: basicKey,
+        isFavorite: isFavorite,
+      );
+      return const Success(Void);
+    } on ErrorUpdateApiCredentials catch (e) {
       return Failure(e);
     } catch (e) {
-      return Failure(ErrorReadingApiCredentials(
-        message: 'Ocorreu um erro ao recuperar as credenciais do Sicoob',
+      return Failure(ErrorUpdateApiCredentials(
+        message:
+            'Ocorreu um erro ao atualizar as credenciais do Banco do Brasil',
       ));
     }
   }
@@ -66,50 +98,20 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   }
 
   @override
-  Future<Result<void, ApiCredentialsError>> removeSicoobApiCredentials({
-    required String id,
-  }) async {
-    try {
-      await _apiCredentialsDataSource.deleteSicoobApiCredentials(id: id);
-      return const Success(Void);
-    } on ErrorRemovingApiCredentials catch (e) {
-      return Failure(e);
-    } catch (e) {
-      return Failure(ErrorRemovingApiCredentials(
-        message: 'Ocorreu um erro ao remover as credenciais do Sicoob',
-      ));
-    }
-  }
-
-  @override
-  Future<Result<void, ApiCredentialsError>> saveBBApiCredentials({
-    required String id,
-    required BBApiCredentialsEntity bbApiCredentialsEntity,
-  }) async {
-    try {
-      await _apiCredentialsDataSource.saveBBApiCredentials(
-        id: id,
-        bbApiCredentialsEntity: bbApiCredentialsEntity,
-      );
-      return const Success(Void);
-    } on ErrorSavingApiCredentials catch (e) {
-      return Failure(e);
-    } catch (e) {
-      return Failure(ErrorSavingApiCredentials(
-        message: 'Ocorreu um erro ao salvar as credenciais do Banco do Brasil',
-      ));
-    }
-  }
-
-  @override
   Future<Result<void, ApiCredentialsError>> saveSicoobApiCredentials({
     required String id,
-    required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
+    required String clientID,
+    required String certificatePassword,
+    required String certificateBase64String,
+    required bool isFavorite,
   }) async {
     try {
       await _apiCredentialsDataSource.saveSicoobApiCredentials(
         id: id,
-        sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
+        clientID: clientID,
+        certificateBase64String: certificateBase64String,
+        certificatePassword: certificatePassword,
+        isFavorite: isFavorite,
       );
       return const Success(Void);
     } on ErrorSavingApiCredentials catch (e) {
@@ -122,22 +124,19 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   }
 
   @override
-  Future<Result<void, ApiCredentialsError>> updateBBApiCredentials({
+  Future<Result<SicoobApiCredentialsEntity, ApiCredentialsError>>
+      readSicoobApiCredentials({
     required String id,
-    required BBApiCredentialsEntity bbApiCredentialsEntity,
   }) async {
     try {
-      await _apiCredentialsDataSource.updateBBApiCredentials(
-        id: id,
-        bbApiCredentialsEntity: bbApiCredentialsEntity,
-      );
-      return const Success(Void);
-    } on ErrorUpdateApiCredentials catch (e) {
+      final sicoobApiCredential =
+          await _apiCredentialsDataSource.readSicoobApiCredentials(id: id);
+      return Success(sicoobApiCredential);
+    } on ErrorReadingApiCredentials catch (e) {
       return Failure(e);
     } catch (e) {
-      return Failure(ErrorUpdateApiCredentials(
-        message:
-            'Ocorreu um erro ao atualizar as credenciais do Banco do Brasil',
+      return Failure(ErrorReadingApiCredentials(
+        message: 'Ocorreu um erro ao recuperar as credenciais do Sicoob',
       ));
     }
   }
@@ -145,12 +144,18 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   @override
   Future<Result<void, ApiCredentialsError>> updateSicoobApiCredentials({
     required String id,
-    required SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
+    required String clientID,
+    required String certificatePassword,
+    required String certificateBase64String,
+    required bool isFavorite,
   }) async {
     try {
       await _apiCredentialsDataSource.updateSicoobApiCredentials(
         id: id,
-        sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
+        clientID: clientID,
+        certificateBase64String: certificateBase64String,
+        certificatePassword: certificatePassword,
+        isFavorite: isFavorite,
       );
       return const Success(Void);
     } on ErrorUpdateApiCredentials catch (e) {
@@ -158,6 +163,22 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
     } catch (e) {
       return Failure(ErrorUpdateApiCredentials(
         message: 'Ocorreu um erro ao atualizar as credenciais do Sicoob',
+      ));
+    }
+  }
+
+  @override
+  Future<Result<void, ApiCredentialsError>> removeSicoobApiCredentials({
+    required String id,
+  }) async {
+    try {
+      await _apiCredentialsDataSource.deleteSicoobApiCredentials(id: id);
+      return const Success(Void);
+    } on ErrorRemovingApiCredentials catch (e) {
+      return Failure(e);
+    } catch (e) {
+      return Failure(ErrorRemovingApiCredentials(
+        message: 'Ocorreu um erro ao remover as credenciais do Sicoob',
       ));
     }
   }

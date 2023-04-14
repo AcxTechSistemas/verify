@@ -21,7 +21,9 @@ class UpdateBBApiCredentialsUseCaseImpl
   }) async {
     return await _apiCredentialsRepository.updateBBApiCredentials(
       id: id,
-      bbApiCredentialsEntity: bbApiCredentialsEntity,
+      applicationDeveloperKey: bbApiCredentialsEntity.applicationDeveloperKey,
+      basicKey: bbApiCredentialsEntity.basicKey,
+      isFavorite: bbApiCredentialsEntity.isFavorite,
     );
   }
 }

@@ -21,7 +21,9 @@ class SaveBBApiCredentialsUseCaseImpl implements SaveBBApiCredentialsUseCase {
   }) async {
     return await _apiCredentialsRepository.saveBBApiCredentials(
       id: id,
-      bbApiCredentialsEntity: bbApiCredentialsEntity,
+      applicationDeveloperKey: bbApiCredentialsEntity.applicationDeveloperKey,
+      basicKey: bbApiCredentialsEntity.basicKey,
+      isFavorite: bbApiCredentialsEntity.isFavorite,
     );
   }
 }

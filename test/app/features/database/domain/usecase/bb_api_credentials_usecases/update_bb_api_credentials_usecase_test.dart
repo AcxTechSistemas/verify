@@ -31,20 +31,28 @@ void main() {
 
   group('UpdateBBApiCredentialsUseCase: ', () {
     test('Should return success on saveBBApiCredentials', () async {
-      when(() => apiCredentialsRepository.updateBBApiCredentials(
-            id: any(named: 'id'),
-            bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity'),
-          )).thenAnswer((_) async => const Success(Void));
+      when(
+        () => apiCredentialsRepository.updateBBApiCredentials(
+          id: any(named: 'id'),
+          applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+          basicKey: any(named: 'basicKey'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
+      ).thenAnswer((_) async => const Success(Void));
 
       final response = await updateBBApiCredentialsUseCase(
         id: 'userID',
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
 
-      verify(() => apiCredentialsRepository.updateBBApiCredentials(
-              id: any(named: 'id'),
-              bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
-          .called(1);
+      verify(
+        () => apiCredentialsRepository.updateBBApiCredentials(
+          id: any(named: 'id'),
+          applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+          basicKey: any(named: 'basicKey'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
+      ).called(1);
 
       expect(response.isSuccess(), true);
     });
@@ -57,8 +65,11 @@ void main() {
 
       when(
         () => apiCredentialsRepository.updateBBApiCredentials(
-            id: any(named: 'id'),
-            bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')),
+          id: any(named: 'id'),
+          applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+          basicKey: any(named: 'basicKey'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
       ).thenAnswer((_) async => Failure(apiCredentialsError));
 
       final response = await updateBBApiCredentialsUseCase(
@@ -68,10 +79,14 @@ void main() {
 
       expect(response.isError(), true);
 
-      verify(() => apiCredentialsRepository.updateBBApiCredentials(
-              id: any(named: 'id'),
-              bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
-          .called(1);
+      verify(
+        () => apiCredentialsRepository.updateBBApiCredentials(
+          id: any(named: 'id'),
+          applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+          basicKey: any(named: 'basicKey'),
+          isFavorite: any(named: 'isFavorite'),
+        ),
+      ).called(1);
 
       final result = response.exceptionOrNull();
 

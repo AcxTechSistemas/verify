@@ -41,9 +41,8 @@ void main() {
         );
         when(() => apiCredentialsDataSource.readBBApiCredentials(
               id: any(named: 'id'),
-            )).thenAnswer(
-          (_) async => bbApiCredentialsModel,
-        );
+            )).thenAnswer((_) async => bbApiCredentialsModel);
+
         final response = await apiCredentialsRepository.readBBApiCredentials(
           id: 'userID',
         );
@@ -107,18 +106,25 @@ void main() {
       });
       test('Should return success on saveBBApiCredentials', () async {
         when(() => apiCredentialsDataSource.saveBBApiCredentials(
-                id: any(named: 'id'),
-                bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
-            .thenAnswer((_) async {});
+              id: any(named: 'id'),
+              applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+              basicKey: any(named: 'basicKey'),
+              isFavorite: any(named: 'isFavorite'),
+            )).thenAnswer((_) async {});
 
         final response = await apiCredentialsRepository.saveBBApiCredentials(
           id: 'userID',
-          bbApiCredentialsEntity: bbApiCredentialsModel,
+          applicationDeveloperKey: 'applicationDeveloperKey',
+          basicKey: 'basicKey',
+          isFavorite: false,
         );
 
         verify(() => apiCredentialsDataSource.saveBBApiCredentials(
-            id: any(named: 'id'),
-            bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')));
+              id: any(named: 'id'),
+              applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+              basicKey: any(named: 'basicKey'),
+              isFavorite: any(named: 'isFavorite'),
+            ));
 
         expect(response.isSuccess(), true);
       });
@@ -126,14 +132,18 @@ void main() {
       test('Should return ErrorSavingApiCredentials on saveBBApiCredentials',
           () async {
         when(() => apiCredentialsDataSource.saveBBApiCredentials(
-                id: any(named: 'id'),
-                bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')))
-            .thenThrow(Exception());
+              id: any(named: 'id'),
+              applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+              basicKey: any(named: 'basicKey'),
+              isFavorite: any(named: 'isFavorite'),
+            )).thenThrow(Exception());
         const expectedResponse =
             'Ocorreu um erro ao salvar as credenciais do Banco do Brasil';
         final response = await apiCredentialsRepository.saveBBApiCredentials(
           id: 'userID',
-          bbApiCredentialsEntity: bbApiCredentialsModel,
+          applicationDeveloperKey: 'applicationDeveloperKey',
+          basicKey: 'basicKey',
+          isFavorite: false,
         );
 
         final result = response.exceptionOrNull();
@@ -144,17 +154,25 @@ void main() {
       test('Should return success on updateBBApiCredentials', () async {
         when(
           () => apiCredentialsDataSource.updateBBApiCredentials(
-              id: any(named: 'id'),
-              bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')),
+            id: any(named: 'id'),
+            applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+            basicKey: any(named: 'basicKey'),
+            isFavorite: any(named: 'isFavorite'),
+          ),
         ).thenAnswer((_) async {});
 
         final response = await apiCredentialsRepository.updateBBApiCredentials(
           id: 'userID',
-          bbApiCredentialsEntity: bbApiCredentialsModel,
+          applicationDeveloperKey: 'applicationDeveloperKey',
+          basicKey: 'basicKey',
+          isFavorite: false,
         );
         verify(() => apiCredentialsDataSource.updateBBApiCredentials(
-            id: any(named: 'id'),
-            bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')));
+              id: any(named: 'id'),
+              applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+              basicKey: any(named: 'basicKey'),
+              isFavorite: any(named: 'isFavorite'),
+            ));
 
         expect(response.isSuccess(), true);
       });
@@ -162,15 +180,20 @@ void main() {
           () async {
         when(
           () => apiCredentialsDataSource.updateBBApiCredentials(
-              id: 'userID',
-              bbApiCredentialsEntity: any(named: 'bbApiCredentialsEntity')),
+            id: any(named: 'id'),
+            applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
+            basicKey: any(named: 'basicKey'),
+            isFavorite: any(named: 'isFavorite'),
+          ),
         ).thenThrow(Exception());
         const expectedResponse =
             'Ocorreu um erro ao atualizar as credenciais do Banco do Brasil';
 
         final response = await apiCredentialsRepository.updateBBApiCredentials(
           id: 'userID',
-          bbApiCredentialsEntity: bbApiCredentialsModel,
+          applicationDeveloperKey: 'applicationDeveloperKey',
+          basicKey: 'basicKey',
+          isFavorite: false,
         );
 
         final result = response.exceptionOrNull();
@@ -256,21 +279,32 @@ void main() {
       test('Should return success on saveSicoobApiCredentials', () async {
         when(
           () => apiCredentialsDataSource.saveSicoobApiCredentials(
-              id: any(named: 'id'),
-              sicoobApiCredentialsEntity:
-                  any(named: 'sicoobApiCredentialsEntity')),
+            id: any(named: 'id'),
+            clientID: any(named: 'clientID'),
+            certificateBase64String: any(named: 'certificateBase64String'),
+            certificatePassword: any(named: 'certificatePassword'),
+            isFavorite: any(named: 'isFavorite'),
+          ),
         ).thenAnswer((_) async {});
 
         final response =
             await apiCredentialsRepository.saveSicoobApiCredentials(
           id: 'userID',
-          sicoobApiCredentialsEntity: sicoobApiCredentialsModel,
+          clientID: 'clientID',
+          certificateBase64String: 'certificateBase64String',
+          certificatePassword: 'certificatePassword',
+          isFavorite: false,
         );
 
-        verify(() => apiCredentialsDataSource.saveSicoobApiCredentials(
+        verify(
+          () => apiCredentialsDataSource.saveSicoobApiCredentials(
             id: any(named: 'id'),
-            sicoobApiCredentialsEntity:
-                any(named: 'sicoobApiCredentialsEntity')));
+            clientID: any(named: 'clientID'),
+            certificateBase64String: any(named: 'certificateBase64String'),
+            certificatePassword: any(named: 'certificatePassword'),
+            isFavorite: any(named: 'isFavorite'),
+          ),
+        );
 
         expect(response.isSuccess(), true);
       });
@@ -280,16 +314,22 @@ void main() {
           () async {
         when(
           () => apiCredentialsDataSource.saveSicoobApiCredentials(
-              id: any(named: 'id'),
-              sicoobApiCredentialsEntity:
-                  any(named: 'sicoobApiCredentialsEntity')),
+            id: any(named: 'id'),
+            clientID: any(named: 'clientID'),
+            certificateBase64String: any(named: 'certificateBase64String'),
+            certificatePassword: any(named: 'certificatePassword'),
+            isFavorite: any(named: 'isFavorite'),
+          ),
         ).thenThrow(Exception());
         const expectedResponse =
             'Ocorreu um erro ao salvar as credenciais do Sicoob';
         final response =
             await apiCredentialsRepository.saveSicoobApiCredentials(
           id: 'userID',
-          sicoobApiCredentialsEntity: sicoobApiCredentialsModel,
+          clientID: 'clientID',
+          certificateBase64String: 'certificateBase64String',
+          certificatePassword: 'certificatePassword',
+          isFavorite: false,
         );
 
         final result = response.exceptionOrNull();
@@ -299,20 +339,29 @@ void main() {
       test('Should return success on updateSicoobApiCredentials', () async {
         when(
           () => apiCredentialsDataSource.updateSicoobApiCredentials(
-              id: any(named: 'id'),
-              sicoobApiCredentialsEntity:
-                  any(named: 'sicoobApiCredentialsEntity')),
+            id: any(named: 'id'),
+            clientID: any(named: 'clientID'),
+            certificateBase64String: any(named: 'certificateBase64String'),
+            certificatePassword: any(named: 'certificatePassword'),
+            isFavorite: any(named: 'isFavorite'),
+          ),
         ).thenAnswer((_) async {});
 
         final response =
             await apiCredentialsRepository.updateSicoobApiCredentials(
           id: 'userID',
-          sicoobApiCredentialsEntity: sicoobApiCredentialsModel,
+          clientID: 'clientID',
+          certificateBase64String: 'certificateBase64String',
+          certificatePassword: 'certificatePassword',
+          isFavorite: false,
         );
         verify(() => apiCredentialsDataSource.updateSicoobApiCredentials(
-            id: any(named: 'id'),
-            sicoobApiCredentialsEntity:
-                any(named: 'sicoobApiCredentialsEntity')));
+              id: any(named: 'id'),
+              clientID: any(named: 'clientID'),
+              certificateBase64String: any(named: 'certificateBase64String'),
+              certificatePassword: any(named: 'certificatePassword'),
+              isFavorite: any(named: 'isFavorite'),
+            ));
 
         expect(response.isSuccess(), true);
       });
@@ -320,9 +369,12 @@ void main() {
           () async {
         when(
           () => apiCredentialsDataSource.updateSicoobApiCredentials(
-              id: any(named: 'id'),
-              sicoobApiCredentialsEntity:
-                  any(named: 'sicoobApiCredentialsEntity')),
+            id: any(named: 'id'),
+            clientID: any(named: 'clientID'),
+            certificateBase64String: any(named: 'certificateBase64String'),
+            certificatePassword: any(named: 'certificatePassword'),
+            isFavorite: any(named: 'isFavorite'),
+          ),
         ).thenThrow(Exception());
         const expectedResponse =
             'Ocorreu um erro ao atualizar as credenciais do Sicoob';
@@ -330,7 +382,10 @@ void main() {
         final response =
             await apiCredentialsRepository.updateSicoobApiCredentials(
           id: 'userID',
-          sicoobApiCredentialsEntity: sicoobApiCredentialsModel,
+          clientID: 'clientID',
+          certificateBase64String: 'certificateBase64String',
+          certificatePassword: 'certificatePassword',
+          isFavorite: false,
         );
 
         final result = response.exceptionOrNull();
