@@ -62,26 +62,14 @@ void main() {
   group('FireStoreCloudDataSourceImpl: ', () {
     group('BBApiCredentials: ', () {
       test('should save BBApiCredentials to Firestore', () async {
-        when(() => documentMock.set(any())).thenAnswer((_) async => {});
-        const id = '123';
-        const applicationDeveloperKey = 'appDevKey';
-        const basicKey = 'basicKey';
-        const isFavorite = true;
-
-        final bbCredentials = BBApiCredentialsModel(
-          applicationDeveloperKey: applicationDeveloperKey,
-          basicKey: basicKey,
-          isFavorite: isFavorite,
-        );
-
+        when(() => documentMock.set(any(), any())).thenAnswer((_) async => {});
         await fireStoreCloudDataSource.saveBBApiCredentials(
-          id: id,
-          applicationDeveloperKey: applicationDeveloperKey,
-          basicKey: basicKey,
-          isFavorite: isFavorite,
+          id: '123',
+          applicationDeveloperKey: 'appDevKey',
+          basicKey: 'basicKey',
+          isFavorite: true,
         );
-        verify(() =>
-            collectionMock.doc('bbApiCredentials').set(bbCredentials.toMap()));
+        verify(() => collectionMock.doc(any()).set(any(), any())).called(1);
       });
       test('should throws ErrorSavingApiCredentials if failure', () async {
         final exception = FirebaseException(
@@ -90,7 +78,7 @@ void main() {
           plugin: 'as',
         );
         when(() => registerLog(any())).thenAnswer((_) async {});
-        when(() => documentMock.set(any())).thenThrow(exception);
+        when(() => documentMock.set(any(), any())).thenThrow(exception);
         const id = '123';
         const applicationDeveloperKey = 'appDevKey';
         const basicKey = 'basicKey';

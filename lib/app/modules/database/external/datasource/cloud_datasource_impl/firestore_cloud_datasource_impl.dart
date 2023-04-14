@@ -7,6 +7,11 @@ import 'package:verify/app/modules/database/infra/datasource/api_credentials_dat
 import 'package:verify/app/modules/database/infra/models/sicoob_api_credentials_model.dart';
 import 'package:verify/app/modules/database/infra/models/bb_api_credentials_model.dart';
 
+enum DocumentName {
+  bbApiCredential,
+  sicoobApiCredential,
+}
+
 class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
   final FirebaseFirestore _firestore;
   final FirebaseFirestoreErrorHandler _firebaseFirestoreErrorHandler;
@@ -34,8 +39,8 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
     try {
       await _firestore
           .collection(id)
-          .doc('bbApiCredentials')
-          .set(bbCredentials.toMap());
+          .doc(DocumentName.bbApiCredential.name)
+          .set(bbCredentials.toMap(), SetOptions(merge: true));
     } on FirebaseException catch (e) {
       final errorMessage = await _firebaseFirestoreErrorHandler(e);
       throw ErrorSavingApiCredentials(message: errorMessage);
@@ -53,7 +58,10 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
     required String id,
   }) async {
     try {
-      final doc = await _firestore.collection(id).doc('bbApiCredentials').get();
+      final doc = await _firestore
+          .collection(id)
+          .doc(DocumentName.bbApiCredential.name)
+          .get();
       final data = doc.data();
       if (doc.exists) {
         if (data != null) {
@@ -78,59 +86,153 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
       await _sendLogsToWeb(e);
       _registerLog(e);
       throw ErrorReadingApiCredentials(
+        message: 'Ocorreu um erro ao recuperar os dados. tente novamente',
+      );
+    }
+  }
+
+  @override
+  Future<void> updateBBApiCredentials({
+    required String id,
+    required String applicationDeveloperKey,
+    required String basicKey,
+    required bool isFavorite,
+  }) async {
+    await saveBBApiCredentials(
+      id: id,
+      applicationDeveloperKey: applicationDeveloperKey,
+      basicKey: basicKey,
+      isFavorite: isFavorite,
+    );
+  }
+
+  @override
+  Future<void> deleteBBApiCredentials({
+    required String id,
+  }) async {
+    try {
+      await _firestore
+          .collection(id)
+          .doc(DocumentName.bbApiCredential.name)
+          .delete();
+    } on FirebaseException catch (e) {
+      final errorMessage = await _firebaseFirestoreErrorHandler(e);
+      throw ErrorRemovingApiCredentials(message: errorMessage);
+    } catch (e) {
+      await _sendLogsToWeb(e);
+      _registerLog(e);
+      throw ErrorRemovingApiCredentials(
+        message: 'Ocorreu um erro ao remover os dados. tente novamente',
+      );
+    }
+  }
+
+  @override
+  Future<void> saveSicoobApiCredentials({
+    required String id,
+    required String clientID,
+    required String certificatePassword,
+    required String certificateBase64String,
+    required bool isFavorite,
+  }) async {
+    final sicoobCredentials = SicoobApiCredentialsModel(
+      clientID: clientID,
+      certificateBase64String: certificateBase64String,
+      certificatePassword: certificatePassword,
+      isFavorite: isFavorite,
+    );
+    try {
+      await _firestore
+          .collection(id)
+          .doc(DocumentName.sicoobApiCredential.name)
+          .set(sicoobCredentials.toMap(), SetOptions(merge: true));
+    } on FirebaseException catch (e) {
+      final errorMessage = await _firebaseFirestoreErrorHandler(e);
+      throw ErrorSavingApiCredentials(message: errorMessage);
+    } catch (e) {
+      await _sendLogsToWeb(e);
+      _registerLog(e);
+      throw ErrorSavingApiCredentials(
         message: 'Ocorreu um erro ao salvar os dados. tente novamente',
       );
     }
   }
 
   @override
-  Future<void> updateBBApiCredentials(
-      {required String id,
-      required String applicationDeveloperKey,
-      required String basicKey,
-      required bool isFavorite}) {
-    // TODO: implement updateBBApiCredentials
-    throw UnimplementedError();
+  Future<SicoobApiCredentialsModel> readSicoobApiCredentials({
+    required String id,
+  }) async {
+    try {
+      final doc = await _firestore
+          .collection(id)
+          .doc(DocumentName.sicoobApiCredential.name)
+          .get();
+      final data = doc.data();
+      if (doc.exists) {
+        if (data != null) {
+          final clientID = data['clientID'];
+          final certificatePassword = data['certificatePassword'];
+          final certificateBase64String = data['certificateBase64String'];
+          final isFavorite = data['isFavorite'];
+          return SicoobApiCredentialsModel(
+            clientID: clientID,
+            certificatePassword: certificatePassword,
+            certificateBase64String: certificateBase64String,
+            isFavorite: isFavorite,
+          );
+        } else {
+          throw FirebaseException(code: 'empty-documment-data', plugin: '');
+        }
+      } else {
+        throw FirebaseException(code: 'documment-not-found', plugin: '');
+      }
+    } on FirebaseException catch (e) {
+      final errorMessage = await _firebaseFirestoreErrorHandler(e);
+      throw ErrorReadingApiCredentials(message: errorMessage);
+    } catch (e) {
+      await _sendLogsToWeb(e);
+      _registerLog(e);
+      throw ErrorReadingApiCredentials(
+        message: 'Ocorreu um erro ao recuperar os dados. tente novamente',
+      );
+    }
   }
 
   @override
-  Future<void> deleteBBApiCredentials({required String id}) {
-    // TODO: implement deleteBBApiCredentials
-    throw UnimplementedError();
+  Future<void> updateSicoobApiCredentials({
+    required String id,
+    required String clientID,
+    required String certificatePassword,
+    required String certificateBase64String,
+    required bool isFavorite,
+  }) async {
+    await saveSicoobApiCredentials(
+      id: id,
+      clientID: clientID,
+      certificatePassword: certificatePassword,
+      certificateBase64String: certificateBase64String,
+      isFavorite: isFavorite,
+    );
   }
 
   @override
-  Future<void> saveSicoobApiCredentials(
-      {required String id,
-      required String clientID,
-      required String certificatePassword,
-      required String certificateBase64String,
-      required bool isFavorite}) {
-    // TODO: implement saveSicoobApiCredentials
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> deleteSicoobApiCredentials({required String id}) {
-    // TODO: implement deleteSicoobApiCredentials
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateSicoobApiCredentials(
-      {required String id,
-      required String clientID,
-      required String certificatePassword,
-      required String certificateBase64String,
-      required bool isFavorite}) {
-    // TODO: implement updateSicoobApiCredentials
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<SicoobApiCredentialsModel> readSicoobApiCredentials(
-      {required String id}) {
-    // TODO: implement readSicoobApiCredentials
-    throw UnimplementedError();
+  Future<void> deleteSicoobApiCredentials({
+    required String id,
+  }) async {
+    try {
+      await _firestore
+          .collection(id)
+          .doc(DocumentName.sicoobApiCredential.name)
+          .delete();
+    } on FirebaseException catch (e) {
+      final errorMessage = await _firebaseFirestoreErrorHandler(e);
+      throw ErrorRemovingApiCredentials(message: errorMessage);
+    } catch (e) {
+      await _sendLogsToWeb(e);
+      _registerLog(e);
+      throw ErrorRemovingApiCredentials(
+        message: 'Ocorreu um erro ao remover os dados. tente novamente',
+      );
+    }
   }
 }
