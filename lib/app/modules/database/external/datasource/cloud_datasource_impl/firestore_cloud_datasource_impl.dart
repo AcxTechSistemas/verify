@@ -49,9 +49,38 @@ class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
   }
 
   @override
-  Future<BBApiCredentialsModel> readBBApiCredentials({required String id}) {
-    // TODO: implement readBBApiCredentials
-    throw UnimplementedError();
+  Future<BBApiCredentialsModel> readBBApiCredentials({
+    required String id,
+  }) async {
+    try {
+      final doc = await _firestore.collection(id).doc('bbApiCredentials').get();
+      final data = doc.data();
+      if (doc.exists) {
+        if (data != null) {
+          final applicationDeveloperKey = data['applicationDeveloperKey'];
+          final basicKey = data['basicKey'];
+          final isFavorite = data['isFavorite'];
+          return BBApiCredentialsModel(
+            applicationDeveloperKey: applicationDeveloperKey,
+            basicKey: basicKey,
+            isFavorite: isFavorite,
+          );
+        } else {
+          throw FirebaseException(code: 'empty-documment-data', plugin: '');
+        }
+      } else {
+        throw FirebaseException(code: 'documment-not-found', plugin: '');
+      }
+    } on FirebaseException catch (e) {
+      final errorMessage = await _firebaseFirestoreErrorHandler(e);
+      throw ErrorReadingApiCredentials(message: errorMessage);
+    } catch (e) {
+      await _sendLogsToWeb(e);
+      _registerLog(e);
+      throw ErrorReadingApiCredentials(
+        message: 'Ocorreu um erro ao salvar os dados. tente novamente',
+      );
+    }
   }
 
   @override

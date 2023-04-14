@@ -3,6 +3,14 @@ import 'package:verify/app/core/register_log.dart';
 import 'package:verify/app/core/send_logs_to_web.dart';
 
 enum FirebaseErrorType {
+  docummentNotFound(
+    errorCode: 'invalid-argument',
+    message: 'O Documento solicitado não exite',
+  ),
+  emptyDocummentData(
+    errorCode: 'empty-documment-data',
+    message: 'Os dados estão vazios ou nao definidos',
+  ),
   invalidArgument(
     errorCode: 'invalid-argument',
     message: 'O valor fornecido é inválido',
@@ -23,7 +31,7 @@ enum FirebaseErrorType {
         'Não foi possível realizar a operação devido à falta de permissões.',
   ),
   notFound(
-    errorCode: 'permission-denied',
+    errorCode: 'not-found',
     message:
         'Não foi possível concluir a operação porque o recurso solicitado não foi encontrado.',
   ),
@@ -31,6 +39,7 @@ enum FirebaseErrorType {
     errorCode: 'aborted',
     message: 'A operação foi cancelada.',
   ),
+
   alreadyExists(
     errorCode: 'already-exists',
     message: 'Não foi possível realizar a operação porque o recurso já existe.',

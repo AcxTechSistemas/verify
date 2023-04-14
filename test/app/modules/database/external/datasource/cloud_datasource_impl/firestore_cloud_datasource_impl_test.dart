@@ -22,6 +22,10 @@ class MockRegisterLog extends Mock implements RegisterLog {}
 
 class MockSendLogsToWeb extends Mock implements SendLogsToWeb {}
 
+// ignore: subtype_of_sealed_class
+class MockDocumentSnapshot extends Mock
+    implements DocumentSnapshot<Map<String, dynamic>> {}
+
 void main() {
   late FireStoreCloudDataSourceImpl fireStoreCloudDataSource;
   late FirebaseFirestore firestoreMock;
@@ -30,6 +34,7 @@ void main() {
   late FirebaseFirestoreErrorHandler firebaseFirestoreErrorHandler;
   late RegisterLog registerLog;
   late SendLogsToWeb sendLogsToWeb;
+  late DocumentSnapshot<Map<String, dynamic>> documentSnapshot;
 
   setUp(() {
     firestoreMock = MockFirebaseFirestore();
@@ -49,6 +54,7 @@ void main() {
       sendLogsToWeb,
     );
 
+    documentSnapshot = MockDocumentSnapshot();
     when(() => sendLogsToWeb(any())).thenAnswer((_) async {});
     when(() => firestoreMock.collection(any())).thenReturn(collectionMock);
     when(() => collectionMock.doc(any())).thenReturn(documentMock);
@@ -101,6 +107,30 @@ void main() {
         } catch (e) {
           expect(e, isA<ErrorSavingApiCredentials>());
         }
+      });
+      test('should return BBApiCredentialsModel on readBBApiCredentials',
+          () async {
+        when(() => documentMock.get(any()))
+            .thenAnswer((_) async => documentSnapshot);
+
+        const id = '123';
+        const applicationDeveloperKey = 'appDevKey';
+        const basicKey = 'basicKey';
+        const isFavorite = true;
+
+        final bbCredentials = BBApiCredentialsModel(
+          applicationDeveloperKey: applicationDeveloperKey,
+          basicKey: basicKey,
+          isFavorite: isFavorite,
+        );
+
+        when(() => documentSnapshot.exists).thenReturn(true);
+        when(() => documentSnapshot.data()).thenReturn(bbCredentials.toMap());
+
+        final bbApiCredentials =
+            await fireStoreCloudDataSource.readBBApiCredentials(id: id);
+
+        expect(bbApiCredentials.basicKey, equals('basicKey'));
       });
     });
   });
