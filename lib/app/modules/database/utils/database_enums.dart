@@ -1,0 +1,4 @@
+enum DocumentName {
+  bbApiCredential,
+  sicoobApiCredential,
+}

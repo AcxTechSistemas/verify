@@ -8,6 +8,7 @@ import 'package:verify/app/modules/database/external/datasource/cloud_datasource
 import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/firestore_cloud_datasource_impl.dart';
 import 'package:verify/app/modules/database/infra/models/bb_api_credentials_model.dart';
 import 'package:verify/app/modules/database/infra/models/sicoob_api_credentials_model.dart';
+import 'package:verify/app/modules/database/utils/database_enums.dart';
 
 // ignore: subtype_of_sealed_class
 class MockDocumentReference extends Mock

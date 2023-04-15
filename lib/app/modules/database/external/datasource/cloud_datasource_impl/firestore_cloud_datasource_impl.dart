@@ -6,11 +6,7 @@ import 'package:verify/app/modules/database/external/datasource/cloud_datasource
 import 'package:verify/app/modules/database/infra/datasource/api_credentials_datasource.dart';
 import 'package:verify/app/modules/database/infra/models/sicoob_api_credentials_model.dart';
 import 'package:verify/app/modules/database/infra/models/bb_api_credentials_model.dart';
-
-enum DocumentName {
-  bbApiCredential,
-  sicoobApiCredential,
-}
+import 'package:verify/app/modules/database/utils/database_enums.dart';
 
 class FireStoreCloudDataSourceImpl implements ApiCredentialsDataSource {
   final FirebaseFirestore _firestore;

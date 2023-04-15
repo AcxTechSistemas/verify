@@ -44,4 +44,19 @@ class SicoobApiCredentialsModel implements SicoobApiCredentialsEntity {
     return SicoobApiCredentialsModel.fromMap(
         json.decode(source) as Map<String, dynamic>);
   }
+
+  SicoobApiCredentialsModel copyWith({
+    String? clientID,
+    String? certificateBase64String,
+    String? certificatePassword,
+    bool? isFavorite,
+  }) {
+    return SicoobApiCredentialsModel(
+      clientID: clientID ?? this.clientID,
+      certificateBase64String:
+          certificateBase64String ?? this.certificateBase64String,
+      certificatePassword: certificatePassword ?? this.certificatePassword,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 }
