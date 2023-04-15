@@ -5,7 +5,7 @@ import 'package:verify/app/core/register_log.dart';
 import 'package:verify/app/core/send_logs_to_web.dart';
 
 import 'package:verify/app/modules/auth/domain/errors/auth_error.dart';
-import 'package:verify/app/modules/auth/external/datasource/firebase/errors/firebase_auth_error_handler.dart';
+import 'package:verify/app/modules/auth/external/datasource/firebase/error_handler/firebase_auth_error_handler.dart';
 import 'package:verify/app/modules/auth/infra/datasource/auth_datasource.dart';
 import 'package:verify/app/modules/auth/infra/models/user_model.dart';
 

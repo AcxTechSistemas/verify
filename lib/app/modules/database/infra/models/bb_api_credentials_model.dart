@@ -40,4 +40,17 @@ class BBApiCredentialsModel implements BBApiCredentialsEntity {
       json.decode(source) as Map<String, dynamic>,
     );
   }
+
+  BBApiCredentialsModel copyWith({
+    String? applicationDeveloperKey,
+    String? basicKey,
+    bool? isFavorite,
+  }) {
+    return BBApiCredentialsModel(
+      applicationDeveloperKey:
+          applicationDeveloperKey ?? this.applicationDeveloperKey,
+      basicKey: basicKey ?? this.basicKey,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 }

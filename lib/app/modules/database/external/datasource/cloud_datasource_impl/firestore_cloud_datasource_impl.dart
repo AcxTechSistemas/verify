@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:verify/app/core/register_log.dart';
 import 'package:verify/app/core/send_logs_to_web.dart';
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
-import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/errors/firebase_firestore_error_handler.dart';
+import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/error_handler/firebase_firestore_error_handler.dart';
 import 'package:verify/app/modules/database/infra/datasource/api_credentials_datasource.dart';
 import 'package:verify/app/modules/database/infra/models/sicoob_api_credentials_model.dart';
 import 'package:verify/app/modules/database/infra/models/bb_api_credentials_model.dart';
