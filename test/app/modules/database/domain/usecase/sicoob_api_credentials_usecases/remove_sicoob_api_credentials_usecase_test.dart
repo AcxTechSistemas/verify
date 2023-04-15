@@ -43,7 +43,7 @@ void main() {
       expect(response.isSuccess(), true);
 
       verify(() => apiCredentialsRepository.removeSicoobApiCredentials(
-            id: any(named: 'id'),
+            id: 'userID',
           )).called(1);
     });
 

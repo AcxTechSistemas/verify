@@ -36,7 +36,7 @@ void main() {
         themeMode: themeMode,
       );
       verify(() => userPreferencesRepository.saveUserThemePreference(
-          themeMode: any(named: 'themeMode'))).called(1);
+          themeMode: themeMode)).called(1);
 
       expect(response.isSuccess(), true);
     });
@@ -54,7 +54,7 @@ void main() {
         themeMode: themeMode,
       );
       verify(() => userPreferencesRepository.saveUserThemePreference(
-          themeMode: any(named: 'themeMode'))).called(1);
+          themeMode: themeMode)).called(1);
 
       expect(response.isError(), true);
     });

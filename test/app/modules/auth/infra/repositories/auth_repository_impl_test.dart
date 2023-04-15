@@ -26,9 +26,11 @@ void main() {
     test('Should call logout method from repository', () async {
       when(() => authDataSource.logout()).thenAnswer((_) async {});
 
-      await authRepository.logout();
+      final loggedOut = await authRepository.logout();
 
       verify(() => authDataSource.logout()).called(1);
+
+      expect(loggedOut.isSuccess(), true);
     });
 
     test('Should return a UserModel when retrieving current logged in user',
@@ -91,10 +93,14 @@ void main() {
       when(() => authDataSource.sendRecoverInstructions(
           email: any(named: 'email'))).thenAnswer((_) async {});
 
-      await authRepository.sendRecoverInstructions(email: email);
+      final sendingRecover = await authRepository.sendRecoverInstructions(
+        email: email,
+      );
 
-      verify(() => authDataSource.sendRecoverInstructions(
-          email: any(named: 'email'))).called(1);
+      verify(() => authDataSource.sendRecoverInstructions(email: email))
+          .called(1);
+
+      expect(sendingRecover.isSuccess(), true);
     });
   });
 }

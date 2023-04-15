@@ -70,7 +70,9 @@ void main() {
           basicKey: 'basicKey',
           isFavorite: true,
         );
-        verify(() => collectionMock.doc(any()).set(any())).called(1);
+        verify(() => collectionMock
+            .doc(DocumentName.bbApiCredential.name)
+            .set(any())).called(1);
       });
       test('should throws ErrorSavingApiCredentials if failure', () async {
         final exception = FirebaseException(
@@ -231,7 +233,9 @@ void main() {
           clientID: 'clientID',
           isFavorite: true,
         );
-        verify(() => collectionMock.doc(any()).set(any())).called(1);
+        verify(() => collectionMock
+            .doc(DocumentName.sicoobApiCredential.name)
+            .set(any())).called(1);
       });
       test('should throws ErrorSavingApiCredentials if failure', () async {
         final exception = FirebaseException(

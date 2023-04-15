@@ -47,10 +47,11 @@ void main() {
 
       verify(
         () => apiCredentialsRepository.updateBBApiCredentials(
-          id: any(named: 'id'),
-          applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
-          basicKey: any(named: 'basicKey'),
-          isFavorite: any(named: 'isFavorite'),
+          id: 'userID',
+          applicationDeveloperKey:
+              bbApiCredentialsEntity.applicationDeveloperKey,
+          basicKey: bbApiCredentialsEntity.basicKey,
+          isFavorite: bbApiCredentialsEntity.isFavorite,
         ),
       ).called(1);
 
@@ -81,10 +82,11 @@ void main() {
 
       verify(
         () => apiCredentialsRepository.updateBBApiCredentials(
-          id: any(named: 'id'),
-          applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
-          basicKey: any(named: 'basicKey'),
-          isFavorite: any(named: 'isFavorite'),
+          id: 'userID',
+          applicationDeveloperKey:
+              bbApiCredentialsEntity.applicationDeveloperKey,
+          basicKey: bbApiCredentialsEntity.basicKey,
+          isFavorite: bbApiCredentialsEntity.isFavorite,
         ),
       ).called(1);
 

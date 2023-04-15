@@ -51,11 +51,12 @@ void main() {
 
       verify(
         () => apiCredentialsRepository.updateSicoobApiCredentials(
-          id: any(named: 'id'),
-          clientID: any(named: 'clientID'),
-          certificateBase64String: any(named: 'certificateBase64String'),
-          certificatePassword: any(named: 'certificatePassword'),
-          isFavorite: any(named: 'isFavorite'),
+          id: 'userID',
+          clientID: sicoobApiCredentialsEntity.clientID,
+          certificateBase64String:
+              sicoobApiCredentialsEntity.certificateBase64String,
+          certificatePassword: sicoobApiCredentialsEntity.certificatePassword,
+          isFavorite: sicoobApiCredentialsEntity.isFavorite,
         ),
       ).called(1);
     });
