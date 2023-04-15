@@ -48,7 +48,7 @@ void main() {
         () => userPreferencesRepository.updateUserThemePreference(
             themeMode: any(named: 'themeMode')),
       ).thenAnswer((_) async => Failure(
-            UserThemePreferenceError(message: ''),
+            ErrorUpdateUserThemePreference(message: ''),
           ));
 
       final response = await updateUserThemeModePreferencesUseCase(

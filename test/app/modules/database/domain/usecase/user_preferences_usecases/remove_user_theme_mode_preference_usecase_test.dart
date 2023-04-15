@@ -44,7 +44,7 @@ void main() {
       when(
         () => userPreferencesRepository.deleteUserThemePreference(),
       ).thenAnswer((_) async => Failure(
-            UserThemePreferenceError(message: ''),
+            ErrorUpdateUserThemePreference(message: ''),
           ));
 
       final response = await removeUserThemeModePreferencesUseCase();

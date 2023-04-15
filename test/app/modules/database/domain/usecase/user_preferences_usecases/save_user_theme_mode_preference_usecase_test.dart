@@ -47,7 +47,7 @@ void main() {
         () => userPreferencesRepository.saveUserThemePreference(
             themeMode: any(named: 'themeMode')),
       ).thenAnswer((_) async => Failure(
-            UserThemePreferenceError(message: ''),
+            ErrorSavingUserThemePreference(message: ''),
           ));
 
       final response = await saveUserThemeModePreferencesUseCase(

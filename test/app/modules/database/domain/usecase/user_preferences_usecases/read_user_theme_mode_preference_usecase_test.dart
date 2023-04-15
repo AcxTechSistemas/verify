@@ -41,7 +41,7 @@ void main() {
       when(
         () => userPreferencesRepository.readUserThemePreference(),
       ).thenAnswer((_) async => Failure(
-            UserThemePreferenceError(message: ''),
+            ErrorReadUserThemePreference(message: ''),
           ));
 
       final response = await readUserThemeModePreferencesUseCase();
