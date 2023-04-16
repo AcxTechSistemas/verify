@@ -16,10 +16,9 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-final controller = Modular.get<LoginController>();
-final store = Modular.get<LoginStore>();
-
 class _LoginPageState extends State<LoginPage> {
+  final controller = Modular.get<LoginController>();
+  final store = Modular.get<LoginStore>();
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(

@@ -13,7 +13,7 @@ enum SicoobPixApiErrorType {
   ),
   emptyBase64String(
     errorCode: 'empty-certificate-base64string',
-    message: 'O Certificado náo foi inserido corretamente',
+    message: 'O Certificado não foi inserido corretamente',
   ),
   certificateNotFound(
     errorCode: 'could-not-find-the-certificate-path',
@@ -30,9 +30,9 @@ enum SicoobPixApiErrorType {
     message: 'Certificado em formato inválido',
   ),
 
-  invalidClient(
+  invalidClientID(
     errorCode: 'invalid_client',
-    message: 'ClientID Inválido',
+    message: 'ClientID Inválido, Revise suas informações',
   ),
 
   invalidDateRange(
@@ -64,7 +64,7 @@ class SicoobPixApiServiceErrorHandler {
     this._sendLogsToWeb,
   );
   Future<String> call(PixException e) async {
-    if (e is SicoobApiException) {
+    if (e is SicoobApiException && e.error != 'invalid_client') {
       return e.errorDescription;
     } else {
       try {

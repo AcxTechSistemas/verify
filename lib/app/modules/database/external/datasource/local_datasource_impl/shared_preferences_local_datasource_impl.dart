@@ -348,8 +348,6 @@ class SharedPreferencesLocalDataSourceImpl
         case 'system':
           themeMode = ThemeMode.system;
           break;
-        default:
-          themeMode = ThemeMode.light;
       }
       return themeMode;
     } catch (e) {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/shared/themes/theme.dart';
 
 class AppWidget extends StatelessWidget {
@@ -7,13 +9,31 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Modular.setInitialRoute('/auth/login');
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      routerDelegate: Modular.routerDelegate,
-      routeInformationParser: Modular.routeInformationParser,
-    );
+    final appStore = Modular.get<AppStore>();
+    Modular.setInitialRoute('/config/');
+
+    return FutureBuilder(
+        future: appStore.loadData(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+            case ConnectionState.active:
+              return const CircularProgressIndicator();
+            case ConnectionState.done:
+              return Observer(
+                builder: (context) {
+                  return MaterialApp.router(
+                    debugShowCheckedModeBanner: false,
+                    themeMode: appStore.themeMode.value,
+                    theme: lightTheme,
+                    darkTheme: darkTheme,
+                    routerDelegate: Modular.routerDelegate,
+                    routeInformationParser: Modular.routeInformationParser,
+                  );
+                },
+              );
+          }
+        });
   }
 }

@@ -2,7 +2,6 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:result_dart/result_dart.dart';
-import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/modules/database/domain/errors/user_preferences_error.dart';
 import 'package:verify/app/modules/database/domain/repository/user_preferences_repository.dart';
 import 'package:verify/app/modules/database/infra/datasource/user_preferences_datasource.dart';

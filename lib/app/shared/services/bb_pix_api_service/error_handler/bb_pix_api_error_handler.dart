@@ -50,11 +50,11 @@ class BBPixApiServiceErrorHandler {
   );
   Future<String> call(PixException e) async {
     if (e is BBApiException) {
-      return e.message;
+      return e.errorDescription;
     } else {
       try {
         errorType = BBPixApiErrorType.values
-            .where((error) => e.message == error.errorCode)
+            .where((error) => e.error == error.errorCode)
             .single;
       } catch (e) {
         await _sendLogsToWeb(e);
