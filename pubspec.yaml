@@ -47,6 +47,9 @@ dependencies:
   google_fonts: ^4.0.3
   cloud_firestore: ^4.5.1
   shared_preferences: ^2.1.0
+  pix_sicoob: ^1.1.6
+  intl: ^0.17.0
+  pix_bb: ^1.0.3
 
 dev_dependencies:
   build_runner: ^2.3.3
