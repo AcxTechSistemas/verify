@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:pix_sicoob/pix_sicoob.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:file_picker/file_picker.dart';
@@ -21,6 +22,8 @@ class SicoobSettingsPageController {
   String certificateString = '';
   final clientIDController = TextEditingController();
   final certificatePasswordController = TextEditingController();
+  final clientIDFocus = FocusNode();
+  final certificatePasswordFocus = FocusNode();
   final formKey = GlobalKey<FormState>();
 
   SicoobSettingsPageController(
@@ -29,6 +32,15 @@ class SicoobSettingsPageController {
     this._saveSicoobApiCredentialsUseCase,
     this._getLoggedUserUseCase,
   );
+  void backToSettings() {
+    clientIDFocus.unfocus();
+    certificatePasswordFocus.unfocus();
+    certificateString = '';
+    certificatePasswordController.clear();
+    clientIDController.clear();
+    Modular.to.pushReplacementNamed('./');
+    clearStore();
+  }
 
   Future<void> goToSicoobDevelopersPortal() async {
     final sicoobDeveloperUrl = Uri.parse(
@@ -87,21 +99,37 @@ class SicoobSettingsPageController {
   }
 
   Future<String?> validateCredentials() async {
+    _store.validatingCredentials(true);
     final response = await _pixSicoobService.validateCredentials(
       clientID: clientIDController.text,
       certificateBase64String: certificateString,
       certificatePassword: certificatePasswordController.text,
     );
+    _store.validatingCredentials(false);
     return response;
   }
 
-  Future<String?> saveCredentialsOnCloudDatabase() async {
+  Future<String?> saveCredentialsinCloud() async {
+    _store.savingInCloud(true);
+    final message = await _saveCredentialsinDatabase(Database.cloud);
+    _store.savingInCloud(false);
+    return message;
+  }
+
+  Future<String?> saveCredentialsinLocal() async {
+    _store.savingInLocal(true);
+    final message = await _saveCredentialsinDatabase(Database.local);
+    _store.savingInLocal(false);
+    return message;
+  }
+
+  Future<String?> _saveCredentialsinDatabase(Database database) async {
     final user = await _getLoggedUserUseCase();
     return user.fold(
       (user) async {
-        await _saveSicoobApiCredentialsUseCase(
-          database: Database.cloud,
-          id: user.name,
+        final saved = await _saveSicoobApiCredentialsUseCase(
+          database: database,
+          id: user.id,
           sicoobApiCredentialsEntity: SicoobApiCredentialsEntity(
             clientID: clientIDController.text,
             certificatePassword: certificatePasswordController.text,
@@ -109,11 +137,23 @@ class SicoobSettingsPageController {
             isFavorite: false,
           ),
         );
+        saved.fold(
+          (success) => null,
+          (failure) => failure.message,
+        );
         return null;
       },
       (error) {
         return error.message;
       },
     );
+  }
+
+  void clearStore() {
+    _store.savingInCloud(false);
+    _store.savingInLocal(false);
+    _store.validatingCredentials(false);
+    _store.setCertificateFileName('');
+    _store.setValidFields(false);
   }
 }

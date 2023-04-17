@@ -25,18 +25,30 @@ class FirebaseDataSourceImpl implements AuthDataSource {
 
   @override
   Future<UserModel> currentUser() async {
-    final user = _firebaseAuth.currentUser;
-
-    if (user == null) {
-      throw ErrorGetLoggedUser(message: 'Token de acesso expirado');
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user != null) {
+        return UserModel(
+          id: user.uid,
+          email: user.email!,
+          name: user.displayName ?? '',
+          emailVerified: user.emailVerified,
+        );
+      } else {
+        throw ErrorGetLoggedUser(
+          message: 'Token expirado. \nPor favor, faça login novamente.',
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      final errorMessage = await _firebaseAuthErrorHandler(e);
+      throw ErrorLoginEmail(message: errorMessage);
+    } catch (e) {
+      await _sendLogsToWeb(e);
+      _registerLog(e);
+      throw ErrorGetLoggedUser(
+        message: 'Token expirado. \nPor favor, faça login novamente.',
+      );
     }
-
-    return UserModel(
-      id: user.uid,
-      email: user.email!,
-      name: user.displayName ?? '',
-      emailVerified: user.emailVerified,
-    );
   }
 
   @override

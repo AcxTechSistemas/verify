@@ -67,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () async {},
+                    onPressed: controller.logout,
                     icon: const Icon(Icons.exit_to_app),
                   ),
                 ],

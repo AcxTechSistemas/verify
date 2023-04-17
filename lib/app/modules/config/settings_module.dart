@@ -6,7 +6,7 @@ import 'package:verify/app/modules/config/presenter/sicoob_settings/view/sicoob_
 
 import 'presenter/sicoob_settings/controller/sicoob_settings_page_controller.dart';
 
-class ConfigModule extends Module {
+class SettingsModule extends Module {
   @override
   List<Bind<Object>> get binds => [
         AutoBind.singleton<SettingsPageController>(SettingsPageController.new),

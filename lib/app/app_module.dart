@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,15 +18,18 @@ import 'package:verify/app/modules/auth/external/datasource/firebase/error_handl
 import 'package:verify/app/modules/auth/external/datasource/firebase/firebase_datasource_impl.dart';
 import 'package:verify/app/modules/auth/infra/datasource/auth_datasource.dart';
 import 'package:verify/app/modules/auth/infra/repositories/auth_repository_impl.dart';
-import 'package:verify/app/modules/config/config_module.dart';
+import 'package:verify/app/modules/config/settings_module.dart';
 import 'package:verify/app/modules/database/domain/repository/api_credentials_repository.dart';
 import 'package:verify/app/modules/database/domain/repository/user_preferences_repository.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/save_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/read_user_theme_mode_preference_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/save_user_theme_mode_preference_usecase.dart';
+import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/error_handler/firebase_firestore_error_handler.dart';
+import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/firestore_cloud_datasource_impl.dart';
 import 'package:verify/app/modules/database/external/datasource/local_datasource_impl/shared_preferences_local_datasource_impl.dart';
 import 'package:verify/app/modules/database/infra/datasource/cloud_api_credentials_datasource.dart';
 import 'package:verify/app/modules/database/infra/datasource/local_api_credentials_datasource.dart';
+import 'package:verify/app/modules/database/infra/datasource/user_preferences_datasource.dart';
 import 'package:verify/app/modules/database/infra/repository/api_credentials_repository_impl.dart';
 import 'package:verify/app/modules/database/infra/repository/user_preferences_repository_impl.dart';
 import 'package:verify/app/shared/services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
@@ -68,12 +72,21 @@ class AppModule extends Module {
         AutoBind.factory<FirebaseAuthErrorHandler>(
             FirebaseAuthErrorHandler.new),
 
-        //Datasources
+        //Database ErrorHandler
+        AutoBind.factory<FirebaseFirestoreErrorHandler>(
+          FirebaseFirestoreErrorHandler.new,
+        ),
+
+        //Database Datasources
+        AutoBind.instance<FirebaseFirestore>(FirebaseFirestore.instance),
         AutoBind.factory<CloudApiCredentialsDataSource>(
-          FirebaseDataSourceImpl.new,
+          FireStoreCloudDataSourceImpl.new,
         ),
         AutoBind.instance<SharedPreferences>(sharedPreferences),
         AutoBind.factory<LocalApiCredentialsDataSource>(
+          SharedPreferencesLocalDataSourceImpl.new,
+        ),
+        AutoBind.factory<UserPreferencesDataSource>(
           SharedPreferencesLocalDataSourceImpl.new,
         ),
 
@@ -101,6 +114,6 @@ class AppModule extends Module {
   @override
   List<ModularRoute> get routes => [
         ModuleRoute('/auth', module: AuthModule()),
-        ModuleRoute('/config', module: ConfigModule()),
+        ModuleRoute('/settings', module: SettingsModule()),
       ];
 }

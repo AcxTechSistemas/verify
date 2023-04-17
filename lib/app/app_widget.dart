@@ -10,7 +10,7 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appStore = Modular.get<AppStore>();
-    Modular.setInitialRoute('/config/');
+    Modular.setInitialRoute('/auth/login');
 
     return FutureBuilder(
         future: appStore.loadData(),

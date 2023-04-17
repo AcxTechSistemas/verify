@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:verify/app/modules/auth/presenter/shared/widgets/auth_action_button.dart';
 import 'package:verify/app/modules/config/presenter/shared/widgets/setup_field_widget.dart';
 import 'package:verify/app/modules/config/presenter/sicoob_settings/controller/sicoob_settings_page_controller.dart';
 import 'package:verify/app/modules/config/presenter/sicoob_settings/store/sicoob_settings_store.dart';
@@ -23,6 +24,10 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
     final colorScheme = theme.colorScheme;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: controller.backToSettings,
+          icon: const Icon(Icons.arrow_back),
+        ),
         title: const Text(
           'Sicoob',
         ),
@@ -54,7 +59,7 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
                       'Certificado válido emitido por CAs externas em conformidade com o padrão internacional x.509',
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: controller.goToSicoobDevelopersPortal,
                       child: const Text(
                         'CONHEÇA O PORTAL DEVELOPERS SICOOB E CADASTRE-SE',
                       ),
@@ -80,6 +85,9 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
                           onPressed: controller.clientIDController.clear,
                           controller: controller.clientIDController,
                           validator: controller.validateClientID,
+                          focusNode: controller.clientIDFocus,
+                          onEditingComplete:
+                              controller.certificatePasswordFocus.requestFocus,
                         ),
                         const SizedBox(height: 16),
                         SetupFieldWidget(
@@ -88,6 +96,9 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
                               controller.certificatePasswordController.clear,
                           controller: controller.certificatePasswordController,
                           validator: controller.validateCertificatePassword,
+                          focusNode: controller.certificatePasswordFocus,
+                          onEditingComplete:
+                              controller.certificatePasswordFocus.unfocus,
                         ),
                       ],
                     ),
@@ -139,15 +150,18 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
               child: Row(
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: controller.backToSettings,
                     child: const Text('Cancelar'),
                   ),
                   const Spacer(),
                   Observer(builder: (context) {
-                    return FilledButton(
-                      onPressed:
-                          store.isValidFields ? _validateCredentials : null,
-                      child: const Text('Validar credenciais'),
+                    return AuthActionButton(
+                      title: 'Validar credenciais',
+                      onPressed: _validateCredentials,
+                      enabled: store.isValidFields,
+                      isLoading: store.isValidatingCredentials ||
+                          store.isSavingInCloud ||
+                          store.isSavingInLocal,
                     );
                   }),
                 ],
@@ -160,19 +174,43 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
   }
 
   _validateCredentials() async {
-    controller.validateCredentials().then((errorMessage) {
+    controller.validateCredentials().then((errorMessage) async {
       if (errorMessage != null) {
         _showSnackBar(
           errorMessage: errorMessage,
           type: SnackBarType.error,
         );
       } else {
-        _showSnackBar(
-          errorMessage: 'Credenciais validadas com sucesso!',
-          type: SnackBarType.success,
-        );
+        final errorSaving = await _saveCredentials();
+        if (errorSaving != null) {
+          _showSnackBar(
+            errorMessage: errorSaving,
+            type: SnackBarType.error,
+          );
+        } else {
+          _showSnackBar(
+            errorMessage: 'Credenciais validadas com sucesso!',
+            type: SnackBarType.success,
+          );
+          controller.backToSettings();
+        }
       }
     });
+  }
+
+  Future<String?> _saveCredentials() async {
+    String? errorInSaving;
+    await controller.saveCredentialsinCloud().then(
+      (errorSavingCloud) {
+        errorInSaving = errorSavingCloud;
+      },
+    );
+    await controller.saveCredentialsinLocal().then(
+      (errorLocalSaving) {
+        errorInSaving = errorLocalSaving;
+      },
+    );
+    return errorInSaving;
   }
 
   _showSnackBar({

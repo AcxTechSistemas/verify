@@ -27,7 +27,8 @@ class SaveSicoobApiCredentialsUseCaseImpl
       database: database,
       id: id,
       clientID: sicoobApiCredentialsEntity.clientID,
-      certificateBase64String: sicoobApiCredentialsEntity.clientID,
+      certificateBase64String:
+          sicoobApiCredentialsEntity.certificateBase64String,
       certificatePassword: sicoobApiCredentialsEntity.certificatePassword,
       isFavorite: sicoobApiCredentialsEntity.isFavorite,
     );

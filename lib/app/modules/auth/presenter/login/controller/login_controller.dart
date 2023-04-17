@@ -53,6 +53,7 @@ class LoginController {
         }
 
         _loginStore.loggingInWithEmailInProgress(false);
+        Modular.to.pushReplacementNamed('/settings/');
         return null;
       },
       (failure) {
@@ -71,6 +72,7 @@ class LoginController {
     return result.fold(
       (success) {
         _loginStore.loggingInWithGoogleInProgress(false);
+        Modular.to.pushReplacementNamed('/settings/');
         return null;
       },
       (failure) {
