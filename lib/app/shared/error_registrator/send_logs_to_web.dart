@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:verify/app/shared/error_registrator/discord_webhook_url.dart';
 import 'package:verify/app/shared/services/client_service/client_service.dart';
 
 abstract class SendLogsToWeb {
@@ -6,13 +9,14 @@ abstract class SendLogsToWeb {
 
 class SendLogsToDiscordChannel implements SendLogsToWeb {
   final ClientService _clientService;
-  SendLogsToDiscordChannel(this._clientService);
+  SendLogsToDiscordChannel(
+    this._clientService,
+  );
   @override
   Future<void> call(Object e) async {
     await _clientService.post(
-      url:
-          'https://discord.com/api/webhooks/1083091280659226675/2tQn2yBfvKdo4gV6zAXnPyL3CzUhHzbRGyGIiB21Z8CYZUudvh8OLrDV-RoS-syN56V-',
-      body: e.toString(),
+      url: discordWebookUrl,
+      body: {'content': '```Error: $e'},
     );
   }
 }

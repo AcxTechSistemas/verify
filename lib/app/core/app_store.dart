@@ -10,7 +10,6 @@ abstract class AppStoreBase with Store {
   final ReadUserThemeModePreferencesUseCase
       _readUserThemeModePreferencesUseCase;
 
-  late ThemeMode mode;
   @observable
   var themeMode = Observable<ThemeMode>(ThemeMode.system);
 
