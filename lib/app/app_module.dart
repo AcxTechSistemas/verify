@@ -49,7 +49,7 @@ class AppModule extends Module {
         AutoBind.factory<RegisterLog>(RegisterLogImpl.new),
 
         //Global Stores
-        AutoBind.singleton<AppStore>(AppStore.new),
+        AutoBind.instance<AppStore>(AppStore()),
 
         //Global Services
         AutoBind.singleton<SicoobPixApiService>(SicoobPixApiServiceImpl.new),

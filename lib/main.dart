@@ -28,7 +28,6 @@ void main() async {
   ]);
 
   final sharedPreferences = await SharedPreferences.getInstance();
-
   runApp(
     ModularApp(module: AppModule(sharedPreferences), child: const AppWidget()),
   );

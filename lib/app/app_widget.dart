@@ -15,25 +15,21 @@ class AppWidget extends StatelessWidget {
     return FutureBuilder(
         future: appStore.loadData(),
         builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.waiting:
-            case ConnectionState.active:
-              return const CircularProgressIndicator();
-            case ConnectionState.done:
-              return Observer(
-                builder: (context) {
-                  return MaterialApp.router(
-                    debugShowCheckedModeBanner: false,
-                    themeMode: appStore.themeMode.value,
-                    theme: lightTheme,
-                    darkTheme: darkTheme,
-                    routerDelegate: Modular.routerDelegate,
-                    routeInformationParser: Modular.routeInformationParser,
-                  );
-                },
-              );
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const CircularProgressIndicator();
           }
+          return Observer(
+            builder: (context) {
+              return MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                themeMode: appStore.themeMode.value,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                routerDelegate: Modular.routerDelegate,
+                routeInformationParser: Modular.routeInformationParser,
+              );
+            },
+          );
         });
   }
 }
