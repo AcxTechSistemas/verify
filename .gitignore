@@ -107,3 +107,4 @@ lib/generated_plugin_registrant.dart
 lib/app/shared/error_registrator/discord_webhook_url.dart
 
 # End of https://www.toptal.com/developers/gitignore/api/flutter,dart,firebase
+android/app/google-services.json
