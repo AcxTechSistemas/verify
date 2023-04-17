@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verify/app/core/app_store.dart';
+import 'package:verify/app/core/auth_store.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/auth/auth_module.dart';
@@ -50,6 +51,7 @@ class AppModule extends Module {
 
         /// Global Stores
         AutoBind.instance<AppStore>(AppStore()),
+        AutoBind.instance<AuthStore>(AuthStore()),
 
         /// Global Services
         //SicoobPIX
