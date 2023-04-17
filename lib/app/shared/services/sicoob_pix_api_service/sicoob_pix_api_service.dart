@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pix_sicoob/pix_sicoob.dart';
-import 'package:verify/app/core/register_log.dart';
-import 'package:verify/app/core/send_logs_to_web.dart';
+import 'package:verify/app/shared/error_registrator/register_log.dart';
+import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/shared/services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
 
 abstract class SicoobPixApiService {

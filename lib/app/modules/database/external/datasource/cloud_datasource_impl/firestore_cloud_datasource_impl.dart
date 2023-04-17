@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:verify/app/core/register_log.dart';
-import 'package:verify/app/core/send_logs_to_web.dart';
+import 'package:verify/app/shared/error_registrator/register_log.dart';
+import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/error_handler/firebase_firestore_error_handler.dart';
 import 'package:verify/app/modules/database/infra/datasource/cloud_api_credentials_datasource.dart';

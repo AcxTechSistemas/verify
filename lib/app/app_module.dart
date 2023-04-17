@@ -4,8 +4,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verify/app/core/app_store.dart';
-import 'package:verify/app/core/register_log.dart';
-import 'package:verify/app/core/send_logs_to_web.dart';
+import 'package:verify/app/shared/error_registrator/register_log.dart';
+import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/auth/auth_module.dart';
 import 'package:verify/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:verify/app/modules/auth/domain/usecase/get_logged_user_usecase.dart';
@@ -32,6 +32,8 @@ import 'package:verify/app/modules/database/infra/datasource/local_api_credentia
 import 'package:verify/app/modules/database/infra/datasource/user_preferences_datasource.dart';
 import 'package:verify/app/modules/database/infra/repository/api_credentials_repository_impl.dart';
 import 'package:verify/app/modules/database/infra/repository/user_preferences_repository_impl.dart';
+import 'package:verify/app/shared/services/client_service/client_service.dart';
+import 'package:verify/app/shared/services/client_service/dio_client_service.dart';
 import 'package:verify/app/shared/services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
 import 'package:verify/app/shared/services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
 
@@ -42,7 +44,8 @@ class AppModule extends Module {
   @override
   List<Bind> get binds => [
         ///Error Registers
-        AutoBind.instance<SendLogsToWeb>(SendLogsToDiscordChannel()),
+        AutoBind.instance<ClientService>(DioClientService()),
+        AutoBind.factory<SendLogsToWeb>(SendLogsToDiscordChannel.new),
         AutoBind.factory<RegisterLog>(RegisterLogImpl.new),
 
         //Global Stores

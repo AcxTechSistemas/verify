@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pix_bb/pix_bb.dart';
-import 'package:verify/app/core/register_log.dart';
-import 'package:verify/app/core/send_logs_to_web.dart';
+import 'package:verify/app/shared/error_registrator/register_log.dart';
+import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/shared/services/bb_pix_api_service/error_handler/bb_pix_api_error_handler.dart';
 
 abstract class BBPixApiService {
@@ -44,7 +44,7 @@ class BBPixApiServiceImpl implements BBPixApiService {
       final errorMessage = await _apiServiceErrorHandler(e);
       return errorMessage;
     } catch (e) {
-      _sendLogsToWeb(e);
+      await _sendLogsToWeb(e);
       _registerLog(e);
       return 'Não foi possivel validar as credenciais tente novamente';
     }
@@ -69,7 +69,7 @@ class BBPixApiServiceImpl implements BBPixApiService {
       );
       return transactions;
     } catch (e) {
-      _sendLogsToWeb(e);
+      await _sendLogsToWeb(e);
       _registerLog(e);
       rethrow;
     }

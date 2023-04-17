@@ -52,6 +52,8 @@ dependencies:
   pix_bb: ^1.0.4
   url_launcher: ^6.1.10
   file_picker: ^5.2.9
+  http: ^0.13.5
+  dio: ^5.1.1
 
 dev_dependencies:
   build_runner: ^2.3.3

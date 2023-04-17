@@ -23,6 +23,7 @@ void main() {
       'Should return instance of LoggedUserInfo if login is successful',
       () async {
         final expectedResponse = LoggedUserInfoEntity(
+          id: 'id',
           name: 'Antonio',
           email: 'example@example.com',
           emailVerified: false,
@@ -54,6 +55,7 @@ void main() {
       'Should return instance of ErrorLoginEmail if the email is invalid',
       () async {
         final expectedResponse = LoggedUserInfoEntity(
+          id: 'id',
           name: 'Antonio',
           email: 'example@example.com',
           emailVerified: false,
@@ -89,6 +91,7 @@ void main() {
       'Should return instance of ErrorLoginEmail if the password is invalid',
       () async {
         final expectedResponse = LoggedUserInfoEntity(
+          id: 'id',
           name: 'Antonio',
           email: 'example@example.com',
           emailVerified: false,

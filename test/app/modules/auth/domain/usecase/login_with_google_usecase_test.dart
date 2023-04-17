@@ -20,6 +20,7 @@ void main() {
       'Should return instance of LoggedUserInfo if login is successful',
       () async {
         final expectedResponse = LoggedUserInfoEntity(
+          id: 'id',
           name: 'Antonio',
           email: 'example@example.com',
           emailVerified: false,

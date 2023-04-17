@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:verify/app/core/register_log.dart';
-import 'package:verify/app/core/send_logs_to_web.dart';
+import 'package:verify/app/shared/error_registrator/register_log.dart';
+import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 
 import 'package:verify/app/modules/auth/domain/errors/auth_error.dart';
 import 'package:verify/app/modules/auth/external/datasource/firebase/error_handler/firebase_auth_error_handler.dart';

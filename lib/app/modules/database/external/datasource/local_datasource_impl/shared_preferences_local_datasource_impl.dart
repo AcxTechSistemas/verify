@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:verify/app/core/register_log.dart';
-import 'package:verify/app/core/send_logs_to_web.dart';
+import 'package:verify/app/shared/error_registrator/register_log.dart';
+import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/modules/database/domain/errors/user_preferences_error.dart';
 import 'package:verify/app/modules/database/infra/datasource/local_api_credentials_datasource.dart';
