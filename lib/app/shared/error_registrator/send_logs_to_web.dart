@@ -1,4 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:result_dart/result_dart.dart';
+import 'package:verify/app/modules/auth/domain/usecase/get_logged_user_usecase.dart';
 import 'package:verify/app/shared/error_registrator/discord_webhook_url.dart';
 import 'package:verify/app/shared/services/client_service/client_service.dart';
 
@@ -13,9 +16,14 @@ class SendLogsToDiscordChannel implements SendLogsToWeb {
   );
   @override
   Future<void> call(Object e) async {
+    final getLoggedUser = Modular.get<GetLoggedUserUseCase>();
+    final result = getLoggedUser();
+    final user = await result.getOrNull();
+    final userId = user?.id;
+
     await _clientService.post(
       url: discordWebookUrl,
-      body: {'content': '```Error: $e```'},
+      body: {'content': '```diff\n+ UserID: $userId\n- Error: $e \n```'},
     );
   }
 }
