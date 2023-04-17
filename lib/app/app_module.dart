@@ -48,20 +48,26 @@ class AppModule extends Module {
         AutoBind.factory<SendLogsToWeb>(SendLogsToDiscordChannel.new),
         AutoBind.factory<RegisterLog>(RegisterLogImpl.new),
 
-        //Global Stores
+        /// Global Stores
         AutoBind.instance<AppStore>(AppStore()),
 
-        //Global Services
+        /// Global Services
+        //SicoobPIX
         AutoBind.singleton<SicoobPixApiService>(SicoobPixApiServiceImpl.new),
         AutoBind.factory<SicoobPixApiServiceErrorHandler>(
           SicoobPixApiServiceErrorHandler.new,
         ),
+        //Banco do Brasil
 
         /// Auth
+        // External
         AutoBind.instance<FirebaseAuth>(FirebaseAuth.instance),
         AutoBind.instance<GoogleSignIn>(GoogleSignIn()),
+        //DataSource
         AutoBind.factory<AuthDataSource>(FirebaseDataSourceImpl.new),
+        //Repository
         AutoBind.factory<AuthRepository>(AuthRepositoryImpl.new),
+        //Use Cases
         AutoBind.factory<LoginWithEmailUseCase>(LoginWithEmailUseCaseImpl.new),
         AutoBind.factory<LoginWithGoogleUseCase>(LoginWithGoogleImpl.new),
         AutoBind.factory<GetLoggedUserUseCase>(GetLoggedUserUseCaseImpl.new),
@@ -70,17 +76,16 @@ class AppModule extends Module {
         ),
         AutoBind.factory<LogoutUseCase>(LogoutUseCaseImpl.new),
         AutoBind.factory<RecoverAccountUseCase>(RecoverAccountUseCaseImpl.new),
-
-        //Auth Error Handler
+        //Error Handler
         AutoBind.factory<FirebaseAuthErrorHandler>(
-            FirebaseAuthErrorHandler.new),
+          FirebaseAuthErrorHandler.new,
+        ),
 
-        //Database ErrorHandler
+        ///Database
         AutoBind.factory<FirebaseFirestoreErrorHandler>(
           FirebaseFirestoreErrorHandler.new,
         ),
-
-        //Database Datasources
+        //Datasources
         AutoBind.instance<FirebaseFirestore>(FirebaseFirestore.instance),
         AutoBind.factory<CloudApiCredentialsDataSource>(
           FireStoreCloudDataSourceImpl.new,
@@ -92,25 +97,22 @@ class AppModule extends Module {
         AutoBind.factory<UserPreferencesDataSource>(
           SharedPreferencesLocalDataSourceImpl.new,
         ),
-
-        //UserPreferences
+        // Use Cases
         AutoBind.factory<SaveUserThemeModePreferencesUseCase>(
           SaveUserThemeModePreferencesUseCaseImpl.new,
         ),
         AutoBind.factory<ReadUserThemeModePreferencesUseCase>(
           ReadUserThemeModePreferencesUseCaseImpl.new,
         ),
-        AutoBind.factory<UserPreferencesRepository>(
-          UserPreferencesRepositoryImpl.new,
+        AutoBind.factory<SaveSicoobApiCredentialsUseCase>(
+          SaveSicoobApiCredentialsUseCaseImpl.new,
         ),
-
-        ///ApiCredentials
+        //Repositories
         AutoBind.factory<ApiCredentialsRepository>(
           ApiCredentialsRepositoryImpl.new,
         ),
-
-        AutoBind.factory<SaveSicoobApiCredentialsUseCase>(
-          SaveSicoobApiCredentialsUseCaseImpl.new,
+        AutoBind.factory<UserPreferencesRepository>(
+          UserPreferencesRepositoryImpl.new,
         ),
       ];
 
