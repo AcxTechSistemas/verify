@@ -5,6 +5,7 @@ import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentia
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/modules/database/domain/repository/api_credentials_repository.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/read_sicoob_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/utils/database_enums.dart';
 
 class MockApiCredentialsRepository extends Mock
     implements ApiCredentialsRepository {}
@@ -13,6 +14,7 @@ void main() {
   late ReadSicoobApiCredentialsUseCase readSicoobApiCredentialsUseCase;
   late ApiCredentialsRepository apiCredentialsRepository;
   late SicoobApiCredentialsEntity sicoobApiCredentialsEntity;
+  late Database database;
 
   setUp(() {
     apiCredentialsRepository = MockApiCredentialsRepository();
@@ -25,16 +27,20 @@ void main() {
       certificatePassword: 'certPassword',
       isFavorite: false,
     );
+    database = Database.local;
+    registerFallbackValue(database);
     registerFallbackValue(sicoobApiCredentialsEntity);
   });
 
   group('ReadSicoobApiCredentialsUseCase: ', () {
     test('Should return success on readSicoobApiCredentials', () async {
       when(() => apiCredentialsRepository.readSicoobApiCredentials(
+            database: any(named: 'database'),
             id: any(named: 'id'),
           )).thenAnswer((_) async => Success(sicoobApiCredentialsEntity));
 
       final response = await readSicoobApiCredentialsUseCase(
+        database: database,
         id: 'userID',
       );
       final result = response.getOrNull();
@@ -50,10 +56,13 @@ void main() {
 
       when(
         () => apiCredentialsRepository.readSicoobApiCredentials(
-            id: any(named: 'id')),
+          database: any(named: 'database'),
+          id: any(named: 'id'),
+        ),
       ).thenAnswer((_) async => Failure(apiCredentialsError));
 
       final response = await readSicoobApiCredentialsUseCase(
+        database: database,
         id: 'userID',
       );
 

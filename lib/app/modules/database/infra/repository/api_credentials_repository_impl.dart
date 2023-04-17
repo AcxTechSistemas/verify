@@ -6,18 +6,40 @@ import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentia
 import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_entity.dart';
 import 'package:verify/app/modules/database/domain/repository/api_credentials_repository.dart';
 import 'package:verify/app/modules/database/infra/datasource/api_credentials_datasource.dart';
+import 'package:verify/app/modules/database/infra/datasource/cloud_api_credentials_datasource.dart';
+import 'package:verify/app/modules/database/infra/datasource/local_api_credentials_datasource.dart';
+import 'package:verify/app/modules/database/utils/database_enums.dart';
 
 class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
-  final ApiCredentialsDataSource _apiCredentialsDataSource;
-  ApiCredentialsRepositoryImpl(this._apiCredentialsDataSource);
+  late ApiCredentialsDataSource _apiCredentialsDataSource;
+  final CloudApiCredentialsDataSource _cloudApiCredentialsDataSource;
+  final LocalApiCredentialsDataSource _localApiCredentialsDataSource;
+
+  ApiCredentialsRepositoryImpl(
+    this._cloudApiCredentialsDataSource,
+    this._localApiCredentialsDataSource,
+  );
+
+  void selectDataSource(Database database) {
+    switch (database) {
+      case Database.cloud:
+        _apiCredentialsDataSource = _cloudApiCredentialsDataSource;
+        break;
+      case Database.local:
+        _apiCredentialsDataSource = _localApiCredentialsDataSource;
+        break;
+    }
+  }
 
   @override
   Future<Result<void, ApiCredentialsError>> saveBBApiCredentials({
+    required Database database,
     required String id,
     required String applicationDeveloperKey,
     required String basicKey,
     required bool isFavorite,
   }) async {
+    selectDataSource(database);
     try {
       await _apiCredentialsDataSource.saveBBApiCredentials(
         id: id,
@@ -38,8 +60,10 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   @override
   Future<Result<BBApiCredentialsEntity, ApiCredentialsError>>
       readBBApiCredentials({
+    required Database database,
     required String id,
   }) async {
+    selectDataSource(database);
     try {
       final bbApiCredential =
           await _apiCredentialsDataSource.readBBApiCredentials(id: id);
@@ -64,11 +88,13 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<void, ApiCredentialsError>> updateBBApiCredentials({
+    required Database database,
     required String id,
     required String applicationDeveloperKey,
     required String basicKey,
     required bool isFavorite,
   }) async {
+    selectDataSource(database);
     try {
       await _apiCredentialsDataSource.updateBBApiCredentials(
         id: id,
@@ -89,8 +115,10 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<void, ApiCredentialsError>> removeBBApiCredentials({
+    required Database database,
     required String id,
   }) async {
+    selectDataSource(database);
     try {
       await _apiCredentialsDataSource.deleteBBApiCredentials(id: id);
       return const Success(Void);
@@ -105,12 +133,14 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<void, ApiCredentialsError>> saveSicoobApiCredentials({
+    required Database database,
     required String id,
     required String clientID,
     required String certificatePassword,
     required String certificateBase64String,
     required bool isFavorite,
   }) async {
+    selectDataSource(database);
     try {
       await _apiCredentialsDataSource.saveSicoobApiCredentials(
         id: id,
@@ -132,8 +162,10 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
   @override
   Future<Result<SicoobApiCredentialsEntity, ApiCredentialsError>>
       readSicoobApiCredentials({
+    required Database database,
     required String id,
   }) async {
+    selectDataSource(database);
     try {
       final sicoobApiCredential =
           await _apiCredentialsDataSource.readSicoobApiCredentials(id: id);
@@ -156,12 +188,14 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<void, ApiCredentialsError>> updateSicoobApiCredentials({
+    required Database database,
     required String id,
     required String clientID,
     required String certificatePassword,
     required String certificateBase64String,
     required bool isFavorite,
   }) async {
+    selectDataSource(database);
     try {
       await _apiCredentialsDataSource.updateSicoobApiCredentials(
         id: id,
@@ -182,8 +216,10 @@ class ApiCredentialsRepositoryImpl implements ApiCredentialsRepository {
 
   @override
   Future<Result<void, ApiCredentialsError>> removeSicoobApiCredentials({
+    required Database database,
     required String id,
   }) async {
+    selectDataSource(database);
     try {
       await _apiCredentialsDataSource.deleteSicoobApiCredentials(id: id);
       return const Success(Void);

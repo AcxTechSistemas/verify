@@ -8,6 +8,7 @@ import 'package:verify/app/modules/auth/domain/usecase/get_logged_user_usecase.d
 import 'package:verify/app/modules/config/presenter/sicoob_settings/store/sicoob_settings_store.dart';
 import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentials_entity.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/save_sicoob_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/utils/database_enums.dart';
 import 'package:verify/app/shared/services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
 
 class SicoobSettingsPageController {
@@ -99,6 +100,7 @@ class SicoobSettingsPageController {
     return user.fold(
       (user) async {
         await _saveSicoobApiCredentialsUseCase(
+          database: Database.cloud,
           id: user.name,
           sicoobApiCredentialsEntity: SicoobApiCredentialsEntity(
             clientID: clientIDController.text,

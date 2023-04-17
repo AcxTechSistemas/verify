@@ -3,7 +3,7 @@ import 'package:verify/app/core/register_log.dart';
 import 'package:verify/app/core/send_logs_to_web.dart';
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/modules/database/domain/errors/user_preferences_error.dart';
-import 'package:verify/app/modules/database/infra/datasource/api_credentials_datasource.dart';
+import 'package:verify/app/modules/database/infra/datasource/local_api_credentials_datasource.dart';
 import 'package:verify/app/modules/database/infra/datasource/user_preferences_datasource.dart';
 import 'package:verify/app/modules/database/infra/models/sicoob_api_credentials_model.dart';
 import 'package:verify/app/modules/database/infra/models/bb_api_credentials_model.dart';
@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verify/app/modules/database/utils/database_enums.dart';
 
 class SharedPreferencesLocalDataSourceImpl
-    implements ApiCredentialsDataSource, UserPreferencesDataSource {
+    implements LocalApiCredentialsDataSource, UserPreferencesDataSource {
   final SharedPreferences _sharedPreferences;
   final RegisterLog _registerLog;
   final SendLogsToWeb _sendLogsToWeb;

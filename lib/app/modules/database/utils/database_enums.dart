@@ -3,3 +3,5 @@ enum DocumentName {
   sicoobApiCredential,
   userThemePreference,
 }
+
+enum Database { cloud, local }

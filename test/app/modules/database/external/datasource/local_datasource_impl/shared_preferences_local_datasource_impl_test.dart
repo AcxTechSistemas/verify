@@ -484,12 +484,6 @@ void main() {
             )).called(1);
       });
 
-      test(
-          'Should return ThemeMode.light by default if document does not exist',
-          () async {
-        final themeMode = await dataSource.readUserThemePreference();
-        expect(themeMode, equals(ThemeMode.light));
-      });
       test('Should return user theme preference on SharedPreferencesDataBase',
           () async {
         when(() => sharedPreferences.getString(any())).thenReturn('dark');

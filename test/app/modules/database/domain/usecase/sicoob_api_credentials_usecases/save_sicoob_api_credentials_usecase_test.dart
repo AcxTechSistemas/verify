@@ -7,6 +7,7 @@ import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentia
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/modules/database/domain/repository/api_credentials_repository.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/save_sicoob_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/utils/database_enums.dart';
 
 class MockApiCredentialsRepository extends Mock
     implements ApiCredentialsRepository {}
@@ -15,6 +16,7 @@ void main() {
   late SaveSicoobApiCredentialsUseCase saveSicoobApiCredentialsUseCase;
   late ApiCredentialsRepository apiCredentialsRepository;
   late SicoobApiCredentialsEntity sicoobApiCredentialsEntity;
+  late Database database;
 
   setUp(() {
     apiCredentialsRepository = MockApiCredentialsRepository();
@@ -27,6 +29,8 @@ void main() {
       clientID: '',
       isFavorite: false,
     );
+    database = Database.local;
+    registerFallbackValue(database);
     registerFallbackValue(sicoobApiCredentialsEntity);
   });
 
@@ -34,6 +38,7 @@ void main() {
     test('Should return success on saveSicoobApiCredentials', () async {
       when(
         () => apiCredentialsRepository.saveSicoobApiCredentials(
+          database: any(named: 'database'),
           id: any(named: 'id'),
           clientID: any(named: 'clientID'),
           certificateBase64String: any(named: 'certificateBase64String'),
@@ -43,6 +48,7 @@ void main() {
       ).thenAnswer((_) async => const Success(Void));
 
       final response = await saveSicoobApiCredentialsUseCase(
+        database: database,
         id: 'userID',
         sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
       );
@@ -51,6 +57,7 @@ void main() {
 
       verify(
         () => apiCredentialsRepository.saveSicoobApiCredentials(
+          database: database,
           id: 'userID',
           clientID: sicoobApiCredentialsEntity.clientID,
           certificateBase64String:
@@ -69,6 +76,7 @@ void main() {
 
       when(
         () => apiCredentialsRepository.saveSicoobApiCredentials(
+          database: any(named: 'database'),
           id: any(named: 'id'),
           clientID: any(named: 'clientID'),
           certificateBase64String: any(named: 'certificateBase64String'),
@@ -78,6 +86,7 @@ void main() {
       ).thenAnswer((_) async => Failure(apiCredentialsError));
 
       final response = await saveSicoobApiCredentialsUseCase(
+        database: database,
         id: 'userID',
         sicoobApiCredentialsEntity: sicoobApiCredentialsEntity,
       );
@@ -86,6 +95,7 @@ void main() {
 
       verify(
         () => apiCredentialsRepository.saveSicoobApiCredentials(
+          database: database,
           id: 'userID',
           clientID: sicoobApiCredentialsEntity.clientID,
           certificateBase64String:

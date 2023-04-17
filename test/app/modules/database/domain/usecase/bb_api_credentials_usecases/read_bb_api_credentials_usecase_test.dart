@@ -5,6 +5,7 @@ import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_e
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/modules/database/domain/repository/api_credentials_repository.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/read_bb_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/utils/database_enums.dart';
 
 class MockApiCredentialsRepository extends Mock
     implements ApiCredentialsRepository {}
@@ -13,6 +14,7 @@ void main() {
   late ReadBBApiCredentialsUseCase readBBApiCredentialsUseCase;
   late ApiCredentialsRepository apiCredentialsRepository;
   late BBApiCredentialsEntity bbApiCredentialsEntity;
+  late Database database;
 
   setUp(() {
     apiCredentialsRepository = MockApiCredentialsRepository();
@@ -24,16 +26,20 @@ void main() {
       basicKey: 'teste',
       isFavorite: false,
     );
+    database = Database.local;
+    registerFallbackValue(database);
     registerFallbackValue(bbApiCredentialsEntity);
   });
 
   group('ReadBBApiCredentialsUseCase: ', () {
     test('Should return success on readBBApiCredentials', () async {
       when(() => apiCredentialsRepository.readBBApiCredentials(
+            database: any(named: 'database'),
             id: any(named: 'id'),
           )).thenAnswer((_) async => Success(bbApiCredentialsEntity));
 
       final response = await readBBApiCredentialsUseCase(
+        database: database,
         id: 'userID',
       );
       final result = response.getOrNull();
@@ -49,11 +55,14 @@ void main() {
       );
 
       when(
-        () =>
-            apiCredentialsRepository.readBBApiCredentials(id: any(named: 'id')),
+        () => apiCredentialsRepository.readBBApiCredentials(
+          database: any(named: 'database'),
+          id: any(named: 'id'),
+        ),
       ).thenAnswer((_) async => Failure(apiCredentialsError));
 
       final response = await readBBApiCredentialsUseCase(
+        database: database,
         id: 'userID',
       );
 

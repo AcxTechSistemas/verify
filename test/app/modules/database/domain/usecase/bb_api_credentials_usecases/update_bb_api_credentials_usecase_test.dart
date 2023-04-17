@@ -7,6 +7,7 @@ import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_e
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
 import 'package:verify/app/modules/database/domain/repository/api_credentials_repository.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/update_bb_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/utils/database_enums.dart';
 
 class MockApiCredentialsRepository extends Mock
     implements ApiCredentialsRepository {}
@@ -15,6 +16,7 @@ void main() {
   late UpdateBBApiCredentialsUseCase updateBBApiCredentialsUseCase;
   late ApiCredentialsRepository apiCredentialsRepository;
   late BBApiCredentialsEntity bbApiCredentialsEntity;
+  late Database database;
 
   setUp(() {
     apiCredentialsRepository = MockApiCredentialsRepository();
@@ -26,6 +28,8 @@ void main() {
       basicKey: '',
       isFavorite: false,
     );
+    database = Database.local;
+    registerFallbackValue(database);
     registerFallbackValue(bbApiCredentialsEntity);
   });
 
@@ -33,6 +37,7 @@ void main() {
     test('Should return success on saveBBApiCredentials', () async {
       when(
         () => apiCredentialsRepository.updateBBApiCredentials(
+          database: any(named: 'database'),
           id: any(named: 'id'),
           applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
           basicKey: any(named: 'basicKey'),
@@ -41,12 +46,14 @@ void main() {
       ).thenAnswer((_) async => const Success(Void));
 
       final response = await updateBBApiCredentialsUseCase(
+        database: database,
         id: 'userID',
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
 
       verify(
         () => apiCredentialsRepository.updateBBApiCredentials(
+          database: database,
           id: 'userID',
           applicationDeveloperKey:
               bbApiCredentialsEntity.applicationDeveloperKey,
@@ -66,6 +73,7 @@ void main() {
 
       when(
         () => apiCredentialsRepository.updateBBApiCredentials(
+          database: any(named: 'database'),
           id: any(named: 'id'),
           applicationDeveloperKey: any(named: 'applicationDeveloperKey'),
           basicKey: any(named: 'basicKey'),
@@ -74,6 +82,7 @@ void main() {
       ).thenAnswer((_) async => Failure(apiCredentialsError));
 
       final response = await updateBBApiCredentialsUseCase(
+        database: database,
         id: 'userID',
         bbApiCredentialsEntity: bbApiCredentialsEntity,
       );
@@ -82,6 +91,7 @@ void main() {
 
       verify(
         () => apiCredentialsRepository.updateBBApiCredentials(
+          database: database,
           id: 'userID',
           applicationDeveloperKey:
               bbApiCredentialsEntity.applicationDeveloperKey,
