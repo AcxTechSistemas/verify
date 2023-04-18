@@ -8,6 +8,7 @@ import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/core/auth_store.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/read_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/remove_bb_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/read_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/remove_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/remove_user_theme_mode_preference_usecase.dart';
@@ -124,6 +125,9 @@ class AppModule extends Module {
         ),
         AutoBind.factory<RemoveSicoobApiCredentialsUseCase>(
           RemoveSicoobApiCredentialsUseCaseImpl.new,
+        ),
+        AutoBind.factory<SaveBBApiCredentialsUseCase>(
+          SaveBBApiCredentialsUseCaseImpl.new,
         ),
         AutoBind.factory<ReadBBApiCredentialsUseCase>(
           ReadBBApiCredentialsUseCaseImpl.new,
