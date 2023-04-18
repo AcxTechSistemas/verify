@@ -125,28 +125,25 @@ class SicoobSettingsPageController {
 
   Future<String?> _saveCredentialsinDatabase(Database database) async {
     final user = await _getLoggedUserUseCase();
-    return user.fold(
-      (user) async {
-        final saved = await _saveSicoobApiCredentialsUseCase(
-          database: database,
-          id: user.id,
-          sicoobApiCredentialsEntity: SicoobApiCredentialsEntity(
-            clientID: clientIDController.text,
-            certificatePassword: certificatePasswordController.text,
-            certificateBase64String: certificateString,
-            isFavorite: false,
-          ),
-        );
-        saved.fold(
-          (success) => null,
-          (failure) => failure.message,
-        );
-        return null;
-      },
-      (error) {
-        return error.message;
-      },
-    );
+    if (user == null) {
+      return 'Sua sessão expirou.\nPor favor, faça login novamente.';
+    } else {
+      final saved = await _saveSicoobApiCredentialsUseCase(
+        database: database,
+        id: user.id,
+        sicoobApiCredentialsEntity: SicoobApiCredentialsEntity(
+          clientID: clientIDController.text,
+          certificatePassword: certificatePasswordController.text,
+          certificateBase64String: certificateString,
+          isFavorite: false,
+        ),
+      );
+      saved.fold(
+        (success) => null,
+        (failure) => failure.message,
+      );
+      return null;
+    }
   }
 
   void clearStore() {

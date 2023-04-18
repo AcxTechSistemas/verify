@@ -17,8 +17,7 @@ class SendLogsToDiscordChannel implements SendLogsToWeb {
   @override
   Future<void> call(Object e) async {
     final getLoggedUser = Modular.get<GetLoggedUserUseCase>();
-    final result = getLoggedUser();
-    final user = await result.getOrNull();
+    final user = await getLoggedUser();
     final userId = user?.id;
 
     await _clientService.post(

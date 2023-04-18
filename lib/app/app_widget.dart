@@ -1,25 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/app_store.dart';
+import 'package:verify/app/core/auth_store.dart';
 import 'package:verify/app/shared/themes/theme.dart';
+import 'package:verify/app/splash_screen_widget.dart';
 
-class AppWidget extends StatelessWidget {
+class AppWidget extends StatefulWidget {
   const AppWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final appStore = Modular.get<AppStore>();
-    Modular.setInitialRoute('/auth/login');
+  State<AppWidget> createState() => _AppWidgetState();
+}
 
-    return FutureBuilder(
-        future: appStore.loadData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const CircularProgressIndicator();
-          }
-          return Observer(
+class _AppWidgetState extends State<AppWidget> {
+  final appStore = Modular.get<AppStore>();
+  final authStore = Modular.get<AuthStore>();
+  final apiCredentialsStore = Modular.get<ApiCredentialsStore>();
+
+  bool intialized = false;
+
+  Future<void> loadData() async {
+    await appStore.loadData();
+    await authStore.loadData();
+    await apiCredentialsStore.loadData();
+    setState(() {
+      intialized = true;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return !intialized
+        ? const SplashScreen()
+        : Observer(
             builder: (context) {
+              Modular.setInitialRoute('/auth/login');
               return MaterialApp.router(
                 debugShowCheckedModeBanner: false,
                 themeMode: appStore.themeMode.value,
@@ -30,6 +53,5 @@ class AppWidget extends StatelessWidget {
               );
             },
           );
-        });
   }
 }

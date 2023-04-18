@@ -24,7 +24,7 @@ class FirebaseDataSourceImpl implements AuthDataSource {
   );
 
   @override
-  Future<UserModel> currentUser() async {
+  Future<UserModel?> currentUser() async {
     try {
       final user = _firebaseAuth.currentUser;
       if (user != null) {
@@ -35,13 +35,11 @@ class FirebaseDataSourceImpl implements AuthDataSource {
           emailVerified: user.emailVerified,
         );
       } else {
-        throw ErrorGetLoggedUser(
-          message: 'Token expirado. \nPor favor, faça login novamente.',
-        );
+        return null;
       }
     } on FirebaseAuthException catch (e) {
       final errorMessage = await _firebaseAuthErrorHandler(e);
-      throw ErrorLoginEmail(message: errorMessage);
+      throw ErrorGetLoggedUser(message: errorMessage);
     } catch (e) {
       await _sendLogsToWeb(e);
       _registerLog(e);

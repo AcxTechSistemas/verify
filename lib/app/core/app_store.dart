@@ -9,22 +9,26 @@ class AppStore = AppStoreBase with _$AppStore;
 
 abstract class AppStoreBase with Store {
   @observable
+  bool loading = false;
+
+  @observable
   var themeMode = Observable<ThemeMode>(ThemeMode.system);
 
   @observable
   var currentDestination = Observable<int>(0);
 
   @action
-  setPreferredTheme(ThemeMode theme) {
+  void setPreferredTheme(ThemeMode theme) {
     themeMode.value = theme;
   }
 
   @action
-  setCurrentDestination(int destination) {
+  void setCurrentDestination(int destination) {
     currentDestination.value = destination;
   }
 
   Future<void> loadData() async {
+    loading = true;
     final readUserThemePreference =
         Modular.get<ReadUserThemeModePreferencesUseCase>();
     final mode = await readUserThemePreference();
@@ -32,5 +36,6 @@ abstract class AppStoreBase with Store {
     if (themeResult != null) {
       setPreferredTheme(themeResult);
     }
+    loading = false;
   }
 }

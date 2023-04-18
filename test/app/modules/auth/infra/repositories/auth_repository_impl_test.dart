@@ -40,8 +40,8 @@ void main() {
       );
 
       final user = await authRepository.loggedUser();
-      final result = user.getOrNull();
-      expect(result, isNotNull);
+
+      expect(user, isNotNull);
     });
 
     test('Shoud return UserModel if login with email is successful', () async {

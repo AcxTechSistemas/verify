@@ -11,17 +11,9 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._authDataSource);
 
   @override
-  Future<Result<LoggedUserInfoEntity, AuthError>> loggedUser() async {
-    try {
-      final user = await _authDataSource.currentUser();
-      return Success(user);
-    } on ErrorGetLoggedUser catch (e) {
-      return Failure(e);
-    } catch (e) {
-      return Failure(ErrorGetLoggedUser(
-        message: 'Ocorreu um erro ao realizar o login. Tente novamente',
-      ));
-    }
+  Future<LoggedUserInfoEntity?> loggedUser() async {
+    final user = await _authDataSource.currentUser();
+    return user;
   }
 
   @override

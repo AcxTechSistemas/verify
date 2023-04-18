@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/modules/config/presenter/settings/controller/settings_page_controller.dart';
 import 'package:verify/app/modules/config/presenter/settings/view/widgets/accounts_list_tile_widget.dart';
@@ -14,6 +15,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final appStore = Modular.get<AppStore>();
+  final apiCredentialsStore = Modular.get<ApiCredentialsStore>();
   final controller = Modular.get<SettingsPageController>();
   @override
   Widget build(BuildContext context) {
@@ -134,13 +136,15 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(height: 16),
                   AccountListTile(
                     bank: Bank.sicoob,
-                    hasCredentials: false,
+                    hasCredentials:
+                        apiCredentialsStore.sicoobApiCredentialsEntity != null,
                     onTap: controller.goToSicoobSettings,
                   ),
                   const SizedBox(height: 16),
                   AccountListTile(
                     bank: Bank.bancoDoBrasil,
-                    hasCredentials: false,
+                    hasCredentials:
+                        apiCredentialsStore.bbApiCredentialsEntity != null,
                     onTap: () {},
                   ),
                 ],

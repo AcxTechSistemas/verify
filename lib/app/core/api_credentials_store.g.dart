@@ -24,6 +24,22 @@ mixin _$ApiCredentialsStore on ApiCredentialsStoreBase, Store {
               name: 'ApiCredentialsStoreBase.listAccounts'))
       .value;
 
+  late final _$loadingAtom =
+      Atom(name: 'ApiCredentialsStoreBase.loading', context: context);
+
+  @override
+  bool get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
   late final _$bbApiCredentialsEntityAtom = Atom(
       name: 'ApiCredentialsStoreBase.bbApiCredentialsEntity', context: context);
 
@@ -59,6 +75,14 @@ mixin _$ApiCredentialsStore on ApiCredentialsStoreBase, Store {
     });
   }
 
+  late final _$loadDataAsyncAction =
+      AsyncAction('ApiCredentialsStoreBase.loadData', context: context);
+
+  @override
+  Future<void> loadData() {
+    return _$loadDataAsyncAction.run(() => super.loadData());
+  }
+
   late final _$ApiCredentialsStoreBaseActionController =
       ActionController(name: 'ApiCredentialsStoreBase', context: context);
 
@@ -87,6 +111,7 @@ mixin _$ApiCredentialsStore on ApiCredentialsStoreBase, Store {
   @override
   String toString() {
     return '''
+loading: ${loading},
 bbApiCredentialsEntity: ${bbApiCredentialsEntity},
 sicoobApiCredentialsEntity: ${sicoobApiCredentialsEntity},
 hasApiCredentials: ${hasApiCredentials},

@@ -76,12 +76,12 @@ void main() {
       );
     });
 
-    test('should throw ErrorGetLoggedUser when currentUser fails', () async {
+    test('should return null when currentUser fails', () async {
       when(() => firebaseAuth.currentUser).thenReturn(null);
 
-      final future = dataSource.currentUser();
+      final user = await dataSource.currentUser();
 
-      expect(future, throwsA(isInstanceOf<ErrorGetLoggedUser>()));
+      expect(user, isNull);
     });
 
     test(

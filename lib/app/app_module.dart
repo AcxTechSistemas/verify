@@ -3,8 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/core/auth_store.dart';
+import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/read_bb_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/read_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/auth/auth_module.dart';
@@ -52,6 +55,7 @@ class AppModule extends Module {
         /// Global Stores
         AutoBind.instance<AppStore>(AppStore()),
         AutoBind.instance<AuthStore>(AuthStore()),
+        AutoBind.instance<ApiCredentialsStore>(ApiCredentialsStore()),
 
         /// Global Services
         //SicoobPIX
@@ -66,9 +70,9 @@ class AppModule extends Module {
         AutoBind.instance<FirebaseAuth>(FirebaseAuth.instance),
         AutoBind.instance<GoogleSignIn>(GoogleSignIn()),
         //DataSource
-        AutoBind.factory<AuthDataSource>(FirebaseDataSourceImpl.new),
+        AutoBind.singleton<AuthDataSource>(FirebaseDataSourceImpl.new),
         //Repository
-        AutoBind.factory<AuthRepository>(AuthRepositoryImpl.new),
+        AutoBind.singleton<AuthRepository>(AuthRepositoryImpl.new),
         //Use Cases
         AutoBind.factory<LoginWithEmailUseCase>(LoginWithEmailUseCaseImpl.new),
         AutoBind.factory<LoginWithGoogleUseCase>(LoginWithGoogleImpl.new),
@@ -108,6 +112,12 @@ class AppModule extends Module {
         ),
         AutoBind.factory<SaveSicoobApiCredentialsUseCase>(
           SaveSicoobApiCredentialsUseCaseImpl.new,
+        ),
+        AutoBind.factory<ReadBBApiCredentialsUseCase>(
+          ReadBBApiCredentialsUseCaseImpl.new,
+        ),
+        AutoBind.factory<ReadSicoobApiCredentialsUseCase>(
+          ReadSicoobApiCredentialsUseCaseImpl.new,
         ),
         //Repositories
         AutoBind.factory<ApiCredentialsRepository>(

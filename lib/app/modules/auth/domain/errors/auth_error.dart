@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 abstract class AuthError implements Exception {
   String get message;
 }
@@ -8,6 +9,8 @@ class ErrorSendingEmailVerification extends AuthError {
   ErrorSendingEmailVerification({
     required this.message,
   });
+  @override
+  String toString() => 'ErrorSendingEmailVerification(message: $message)';
 }
 
 class ErrorRecoverAccount extends AuthError {
@@ -16,6 +19,8 @@ class ErrorRecoverAccount extends AuthError {
   ErrorRecoverAccount({
     required this.message,
   });
+  @override
+  String toString() => 'ErrorRecoverAccount(message: $message)';
 }
 
 class ErrorGoogleLogin extends AuthError {
@@ -24,6 +29,8 @@ class ErrorGoogleLogin extends AuthError {
   ErrorGoogleLogin({
     required this.message,
   });
+  @override
+  String toString() => 'ErrorGoogleLogin(message: $message)';
 }
 
 class ErrorLoginEmail extends AuthError {
@@ -32,6 +39,8 @@ class ErrorLoginEmail extends AuthError {
   ErrorLoginEmail({
     required this.message,
   });
+  @override
+  String toString() => 'ErrorLoginEmail(message: $message)';
 }
 
 class ErrorGetLoggedUser extends AuthError {
@@ -40,6 +49,8 @@ class ErrorGetLoggedUser extends AuthError {
   ErrorGetLoggedUser({
     required this.message,
   });
+  @override
+  String toString() => 'ErrorGetLoggedUser(message: $message)';
 }
 
 class ErrorLogout extends AuthError {
@@ -48,6 +59,9 @@ class ErrorLogout extends AuthError {
   ErrorLogout({
     required this.message,
   });
+
+  @override
+  String toString() => 'ErrorLogout(message: $message)';
 }
 
 class ErrorRegisterEmail extends AuthError {
@@ -56,4 +70,7 @@ class ErrorRegisterEmail extends AuthError {
   ErrorRegisterEmail({
     required this.message,
   });
+
+  @override
+  String toString() => 'ErrorRegisterEmail(message: $message)';
 }
