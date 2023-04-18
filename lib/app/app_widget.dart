@@ -25,9 +25,11 @@ class _AppWidgetState extends State<AppWidget> {
     await appStore.loadData();
     await authStore.loadData();
     await apiCredentialsStore.loadData();
-    setState(() {
-      intialized = true;
-    });
+    if (mounted) {
+      setState(() {
+        intialized = true;
+      });
+    }
   }
 
   @override
