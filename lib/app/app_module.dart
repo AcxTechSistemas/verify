@@ -8,6 +8,7 @@ import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/core/auth_store.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/read_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/remove_bb_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/read_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/remove_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/remove_user_theme_mode_preference_usecase.dart';
@@ -39,6 +40,8 @@ import 'package:verify/app/modules/database/infra/datasource/local_api_credentia
 import 'package:verify/app/modules/database/infra/datasource/user_preferences_datasource.dart';
 import 'package:verify/app/modules/database/infra/repository/api_credentials_repository_impl.dart';
 import 'package:verify/app/modules/database/infra/repository/user_preferences_repository_impl.dart';
+import 'package:verify/app/shared/services/bb_pix_api_service/bb_pix_api_service.dart';
+import 'package:verify/app/shared/services/bb_pix_api_service/error_handler/bb_pix_api_error_handler.dart';
 import 'package:verify/app/shared/services/client_service/client_service.dart';
 import 'package:verify/app/shared/services/client_service/dio_client_service.dart';
 import 'package:verify/app/shared/services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
@@ -61,10 +64,15 @@ class AppModule extends Module {
         AutoBind.instance<ApiCredentialsStore>(ApiCredentialsStore()),
 
         /// Global Services
-        //SicoobPIX
+        //SicoobPix
         AutoBind.singleton<SicoobPixApiService>(SicoobPixApiServiceImpl.new),
         AutoBind.factory<SicoobPixApiServiceErrorHandler>(
           SicoobPixApiServiceErrorHandler.new,
+        ),
+        //BBPix
+        AutoBind.singleton<BBPixApiService>(BBPixApiServiceImpl.new),
+        AutoBind.factory<BBPixApiServiceErrorHandler>(
+          BBPixApiServiceErrorHandler.new,
         ),
         //Banco do Brasil
 
@@ -127,6 +135,9 @@ class AppModule extends Module {
         ),
         AutoBind.factory<ReadBBApiCredentialsUseCase>(
           ReadBBApiCredentialsUseCaseImpl.new,
+        ),
+        AutoBind.factory<SaveBBApiCredentialsUseCase>(
+          SaveBBApiCredentialsUseCaseImpl.new,
         ),
         AutoBind.factory<RemoveBBApiCredentialsUseCase>(
           RemoveBBApiCredentialsUseCaseImpl.new,
