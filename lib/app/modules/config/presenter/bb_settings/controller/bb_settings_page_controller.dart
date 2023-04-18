@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:verify/app/modules/auth/domain/usecase/get_logged_user_usecase.dart';
-import 'package:verify/app/modules/config/presenter/sicoob_settings/store/sicoob_settings_store.dart';
+import 'package:verify/app/modules/config/presenter/bb_settings/store/bb_settings_store.dart';
 import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_entity.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/remove_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
@@ -11,7 +11,7 @@ import 'package:verify/app/shared/services/bb_pix_api_service/bb_pix_api_service
 
 class BBSettingsPageController {
   final BBPixApiService _bbPixApiService;
-  final SicoobSettingsStore _store;
+  final BBSettingsStore _store;
   final SaveBBApiCredentialsUseCase _saveBBApiCredentialsUseCase;
   final RemoveBBApiCredentialsUseCase _removeBBApiCredentialsUseCase;
   final GetLoggedUserUseCase _getLoggedUserUseCase;
@@ -159,7 +159,6 @@ class BBSettingsPageController {
     _store.savingInCloud(false);
     _store.savingInLocal(false);
     _store.validatingCredentials(false);
-    _store.setCertificateFileName('');
     _store.setValidFields(false);
   }
 }

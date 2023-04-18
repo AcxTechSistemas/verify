@@ -5,7 +5,6 @@ import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/auth/presenter/shared/widgets/auth_action_button.dart';
 import 'package:verify/app/modules/config/presenter/bb_settings/controller/bb_settings_page_controller.dart';
 import 'package:verify/app/modules/config/presenter/shared/widgets/setup_field_widget.dart';
-import 'package:verify/app/modules/config/presenter/sicoob_settings/controller/sicoob_settings_page_controller.dart';
 import 'package:verify/app/modules/config/presenter/sicoob_settings/store/sicoob_settings_store.dart';
 import 'package:verify/app/shared/widgets/custom_snack_bar.dart';
 
@@ -72,11 +71,11 @@ class _BBSettingsPageState extends State<BBSettingsPage> {
             Padding(
               padding: const EdgeInsets.all(16),
               child: Observer(builder: (context) {
-                if (apiStore.sicoobApiCredentialsEntity != null) {
+                if (apiStore.bbApiCredentialsEntity != null) {
                   return Column(
                     children: [
                       Image.asset(
-                        'assets/images/sicoobAccountCard.png',
+                        'assets/images/bancoDoBrasilAccountCard.png',
                         scale: 1.7,
                       ),
                       Padding(
@@ -85,7 +84,7 @@ class _BBSettingsPageState extends State<BBSettingsPage> {
                           title: 'Remover credenciais',
                           color: colorScheme.error,
                           onPressed: _removeCredentials,
-                          enabled: apiStore.sicoobApiCredentialsEntity != null,
+                          enabled: apiStore.bbApiCredentialsEntity != null,
                           isLoading:
                               store.isSavingInCloud || store.isSavingInLocal,
                         ),
