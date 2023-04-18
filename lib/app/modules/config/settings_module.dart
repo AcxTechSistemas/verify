@@ -25,5 +25,9 @@ class SettingsModule extends Module {
           '/sicoob-settings',
           child: (context, _) => const SicoobSettingsPage(),
         ),
+        ChildRoute(
+          '/bb-settings',
+          child: (context, _) => const SicoobSettingsPage(),
+        ),
       ];
 }

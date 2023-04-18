@@ -25,6 +25,10 @@ class SettingsPageController {
     Modular.to.pushReplacementNamed('./sicoob-settings');
   }
 
+  void goToBBSettings() {
+    Modular.to.pushReplacementNamed('./bb-settings');
+  }
+
   Future<void> logout() async {
     final loggout = Modular.get<LogoutUseCase>();
     await loggout().then((loggedOut) async {

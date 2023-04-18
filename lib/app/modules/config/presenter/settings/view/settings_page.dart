@@ -154,7 +154,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     bank: Bank.bancoDoBrasil,
                     hasCredentials:
                         apiCredentialsStore.bbApiCredentialsEntity != null,
-                    onTap: () {},
+                    onTap: controller.goToBBSettings,
                   ),
                 ],
               ),
