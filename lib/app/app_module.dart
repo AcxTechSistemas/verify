@@ -133,6 +133,9 @@ class AppModule extends Module {
         AutoBind.factory<RemoveSicoobApiCredentialsUseCase>(
           RemoveSicoobApiCredentialsUseCaseImpl.new,
         ),
+        AutoBind.factory<SaveBBApiCredentialsUseCase>(
+          SaveBBApiCredentialsUseCaseImpl.new,
+        ),
         AutoBind.factory<ReadBBApiCredentialsUseCase>(
           ReadBBApiCredentialsUseCaseImpl.new,
         ),
