@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class SetupFieldWidget extends StatelessWidget {
   final String title;
+  final String? initialValue;
   final TextEditingController controller;
   final void Function()? onPressed;
   final Function()? onEditingComplete;
@@ -15,12 +16,15 @@ class SetupFieldWidget extends StatelessWidget {
     this.validator,
     this.focusNode,
     this.onEditingComplete,
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      initialValue: initialValue,
+      obscureText: initialValue != null,
       focusNode: focusNode,
       validator: validator,
       onEditingComplete: onEditingComplete,

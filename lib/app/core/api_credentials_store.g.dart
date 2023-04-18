@@ -109,6 +109,17 @@ mixin _$ApiCredentialsStore on ApiCredentialsStoreBase, Store {
   }
 
   @override
+  void dispose() {
+    final _$actionInfo = _$ApiCredentialsStoreBaseActionController.startAction(
+        name: 'ApiCredentialsStoreBase.dispose');
+    try {
+      return super.dispose();
+    } finally {
+      _$ApiCredentialsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 loading: ${loading},

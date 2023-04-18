@@ -38,4 +38,11 @@ abstract class AppStoreBase with Store {
     }
     loading = false;
   }
+
+  @action
+  void dispose() {
+    themeMode.value = ThemeMode.system;
+    currentDestination.value = 0;
+    loading = false;
+  }
 }

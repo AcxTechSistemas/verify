@@ -94,4 +94,11 @@ abstract class ApiCredentialsStoreBase with Store {
     bbApiCredentialsEntity = bbCredentials;
     loading = false;
   }
+
+  @action
+  void dispose() {
+    bbApiCredentialsEntity = null;
+    sicoobApiCredentialsEntity = null;
+    loading = false;
+  }
 }

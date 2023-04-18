@@ -13,6 +13,23 @@ abstract class AuthStoreBase with Store {
   @observable
   LoggedUserInfoEntity? loggedUser;
 
+  @computed
+  String get userName {
+    String name = '';
+    String subName = '';
+    final splitted = loggedUser?.name.split(' ');
+    if (splitted != null) {
+      if (splitted.length >= 2) {
+        name = splitted[0];
+        subName = splitted[1];
+      } else {
+        name = splitted.first;
+      }
+    }
+
+    return '$name $subName';
+  }
+
   @action
   void setUser(LoggedUserInfoEntity? user) {
     loggedUser = user;
@@ -25,5 +42,11 @@ abstract class AuthStoreBase with Store {
     final user = await useCase();
     loggedUser = user;
     loading = false;
+  }
+
+  @action
+  void dispose() {
+    loading = false;
+    loggedUser = null;
   }
 }

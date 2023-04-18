@@ -7,7 +7,10 @@ import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/core/auth_store.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/read_bb_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/remove_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/read_sicoob_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/remove_sicoob_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/remove_user_theme_mode_preference_usecase.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/auth/auth_module.dart';
@@ -77,6 +80,9 @@ class AppModule extends Module {
         AutoBind.factory<LoginWithEmailUseCase>(LoginWithEmailUseCaseImpl.new),
         AutoBind.factory<LoginWithGoogleUseCase>(LoginWithGoogleImpl.new),
         AutoBind.factory<GetLoggedUserUseCase>(GetLoggedUserUseCaseImpl.new),
+        AutoBind.factory<RemoveUserThemeModePreferencesUseCase>(
+          RemoveUserThemeModePreferencesUseCaseImpl.new,
+        ),
         AutoBind.factory<RegisterWithEmailUseCase>(
           RegisterWithEmailUseCaseImpl.new,
         ),
@@ -113,11 +119,17 @@ class AppModule extends Module {
         AutoBind.factory<SaveSicoobApiCredentialsUseCase>(
           SaveSicoobApiCredentialsUseCaseImpl.new,
         ),
+        AutoBind.factory<ReadSicoobApiCredentialsUseCase>(
+          ReadSicoobApiCredentialsUseCaseImpl.new,
+        ),
+        AutoBind.factory<RemoveSicoobApiCredentialsUseCase>(
+          RemoveSicoobApiCredentialsUseCaseImpl.new,
+        ),
         AutoBind.factory<ReadBBApiCredentialsUseCase>(
           ReadBBApiCredentialsUseCaseImpl.new,
         ),
-        AutoBind.factory<ReadSicoobApiCredentialsUseCase>(
-          ReadSicoobApiCredentialsUseCaseImpl.new,
+        AutoBind.factory<RemoveBBApiCredentialsUseCase>(
+          RemoveBBApiCredentialsUseCaseImpl.new,
         ),
         //Repositories
         AutoBind.factory<ApiCredentialsRepository>(

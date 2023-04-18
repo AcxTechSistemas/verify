@@ -83,6 +83,17 @@ mixin _$AppStore on AppStoreBase, Store {
   }
 
   @override
+  void dispose() {
+    final _$actionInfo = _$AppStoreBaseActionController.startAction(
+        name: 'AppStoreBase.dispose');
+    try {
+      return super.dispose();
+    } finally {
+      _$AppStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 loading: ${loading},

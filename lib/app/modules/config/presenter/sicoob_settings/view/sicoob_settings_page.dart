@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/auth/presenter/shared/widgets/auth_action_button.dart';
 import 'package:verify/app/modules/config/presenter/shared/widgets/setup_field_widget.dart';
 import 'package:verify/app/modules/config/presenter/sicoob_settings/controller/sicoob_settings_page_controller.dart';
@@ -17,6 +18,8 @@ class SicoobSettingsPage extends StatefulWidget {
 class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
   final controller = Modular.get<SicoobSettingsPageController>();
   final store = Modular.get<SicoobSettingsStore>();
+  final apiStore = Modular.get<ApiCredentialsStore>();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -70,102 +73,118 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text('Configure sua conta:'),
-                  const SizedBox(height: 16),
-                  Form(
-                    key: controller.formKey,
-                    onChanged: () => controller.validateFields(),
-                    child: Column(
-                      children: [
-                        SetupFieldWidget(
-                          title: 'ClientID',
-                          onPressed: controller.clientIDController.clear,
-                          controller: controller.clientIDController,
-                          validator: controller.validateClientID,
-                          focusNode: controller.clientIDFocus,
-                          onEditingComplete:
-                              controller.certificatePasswordFocus.requestFocus,
+              child: Observer(builder: (context) {
+                if (apiStore.sicoobApiCredentialsEntity != null) {
+                  return Column(
+                    children: [
+                      Image.asset(
+                        'assets/images/sicoobAccountCard.png',
+                        scale: 1.7,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: AuthActionButton(
+                          title: 'Remover credenciais',
+                          color: colorScheme.error,
+                          onPressed: _removeCredentials,
+                          enabled: apiStore.sicoobApiCredentialsEntity != null,
+                          isLoading:
+                              store.isSavingInCloud || store.isSavingInLocal,
                         ),
-                        const SizedBox(height: 16),
-                        SetupFieldWidget(
-                          title: 'Senha do certificado',
-                          onPressed:
-                              controller.certificatePasswordController.clear,
-                          controller: controller.certificatePasswordController,
-                          validator: controller.validateCertificatePassword,
-                          focusNode: controller.certificatePasswordFocus,
-                          onEditingComplete:
-                              controller.certificatePasswordFocus.unfocus,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  InkWell(
-                    onTap: controller.pickCertificate,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
+                      ),
+                    ],
+                  );
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text('Configure sua conta:'),
+                    const SizedBox(height: 16),
+                    Form(
+                      key: controller.formKey,
+                      onChanged: () => controller.validateFields(),
+                      child: Column(
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Observer(builder: (context) {
-                                return Visibility(
+                          SetupFieldWidget(
+                            title: 'ClientID',
+                            controller: controller.clientIDController,
+                            validator: controller.validateClientID,
+                            focusNode: controller.clientIDFocus,
+                            onPressed: controller.clientIDController.clear,
+                            onEditingComplete: controller
+                                .certificatePasswordFocus.requestFocus,
+                          ),
+                          const SizedBox(height: 16),
+                          SetupFieldWidget(
+                            title: 'Senha do certificado',
+                            onPressed:
+                                controller.certificatePasswordController.clear,
+                            controller:
+                                controller.certificatePasswordController,
+                            validator: controller.validateCertificatePassword,
+                            focusNode: controller.certificatePasswordFocus,
+                            onEditingComplete:
+                                controller.certificatePasswordFocus.unfocus,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    InkWell(
+                      onTap: controller.pickCertificate,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Visibility(
                                   visible: store.certificateFileName.isEmpty,
                                   child: Text(
                                     'Enviar certificado',
                                     style: textTheme.bodyMedium,
                                   ),
-                                );
-                              }),
-                              Observer(builder: (context) {
-                                const title = 'Selecione um certificado';
-                                final fileName = store.certificateFileName;
-                                return Text(
+                                ),
+                                Text(
                                   store.certificateFileName.isEmpty
-                                      ? title
-                                      : fileName,
+                                      ? 'Selecione um certificado'
+                                      : store.certificateFileName,
                                   style: textTheme.titleLarge!.copyWith(
                                     fontWeight: FontWeight.w400,
                                   ),
-                                );
-                              }),
-                            ],
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            const Icon(Icons.attach_file),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Row(
+                        children: [
+                          TextButton(
+                            onPressed: controller.backToSettings,
+                            child: const Text('Cancelar'),
                           ),
                           const Spacer(),
-                          const Icon(Icons.attach_file),
+                          AuthActionButton(
+                            title: 'Validar credenciais',
+                            onPressed: _validateCredentials,
+                            enabled: store.isValidFields,
+                            isLoading: store.isValidatingCredentials ||
+                                store.isSavingInCloud ||
+                                store.isSavingInLocal,
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  TextButton(
-                    onPressed: controller.backToSettings,
-                    child: const Text('Cancelar'),
-                  ),
-                  const Spacer(),
-                  Observer(builder: (context) {
-                    return AuthActionButton(
-                      title: 'Validar credenciais',
-                      onPressed: _validateCredentials,
-                      enabled: store.isValidFields,
-                      isLoading: store.isValidatingCredentials ||
-                          store.isSavingInCloud ||
-                          store.isSavingInLocal,
-                    );
-                  }),
-                ],
-              ),
+                  ],
+                );
+              }),
             ),
           ],
         ),
@@ -192,7 +211,6 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
             errorMessage: 'Credenciais validadas com sucesso!',
             type: SnackBarType.success,
           );
-          controller.backToSettings();
         }
       }
     });
@@ -210,7 +228,24 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
         errorInSaving = errorLocalSaving;
       },
     );
+    await apiStore.loadData();
     return errorInSaving;
+  }
+
+  Future<String?> _removeCredentials() async {
+    String? errorInRemoving;
+    await controller.removeCredentialsinCloud().then(
+      (errorSavingCloud) {
+        errorInRemoving = errorSavingCloud;
+      },
+    );
+    await controller.removeCredentialsinLocal().then(
+      (errorLocalSaving) {
+        errorInRemoving = errorLocalSaving;
+      },
+    );
+    await apiStore.loadData();
+    return errorInRemoving;
   }
 
   _showSnackBar({

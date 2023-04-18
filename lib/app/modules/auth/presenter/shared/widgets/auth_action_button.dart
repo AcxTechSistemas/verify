@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AuthActionButton extends StatelessWidget {
   final String title;
+  final Color? color;
   final void Function()? onPressed;
   final bool isLoading;
   final bool enabled;
@@ -11,6 +12,7 @@ class AuthActionButton extends StatelessWidget {
     required this.title,
     this.isLoading = false,
     this.enabled = false,
+    this.color,
   });
 
   @override
@@ -18,6 +20,10 @@ class AuthActionButton extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     return FilledButton(
+      style: ButtonStyle(
+          backgroundColor: color != null
+              ? MaterialStateColor.resolveWith((states) => color!)
+              : null),
       onPressed: enabled ? onPressed : null,
       child: isLoading
           ? SizedBox(

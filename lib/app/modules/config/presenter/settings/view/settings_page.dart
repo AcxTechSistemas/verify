@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/app_store.dart';
+import 'package:verify/app/core/auth_store.dart';
 import 'package:verify/app/modules/config/presenter/settings/controller/settings_page_controller.dart';
 import 'package:verify/app/modules/config/presenter/settings/view/widgets/accounts_list_tile_widget.dart';
 
@@ -15,8 +16,16 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final appStore = Modular.get<AppStore>();
+  final authStore = Modular.get<AuthStore>();
+  final apiStore = Modular.get<ApiCredentialsStore>();
   final apiCredentialsStore = Modular.get<ApiCredentialsStore>();
   final controller = Modular.get<SettingsPageController>();
+  @override
+  void initState() {
+    apiStore.loadData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -48,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Alefe Alves',
+                          authStore.userName,
                           maxLines: 1,
                           overflow: TextOverflow.fade,
                           style: textTheme.headlineSmall!.copyWith(
@@ -56,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         Text(
-                          'alefeasc@gmail.com',
+                          authStore.loggedUser?.email ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.fade,
                           style: textTheme.titleSmall!.copyWith(

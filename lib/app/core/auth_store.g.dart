@@ -9,6 +9,14 @@ part of 'auth_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AuthStore on AuthStoreBase, Store {
+  Computed<String>? _$userNameComputed;
+
+  @override
+  String get userName =>
+      (_$userNameComputed ??= Computed<String>(() => super.userName,
+              name: 'AuthStoreBase.userName'))
+          .value;
+
   late final _$loadingAtom =
       Atom(name: 'AuthStoreBase.loading', context: context);
 
@@ -64,10 +72,22 @@ mixin _$AuthStore on AuthStoreBase, Store {
   }
 
   @override
+  void dispose() {
+    final _$actionInfo = _$AuthStoreBaseActionController.startAction(
+        name: 'AuthStoreBase.dispose');
+    try {
+      return super.dispose();
+    } finally {
+      _$AuthStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 loading: ${loading},
-loggedUser: ${loggedUser}
+loggedUser: ${loggedUser},
+userName: ${userName}
     ''';
   }
 }

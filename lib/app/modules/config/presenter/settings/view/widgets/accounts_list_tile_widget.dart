@@ -41,23 +41,23 @@ class AccountListTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 17, 24, 17),
-        height: 52,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: bank.backgroundColor,
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SvgPicture.asset(bank.logoPath),
             const Spacer(),
             Text(
-              hasCredentials ? 'Conectada' : 'Desconectada',
+              hasCredentials ? 'Configurada' : 'Desconectada',
               style: const TextStyle().copyWith(color: bank.foregroundColor),
             ),
             const SizedBox(width: 8),
-            CircleAvatar(
-              maxRadius: 4,
-              backgroundColor: hasCredentials ? Colors.green : Colors.red,
+            Icon(
+              hasCredentials ? Icons.verified : Icons.warning_rounded,
+              color: hasCredentials ? Colors.green : Colors.red,
             ),
           ],
         ),

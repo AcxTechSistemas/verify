@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:verify/app/core/auth_store.dart';
 import 'package:verify/app/modules/auth/domain/entities/login_credentials_entity.dart';
 import 'package:verify/app/modules/auth/domain/usecase/login_with_email_usecase.dart';
 import 'package:verify/app/modules/auth/domain/usecase/login_with_google_usecase.dart';
@@ -17,6 +18,8 @@ class LoginController {
   final passwordController = TextEditingController();
   final emailFocus = FocusNode();
   final passwordFocus = FocusNode();
+
+  final authStore = Modular.get<AuthStore>();
 
   LoginController(
     this._loginStore,
@@ -51,7 +54,7 @@ class LoginController {
           _loginStore.loggingInWithEmailInProgress(false);
           return 'Confirme seu email no link enviado';
         }
-
+        authStore.setUser(user);
         _loginStore.loggingInWithEmailInProgress(false);
         Modular.to.pushReplacementNamed('/settings/');
         return null;
@@ -70,7 +73,8 @@ class LoginController {
     final result = await _loginWithGoogleUseCase.call();
 
     return result.fold(
-      (success) {
+      (user) {
+        authStore.setUser(user);
         _loginStore.loggingInWithGoogleInProgress(false);
         Modular.to.pushReplacementNamed('/settings/');
         return null;
