@@ -65,25 +65,33 @@ class _TimelinePageState extends State<TimelinePage> {
             ),
             Builder(
               builder: (context) {
-                if (store.selectedBB) {
-                  return Flexible(
-                    child: BBPixListViewBuilder(
-                      future: controller.fetchBBPixTransactions(
-                        apiStore.bbApiCredentialsEntity!,
-                      ),
-                    ),
-                  );
+                if (apiStore.hasApiCredentials) {
+                  if (apiStore.hasBBApiCredentials) {
+                    if (store.selectedBB) {
+                      return Flexible(
+                        child: BBPixListViewBuilder(
+                          future: controller.fetchBBPixTransactions(
+                            apiStore.bbApiCredentialsEntity!,
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                  if (apiStore.hasSicoobApiCredentials) {
+                    if (store.selectedSicoob) {
+                      return Flexible(
+                        child: SicoobPixListViewBuilder(
+                          future: controller.fetchSicoobPixTransactions(
+                            apiStore.sicoobApiCredentialsEntity!,
+                          ),
+                        ),
+                      );
+                    }
+                  }
                 }
-                if (store.selectedSicoob) {
-                  return Flexible(
-                    child: SicoobPixListViewBuilder(
-                      future: controller.fetchSicoobPixTransactions(
-                        apiStore.sicoobApiCredentialsEntity!,
-                      ),
-                    ),
-                  );
-                }
-                return const EmptyAccountWidget();
+                return const Flexible(
+                  child: EmptyAccountWidget(),
+                );
               },
             ),
           ],

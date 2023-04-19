@@ -33,6 +33,7 @@ class _BBPixListViewBuilderState extends State<BBPixListViewBuilder> {
               children: [
                 FoundTransactionsCountWidget(length: listPix.length),
                 Expanded(
+                  //TODO: Implements widgets for failure in search or empty data
                   child: ListView.builder(
                     padding: EdgeInsets.zero,
                     itemCount: listPix.length,

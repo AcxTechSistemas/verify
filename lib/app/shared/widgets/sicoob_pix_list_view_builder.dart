@@ -23,29 +23,43 @@ class SicoobPixListViewBuilder extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           case ConnectionState.done:
-            final listPix = snapshot.data!;
-            return Column(
-              children: [
-                FoundTransactionsCountWidget(length: listPix.length),
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: listPix.length,
-                    itemBuilder: (context, index) {
-                      final pix = listPix[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: PixTransactionTileWidget(
-                          clientName: pix.pagador.nome,
-                          value: pix.valor,
-                          date: pix.horario,
-                        ),
-                      );
-                    },
+
+            //TODO: Implements widgets for failure in search or empty data
+            if (snapshot.hasData) {
+              if (snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('Nenhuma transação encontrada'),
+                );
+              }
+              final listPix = snapshot.data!;
+              return Column(
+                children: [
+                  FoundTransactionsCountWidget(length: listPix.length),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: listPix.length,
+                      itemBuilder: (context, index) {
+                        final pix = listPix[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: PixTransactionTileWidget(
+                            clientName: pix.pagador.nome,
+                            value: pix.valor,
+                            date: pix.horario,
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
-            );
+                ],
+              );
+            }
+            if (snapshot.hasError) {
+              return ErrorWidget(snapshot.error ?? '');
+            } else {
+              return ErrorWidget('');
+            }
         }
       },
     );
