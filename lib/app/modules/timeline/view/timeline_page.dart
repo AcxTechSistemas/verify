@@ -37,7 +37,11 @@ class _TimelinePageState extends State<TimelinePage> {
         return Column(
           children: [
             DateCarrouselWidget(
-              onDateSelected: controller.onDateSelected,
+              onDateSelected: (date) {
+                setState(() {
+                  controller.onDateSelected(date);
+                });
+              },
             ),
             Container(
               padding: const EdgeInsets.all(16),
@@ -50,7 +54,7 @@ class _TimelinePageState extends State<TimelinePage> {
                     title: 'Sicoob',
                     selected: store.selectedSicoob,
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   _TimelineAccountButton(
                     onTap: () => controller.selectAccout(1),
                     title: 'Banco do Brasil',
@@ -62,18 +66,20 @@ class _TimelinePageState extends State<TimelinePage> {
             Builder(
               builder: (context) {
                 if (store.selectedBB) {
-                  return BBPixListViewBuilder(
-                    future: controller.fetchBBPixTransactions(
-                      apiStore.bbApiCredentialsEntity!,
-                      store.selectedDate,
+                  return Flexible(
+                    child: BBPixListViewBuilder(
+                      future: controller.fetchBBPixTransactions(
+                        apiStore.bbApiCredentialsEntity!,
+                      ),
                     ),
                   );
                 }
                 if (store.selectedSicoob) {
-                  return SicoobPixListViewBuilder(
-                    future: controller.fetchSicoobPixTransactions(
-                      apiStore.sicoobApiCredentialsEntity!,
-                      store.selectedDate,
+                  return Flexible(
+                    child: SicoobPixListViewBuilder(
+                      future: controller.fetchSicoobPixTransactions(
+                        apiStore.sicoobApiCredentialsEntity!,
+                      ),
                     ),
                   );
                 }
@@ -108,7 +114,7 @@ class _TimelineAccountButton extends StatelessWidget {
         onTap: onTap,
         child: Container(
           alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
             border: selected
                 ? null

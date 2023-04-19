@@ -11,14 +11,26 @@ import 'package:verify/app/shared/services/sicoob_pix_api_service/sicoob_pix_api
 class TimelineController {
   final BBPixApiService _bbPixApiService;
   final SicoobPixApiService _sicoobPixApiService;
+
   final store = Modular.get<TimelineStore>();
+  DateTime currentDate = DateTime.now();
+
+  DateTime get initialDate => currentDate.copyWith(
+        hour: 00,
+        minute: 00,
+        second: 00,
+        microsecond: 00,
+        millisecond: 01,
+      );
+
+  DateTime get endDate => currentDate.add(Duration(hours: 6));
 
   TimelineController(
     this._bbPixApiService,
     this._sicoobPixApiService,
   );
   void onDateSelected(DateTime date) {
-    store.setselectedDate(date);
+    currentDate = date;
   }
 
   void selectAccout(int selected) {
@@ -27,11 +39,9 @@ class TimelineController {
 
   Future<List<bb.Pix>> fetchBBPixTransactions(
     BBApiCredentialsEntity bbApiCredentialsEntity,
-    DateTime currentDate,
   ) async {
-    final startDate = currentDate.copyWith(hour: 00, minute: 00, second: 00);
     final transactions = await _bbPixApiService.fetchTransactions(
-      dateTimeRange: DateTimeRange(start: startDate, end: currentDate),
+      dateTimeRange: DateTimeRange(start: initialDate, end: endDate),
       applicationDeveloperKey: bbApiCredentialsEntity.applicationDeveloperKey,
       basicKey: bbApiCredentialsEntity.basicKey,
     );
@@ -40,11 +50,9 @@ class TimelineController {
 
   Future<List<sicoob.Pix>> fetchSicoobPixTransactions(
     SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
-    DateTime currentDate,
   ) async {
-    final startDate = currentDate.copyWith(hour: 00, minute: 00, second: 00);
     final transactions = await _sicoobPixApiService.fetchTransactions(
-      dateTimeRange: DateTimeRange(start: startDate, end: currentDate),
+      dateTimeRange: DateTimeRange(start: initialDate, end: endDate),
       clientID: sicoobApiCredentialsEntity.clientID,
       certificateBase64String:
           sicoobApiCredentialsEntity.certificateBase64String,

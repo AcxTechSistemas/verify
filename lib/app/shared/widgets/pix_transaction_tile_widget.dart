@@ -20,8 +20,8 @@ class PixTransactionTileWidget extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final doubleValue = double.parse(value);
     final brazilianValue = UtilBrasilFields.obterReal(doubleValue);
-    final dateTime = DateTime.parse(date);
-    final formattedDate = DateFormat('dd MMM hh:mm').format(dateTime);
+    final dateTime = DateTime.parse(date).subtract(const Duration(hours: 3));
+    final formattedDate = DateFormat('dd MMM HH:MM').format(dateTime);
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(

@@ -24,22 +24,6 @@ mixin _$TimelineStore on TimelineStoreBase, Store {
               name: 'TimelineStoreBase.selectedBB'))
           .value;
 
-  late final _$selectedDateAtom =
-      Atom(name: 'TimelineStoreBase.selectedDate', context: context);
-
-  @override
-  DateTime get selectedDate {
-    _$selectedDateAtom.reportRead();
-    return super.selectedDate;
-  }
-
-  @override
-  set selectedDate(DateTime value) {
-    _$selectedDateAtom.reportWrite(value, super.selectedDate, () {
-      super.selectedDate = value;
-    });
-  }
-
   late final _$selectedAccountAtom =
       Atom(name: 'TimelineStoreBase.selectedAccount', context: context);
 
@@ -60,17 +44,6 @@ mixin _$TimelineStore on TimelineStoreBase, Store {
       ActionController(name: 'TimelineStoreBase', context: context);
 
   @override
-  dynamic setselectedDate(DateTime date) {
-    final _$actionInfo = _$TimelineStoreBaseActionController.startAction(
-        name: 'TimelineStoreBase.setselectedDate');
-    try {
-      return super.setselectedDate(date);
-    } finally {
-      _$TimelineStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   dynamic setselectedAccount(int selected) {
     final _$actionInfo = _$TimelineStoreBaseActionController.startAction(
         name: 'TimelineStoreBase.setselectedAccount');
@@ -84,7 +57,6 @@ mixin _$TimelineStore on TimelineStoreBase, Store {
   @override
   String toString() {
     return '''
-selectedDate: ${selectedDate},
 selectedAccount: ${selectedAccount},
 selectedSicoob: ${selectedSicoob},
 selectedBB: ${selectedBB}

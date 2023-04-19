@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/home/controller/home_page_controller.dart';
 import 'package:verify/app/modules/home/store/home_store.dart';
