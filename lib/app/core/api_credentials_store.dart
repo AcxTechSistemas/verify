@@ -40,7 +40,7 @@ abstract class ApiCredentialsStoreBase with Store {
   bool get hasSicoobApiCredentials => sicoobApiCredentialsEntity != null;
 
   @computed
-  bool get hasBBApiCredentials => sicoobApiCredentialsEntity != null;
+  bool get hasBBApiCredentials => bbApiCredentialsEntity != null;
 
   @computed
   bool get firstIsSicoob => listAccounts.first.containsValue('sicoob');

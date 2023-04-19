@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:pix_bb/pix_bb.dart' as bb;
 import 'package:pix_sicoob/pix_sicoob.dart' as sicoob;
-import 'package:result_dart/result_dart.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_entity.dart';
 import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentials_entity.dart';
@@ -73,7 +72,7 @@ class HomePageController {
         database: Database.local,
         bbApiCredentialsEntity: bbCredentials,
       );
-      result.fold(
+      return result.fold(
         (success) {
           apiStore.loadData();
           return null;
@@ -99,7 +98,7 @@ class HomePageController {
         database: Database.local,
         sicoobApiCredentialsEntity: sicoobCredentials,
       );
-      result.fold(
+      return result.fold(
         (success) {
           apiStore.loadData();
           return null;

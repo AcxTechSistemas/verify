@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/core/auth_store.dart';
@@ -22,6 +24,8 @@ class _AppWidgetState extends State<AppWidget> {
   bool intialized = false;
 
   Future<void> loadData() async {
+    Intl.defaultLocale = 'pt_BR';
+    await initializeDateFormatting();
     await appStore.loadData();
     await authStore.loadData();
     await apiCredentialsStore.loadData();

@@ -7,11 +7,11 @@ import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/home/controller/home_page_controller.dart';
 import 'package:verify/app/modules/home/store/home_store.dart';
 import 'package:verify/app/modules/home/view/widgets/account_card_widget.dart';
-import 'package:verify/app/modules/home/view/widgets/bb_pix_list_view_builder_widget.dart';
-import 'package:verify/app/modules/home/view/widgets/sicoob_pix_list_view_builder.dart';
+import 'package:verify/app/shared/widgets/bb_pix_list_view_builder_widget.dart';
 import 'package:verify/app/shared/widgets/custom_navigation_bar.dart';
 import 'package:verify/app/shared/widgets/custom_snack_bar.dart';
 import 'package:verify/app/shared/widgets/menu_title_widget.dart';
+import 'package:verify/app/shared/widgets/sicoob_pix_list_view_builder.dart';
 import 'widgets/selected_page_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -107,9 +107,14 @@ class _HomePageState extends State<HomePage> {
                               homeStore.firstAccountSelected ||
                           !apiStore.firstIsBB &&
                               homeStore.secondAccountSelected) {
-                        return BBPixListViewBuilder(
-                          future: controller.fetchBBPixTransactions(
-                            apiStore.bbApiCredentialsEntity!,
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            setState(() {});
+                          },
+                          child: BBPixListViewBuilder(
+                            future: controller.fetchBBPixTransactions(
+                              apiStore.bbApiCredentialsEntity!,
+                            ),
                           ),
                         );
                       }
@@ -120,9 +125,14 @@ class _HomePageState extends State<HomePage> {
                               homeStore.firstAccountSelected ||
                           !apiStore.firstIsSicoob &&
                               homeStore.secondAccountSelected) {
-                        return SicoobPixListViewBuilder(
-                          future: controller.fetchSicoobPixTransactions(
-                            apiStore.sicoobApiCredentialsEntity!,
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            setState(() {});
+                          },
+                          child: SicoobPixListViewBuilder(
+                            future: controller.fetchSicoobPixTransactions(
+                              apiStore.sicoobApiCredentialsEntity!,
+                            ),
                           ),
                         );
                       }
@@ -167,11 +177,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class EmptyAccount extends StatelessWidget {
-  final String? title;
-  const EmptyAccount({
-    super.key,
-    this.title,
-  });
+  const EmptyAccount({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +190,7 @@ class EmptyAccount extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
-            title ?? 'Configure uma conta para ter acesso aos nossos serviços',
+            'Configure sua conta para ter acesso aos nossos serviços',
             textAlign: TextAlign.center,
             style: textTheme.titleMedium!.copyWith(
               color: colorScheme.primary,
