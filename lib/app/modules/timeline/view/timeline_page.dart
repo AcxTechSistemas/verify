@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:verify/app/core/api_credentials_store.dart';
+import 'package:verify/app/modules/timeline/controller/timeline_controller.dart';
+import 'package:verify/app/modules/timeline/store/timeline_store.dart';
 import 'package:verify/app/modules/timeline/view/widgets/date_carrousel_widget.dart';
+import 'package:verify/app/shared/widgets/bb_pix_list_view_builder_widget.dart';
 import 'package:verify/app/shared/widgets/custom_navigation_bar.dart';
+import 'package:verify/app/shared/widgets/empty_account_widget.dart';
+import 'package:verify/app/shared/widgets/sicoob_pix_list_view_builder.dart';
 
 class TimelinePage extends StatefulWidget {
   const TimelinePage({super.key});
@@ -10,6 +18,9 @@ class TimelinePage extends StatefulWidget {
 }
 
 class _TimelinePageState extends State<TimelinePage> {
+  final controller = Modular.get<TimelineController>();
+  final store = Modular.get<TimelineStore>();
+  final apiStore = Modular.get<ApiCredentialsStore>();
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -22,16 +33,97 @@ class _TimelinePageState extends State<TimelinePage> {
           icon: const Icon(Icons.arrow_back),
         ),
       ),
-      body: Column(
-        children: [
-          DateCarrouselWidget(
-            onDateSelected: (date) {
-              print(date);
-            },
+      body: Observer(builder: (context) {
+        return Column(
+          children: [
+            DateCarrouselWidget(
+              onDateSelected: controller.onDateSelected,
+            ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: colorScheme.onInverseSurface,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _TimelineAccountButton(
+                    onTap: () => controller.selectAccout(0),
+                    title: 'Sicoob',
+                    selected: store.selectedSicoob,
+                  ),
+                  SizedBox(width: 16),
+                  _TimelineAccountButton(
+                    onTap: () => controller.selectAccout(1),
+                    title: 'Banco do Brasil',
+                    selected: store.selectedBB,
+                  ),
+                ],
+              ),
+            ),
+            Builder(
+              builder: (context) {
+                if (store.selectedBB) {
+                  return BBPixListViewBuilder(
+                    future: controller.fetchBBPixTransactions(
+                      apiStore.bbApiCredentialsEntity!,
+                      store.selectedDate,
+                    ),
+                  );
+                }
+                if (store.selectedSicoob) {
+                  return SicoobPixListViewBuilder(
+                    future: controller.fetchSicoobPixTransactions(
+                      apiStore.sicoobApiCredentialsEntity!,
+                      store.selectedDate,
+                    ),
+                  );
+                }
+                return const EmptyAccountWidget();
+              },
+            ),
+          ],
+        );
+      }),
+      bottomNavigationBar: const CustomNavigationBar(),
+    );
+  }
+}
+
+class _TimelineAccountButton extends StatelessWidget {
+  final String title;
+  final bool selected;
+  final void Function() onTap;
+
+  const _TimelineAccountButton({
+    required this.title,
+    required this.onTap,
+    required this.selected,
+  });
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            border: selected
+                ? null
+                : Border.all(
+                    width: 0.8,
+                  ),
+            borderRadius: BorderRadius.circular(8),
+            color: selected ? colorScheme.secondaryContainer : null,
           ),
-        ],
+          child: Text(
+            title,
+            style: textTheme.labelLarge,
+          ),
+        ),
       ),
-      bottomNavigationBar: CustomNavigationBar(),
     );
   }
 }

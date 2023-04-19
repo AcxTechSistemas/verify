@@ -15,6 +15,7 @@ import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credential
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/update_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/remove_user_theme_mode_preference_usecase.dart';
 import 'package:verify/app/modules/home/home_module.dart';
+import 'package:verify/app/modules/timeline/timeline_module.dart';
 import 'package:verify/app/modules/timeline/view/timeline_page.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
@@ -172,11 +173,6 @@ class AppModule extends Module {
           transition: TransitionType.fadeIn,
           duration: const Duration(milliseconds: 300),
         ),
-        ChildRoute(
-          '/timeline',
-          child: (context, _) => const TimelinePage(),
-          transition: TransitionType.fadeIn,
-          duration: const Duration(milliseconds: 300),
-        ),
+        ModuleRoute('/timeline', module: TimelineModule()),
       ];
 }

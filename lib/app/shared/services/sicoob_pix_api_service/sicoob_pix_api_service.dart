@@ -14,6 +14,7 @@ abstract class SicoobPixApiService {
     required String clientID,
     required String certificateBase64String,
     required String certificatePassword,
+    DateTimeRange? dateTimeRange,
   });
 }
 

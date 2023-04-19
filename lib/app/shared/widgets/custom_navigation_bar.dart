@@ -22,10 +22,10 @@ class CustomNavigationBar extends StatelessWidget {
             if (currentDestination != selectedDestination) {
               switch (selectedDestination) {
                 case 0:
-                  Modular.to.pushReplacementNamed('/home');
+                  Modular.to.pushReplacementNamed('/home/');
                   break;
                 case 1:
-                  Modular.to.pushReplacementNamed('/timeline');
+                  Modular.to.pushReplacementNamed('/timeline/');
                   break;
                 case 2:
                   Modular.to.pushReplacementNamed('/settings/');

@@ -10,6 +10,7 @@ import 'package:verify/app/modules/home/view/widgets/account_card_widget.dart';
 import 'package:verify/app/shared/widgets/bb_pix_list_view_builder_widget.dart';
 import 'package:verify/app/shared/widgets/custom_navigation_bar.dart';
 import 'package:verify/app/shared/widgets/custom_snack_bar.dart';
+import 'package:verify/app/shared/widgets/empty_account_widget.dart';
 import 'package:verify/app/shared/widgets/menu_title_widget.dart';
 import 'package:verify/app/shared/widgets/sicoob_pix_list_view_builder.dart';
 import 'widgets/selected_page_widget.dart';
@@ -138,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                       }
                     }
                   }
-                  return const EmptyAccount();
+                  return const EmptyAccountWidget();
                 },
               ),
             ),
@@ -173,37 +174,5 @@ class _HomePageState extends State<HomePage> {
         );
       }
     });
-  }
-}
-
-class EmptyAccount extends StatelessWidget {
-  const EmptyAccount({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-    final colorScheme = theme.colorScheme;
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            'Configure sua conta para ter acesso aos nossos serviços',
-            textAlign: TextAlign.center,
-            style: textTheme.titleMedium!.copyWith(
-              color: colorScheme.primary,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Expanded(
-            child: Lottie.asset(
-              'assets/animations/emptyAccounts.json',
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
