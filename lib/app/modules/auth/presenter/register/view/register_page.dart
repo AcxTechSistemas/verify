@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/modules/auth/presenter/register/controller/register_controller.dart';
 import 'package:verify/app/modules/auth/presenter/register/store/register_store.dart';
-import 'package:verify/app/modules/auth/presenter/shared/widgets/google_sign_in_button_widget.dart';
 import 'package:verify/app/modules/auth/presenter/shared/widgets/auth_action_button.dart';
 import 'package:verify/app/modules/auth/presenter/shared/widgets/auth_field_widget.dart';
 import 'package:verify/app/modules/auth/presenter/shared/widgets/auth_header_widget.dart';
@@ -74,27 +73,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           const SizedBox(height: 24),
                           Align(
                             alignment: Alignment.centerRight,
-                            child: Observer(
-                              builder: (context) {
-                                return AuthActionButton(
-                                  title: 'Cadastrar',
-                                  enabled: store.registerButtonEnabled,
-                                  isLoading: store.registeringWithEmail,
-                                  onPressed: _registerWithEmail,
-                                );
-                              },
-                            ),
+                            child: Observer(builder: (context) {
+                              return AuthActionButton(
+                                title: 'Cadastrar',
+                                enabled: store.registerButtonEnabled,
+                                isLoading: store.registeringWithEmail,
+                                onPressed: _registerWithEmail,
+                              );
+                            }),
                           ),
                           const Spacer(),
-                          Observer(
-                            builder: (context) {
-                              return GoogleSignInButton(
-                                title: 'Cadastre-se com Google',
-                                onTap: _loginWithGoogle,
-                                isLoading: store.registeringWithGoogle,
-                              );
-                            },
-                          ),
                           const Spacer(),
                           TextButton.icon(
                             onPressed: controller.goToLoginPage,
@@ -116,21 +104,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _registerWithEmail() async {
     await controller.registerWithEmail().then((errorMessage) {
-      if (errorMessage != null) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          CustomSnackBar(
-            message: errorMessage,
-            snackBarType: SnackBarType.error,
-          ),
-        );
-      }
-    });
-  }
-
-  Future<void> _loginWithGoogle() async {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    await controller.loginWithGoogle().then((errorMessage) {
       if (errorMessage != null) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(

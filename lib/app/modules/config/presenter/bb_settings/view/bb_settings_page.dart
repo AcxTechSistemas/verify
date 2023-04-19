@@ -6,7 +6,6 @@ import 'package:verify/app/modules/auth/presenter/shared/widgets/auth_action_but
 import 'package:verify/app/modules/config/presenter/bb_settings/controller/bb_settings_page_controller.dart';
 import 'package:verify/app/modules/config/presenter/bb_settings/store/bb_settings_store.dart';
 import 'package:verify/app/modules/config/presenter/shared/widgets/setup_field_widget.dart';
-import 'package:verify/app/modules/config/presenter/sicoob_settings/store/sicoob_settings_store.dart';
 import 'package:verify/app/shared/widgets/custom_snack_bar.dart';
 
 class BBSettingsPage extends StatefulWidget {

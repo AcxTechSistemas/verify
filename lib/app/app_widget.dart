@@ -44,7 +44,9 @@ class _AppWidgetState extends State<AppWidget> {
         ? const SplashScreen()
         : Observer(
             builder: (context) {
-              Modular.setInitialRoute('/auth/login');
+              Modular.setInitialRoute(
+                authStore.loggedUser == null ? '/auth/login' : '/home/',
+              );
               return MaterialApp.router(
                 debugShowCheckedModeBanner: false,
                 themeMode: appStore.themeMode.value,

@@ -9,9 +9,13 @@ import 'package:verify/app/core/auth_store.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/read_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/remove_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/update_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/read_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/remove_sicoob_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/update_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/remove_user_theme_mode_preference_usecase.dart';
+import 'package:verify/app/modules/home/home_module.dart';
+import 'package:verify/app/modules/timeline/view/timeline_page.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/auth/auth_module.dart';
@@ -124,20 +128,28 @@ class AppModule extends Module {
         AutoBind.factory<ReadUserThemeModePreferencesUseCase>(
           ReadUserThemeModePreferencesUseCaseImpl.new,
         ),
+
         AutoBind.factory<SaveSicoobApiCredentialsUseCase>(
           SaveSicoobApiCredentialsUseCaseImpl.new,
         ),
         AutoBind.factory<ReadSicoobApiCredentialsUseCase>(
           ReadSicoobApiCredentialsUseCaseImpl.new,
         ),
+        AutoBind.factory<UpdateSicoobApiCredentialsUseCase>(
+          UpdateSicoobApiCredentialsUseCaseImpl.new,
+        ),
         AutoBind.factory<RemoveSicoobApiCredentialsUseCase>(
           RemoveSicoobApiCredentialsUseCaseImpl.new,
+        ),
+        AutoBind.factory<SaveBBApiCredentialsUseCase>(
+          SaveBBApiCredentialsUseCaseImpl.new,
         ),
         AutoBind.factory<ReadBBApiCredentialsUseCase>(
           ReadBBApiCredentialsUseCaseImpl.new,
         ),
-        AutoBind.factory<SaveBBApiCredentialsUseCase>(
-          SaveBBApiCredentialsUseCaseImpl.new,
+
+        AutoBind.factory<UpdateBBApiCredentialsUseCase>(
+          UpdateBBApiCredentialsUseCaseImpl.new,
         ),
         AutoBind.factory<RemoveBBApiCredentialsUseCase>(
           RemoveBBApiCredentialsUseCaseImpl.new,
@@ -150,10 +162,21 @@ class AppModule extends Module {
           UserPreferencesRepositoryImpl.new,
         ),
       ];
-
   @override
   List<ModularRoute> get routes => [
         ModuleRoute('/auth', module: AuthModule()),
         ModuleRoute('/settings', module: SettingsModule()),
+        ModuleRoute(
+          '/home',
+          module: HomeModule(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
+        ChildRoute(
+          '/timeline',
+          child: (context, _) => const TimelinePage(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
       ];
 }

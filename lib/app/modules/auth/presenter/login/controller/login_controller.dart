@@ -3,7 +3,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/auth_store.dart';
-import 'package:verify/app/modules/auth/domain/entities/logged_user_entity.dart';
 import 'package:verify/app/modules/auth/domain/entities/logged_user_info.dart';
 import 'package:verify/app/modules/auth/domain/entities/login_credentials_entity.dart';
 import 'package:verify/app/modules/auth/domain/usecase/login_with_email_usecase.dart';
