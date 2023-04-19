@@ -32,8 +32,8 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
             Visibility(
               visible: !widget.hasCredentials,
               child: SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight * 0.9,
+                width: constraints.maxWidth * 0.9,
+                height: constraints.maxHeight,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -41,11 +41,14 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
                     Text(
                       'Toque para configurar',
                       style: textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w900,
                         color: colorScheme.primary,
                       ),
                     ),
-                    const Icon(Icons.touch_app),
+                    const Icon(
+                      Icons.touch_app,
+                      size: 32,
+                    ),
                   ],
                 ),
               ),
@@ -56,7 +59,7 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
                 widget.imageAsset,
                 opacity: widget.hasCredentials
                     ? null
-                    : const AlwaysStoppedAnimation<double>(0.3),
+                    : const AlwaysStoppedAnimation<double>(0.2),
               ),
             ),
             Visibility(

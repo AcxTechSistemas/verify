@@ -75,7 +75,7 @@ class LoginController {
         authStore.setUser(user);
         _loginStore.loggingInWithEmailInProgress(false);
         await _fetchCloudApiCredentials(user);
-        Modular.to.pushReplacementNamed('/settings/');
+        Modular.to.pushReplacementNamed('/home/');
         return null;
       },
       (failure) {
@@ -96,7 +96,7 @@ class LoginController {
         authStore.setUser(user);
         await _fetchCloudApiCredentials(user);
         _loginStore.loggingInWithGoogleInProgress(false);
-        Modular.to.pushReplacementNamed('/settings/');
+        Modular.to.pushReplacementNamed('/home/');
         return null;
       },
       (failure) {
