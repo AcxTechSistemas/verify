@@ -16,6 +16,7 @@ ThemeData get lightTheme => ThemeData(
       inputDecorationTheme: _lightInputDecoration,
       filledButtonTheme: _lightFilledButtonThemeData,
       appBarTheme: _lightAppBarTheme,
+      navigationBarTheme: _lightNavigationBarTheme,
     );
 
 ThemeData get darkTheme => ThemeData(
@@ -27,4 +28,17 @@ ThemeData get darkTheme => ThemeData(
       inputDecorationTheme: _darkInputDecoration,
       filledButtonTheme: _darkFilledButtonThemeData,
       appBarTheme: _darkAppBarTheme,
+    );
+
+NavigationBarThemeData get _lightNavigationBarTheme => NavigationBarThemeData(
+      backgroundColor: _lightColorScheme.inverseSurface,
+      indicatorColor: _lightColorScheme.secondaryContainer,
+      iconTheme: MaterialStateProperty.resolveWith<IconThemeData?>((states) {
+        if (states.contains(MaterialState.selected)) {
+          return IconThemeData(
+            color: _lightColorScheme.primary,
+          );
+        }
+        return null;
+      }),
     );
