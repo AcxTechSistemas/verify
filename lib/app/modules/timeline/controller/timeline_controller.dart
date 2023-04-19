@@ -15,16 +15,6 @@ class TimelineController {
   final store = Modular.get<TimelineStore>();
   DateTime currentDate = DateTime.now();
 
-  DateTime get initialDate => currentDate.copyWith(
-        hour: 00,
-        minute: 00,
-        second: 00,
-        microsecond: 00,
-        millisecond: 01,
-      );
-
-  DateTime get endDate => currentDate.add(Duration(hours: 6));
-
   TimelineController(
     this._bbPixApiService,
     this._sicoobPixApiService,
@@ -40,6 +30,18 @@ class TimelineController {
   Future<List<bb.Pix>> fetchBBPixTransactions(
     BBApiCredentialsEntity bbApiCredentialsEntity,
   ) async {
+    final initialDate = DateTime(
+      currentDate.year,
+      currentDate.month,
+      currentDate.day,
+    );
+
+    final endDate = DateTime(
+      currentDate.year,
+      currentDate.month,
+      currentDate.day + 1,
+    ).add(const Duration(hours: 1));
+
     final transactions = await _bbPixApiService.fetchTransactions(
       dateTimeRange: DateTimeRange(start: initialDate, end: endDate),
       applicationDeveloperKey: bbApiCredentialsEntity.applicationDeveloperKey,
@@ -51,6 +53,18 @@ class TimelineController {
   Future<List<sicoob.Pix>> fetchSicoobPixTransactions(
     SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
   ) async {
+    final initialDate = DateTime(
+      currentDate.year,
+      currentDate.month,
+      currentDate.day,
+    );
+
+    final endDate = DateTime(
+      currentDate.year,
+      currentDate.month,
+      currentDate.day + 1,
+    ).add(const Duration(hours: 1));
+
     final transactions = await _sicoobPixApiService.fetchTransactions(
       dateTimeRange: DateTimeRange(start: initialDate, end: endDate),
       clientID: sicoobApiCredentialsEntity.clientID,

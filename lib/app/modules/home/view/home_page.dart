@@ -27,6 +27,12 @@ class _HomePageState extends State<HomePage> {
   final controller = Modular.get<HomePageController>();
 
   @override
+  void initState() {
+    super.initState();
+    controller.refreshCurrentDate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
@@ -109,7 +115,9 @@ class _HomePageState extends State<HomePage> {
                               homeStore.secondAccountSelected) {
                         return RefreshIndicator(
                           onRefresh: () async {
-                            setState(() {});
+                            setState(() {
+                              controller.refreshCurrentDate();
+                            });
                           },
                           child: BBPixListViewBuilder(
                             future: controller.fetchBBPixTransactions(
@@ -127,7 +135,9 @@ class _HomePageState extends State<HomePage> {
                               homeStore.secondAccountSelected) {
                         return RefreshIndicator(
                           onRefresh: () async {
-                            setState(() {});
+                            setState(() {
+                              controller.refreshCurrentDate();
+                            });
                           },
                           child: SicoobPixListViewBuilder(
                             future: controller.fetchSicoobPixTransactions(

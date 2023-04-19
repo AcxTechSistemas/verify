@@ -164,14 +164,29 @@ class AppModule extends Module {
       ];
   @override
   List<ModularRoute> get routes => [
-        ModuleRoute('/auth', module: AuthModule()),
-        ModuleRoute('/settings', module: SettingsModule()),
+        ModuleRoute(
+          '/auth',
+          module: AuthModule(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
+        ModuleRoute(
+          '/settings',
+          module: SettingsModule(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
         ModuleRoute(
           '/home',
           module: HomeModule(),
           transition: TransitionType.fadeIn,
           duration: const Duration(milliseconds: 300),
         ),
-        ModuleRoute('/timeline', module: TimelineModule()),
+        ModuleRoute(
+          '/timeline',
+          module: TimelineModule(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
       ];
 }

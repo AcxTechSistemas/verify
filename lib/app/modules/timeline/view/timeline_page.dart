@@ -119,7 +119,8 @@ class _TimelineAccountButton extends StatelessWidget {
             border: selected
                 ? null
                 : Border.all(
-                    width: 0.8,
+                    color: colorScheme.secondaryContainer,
+                    width: 1.5,
                   ),
             borderRadius: BorderRadius.circular(8),
             color: selected ? colorScheme.secondaryContainer : null,

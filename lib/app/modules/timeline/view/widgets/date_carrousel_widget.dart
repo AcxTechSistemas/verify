@@ -52,7 +52,7 @@ class _DateCarrouselWidgetState extends State<DateCarrouselWidget> {
                     style: textTheme.titleSmall!.copyWith(
                       color: isCurrentSelect
                           ? colorScheme.onInverseSurface
-                          : colorScheme.tertiary,
+                          : colorScheme.primary,
                       height: 1.5,
                       fontWeight: FontWeight.w700,
                     ),

@@ -26,6 +26,12 @@ class HomePageController {
     initialPage: 0,
   );
 
+  DateTime currentDate = DateTime.now();
+
+  refreshCurrentDate() {
+    currentDate = DateTime.now();
+  }
+
   HomePageController(
     this._sicoobPixApiService,
     this._bbPixApiService,
@@ -40,7 +46,20 @@ class HomePageController {
   Future<List<bb.Pix>> fetchBBPixTransactions(
     BBApiCredentialsEntity bbApiCredentialsEntity,
   ) async {
+    final initialDate = DateTime(
+      currentDate.year,
+      currentDate.month,
+      currentDate.day - 3,
+    );
+
+    final endDate = DateTime(
+      currentDate.year,
+      currentDate.month,
+      currentDate.day + 1,
+    ).add(const Duration(hours: 1));
+
     final transactions = await _bbPixApiService.fetchTransactions(
+      dateTimeRange: DateTimeRange(start: initialDate, end: endDate),
       applicationDeveloperKey: bbApiCredentialsEntity.applicationDeveloperKey,
       basicKey: bbApiCredentialsEntity.basicKey,
     );
@@ -50,7 +69,20 @@ class HomePageController {
   Future<List<sicoob.Pix>> fetchSicoobPixTransactions(
     SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
   ) async {
+    final initialDate = DateTime(
+      currentDate.year,
+      currentDate.month,
+      1,
+    );
+
+    final endDate = DateTime(
+      currentDate.year,
+      currentDate.month + 1,
+      1,
+    ).subtract(const Duration(seconds: 1));
+
     final transactions = await _sicoobPixApiService.fetchTransactions(
+      dateTimeRange: DateTimeRange(start: initialDate, end: endDate),
       clientID: sicoobApiCredentialsEntity.clientID,
       certificateBase64String:
           sicoobApiCredentialsEntity.certificateBase64String,
