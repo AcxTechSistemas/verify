@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(height: 26),
+                      const SizedBox(height: 16),
                       const MenuTitleWidget(
                         title: 'Contas',
                       ),
