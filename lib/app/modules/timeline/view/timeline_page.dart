@@ -112,7 +112,6 @@ class _TimelinePageState extends State<TimelinePage> {
             label: const Text('Hoje'),
             onPressed: () {
               setState(() {
-                controller.scrollController.jumpTo(0);
                 controller.goToTodayDate();
               });
             },
