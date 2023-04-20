@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pix_sicoob/pix_sicoob.dart';
+import 'package:verify/app/shared/widgets/custom_error_widget.dart';
 import 'package:verify/app/shared/widgets/found_transactions_count_widget.dart';
 import 'package:verify/app/shared/widgets/pix_transaction_tile_widget.dart';
+import 'package:lottie/lottie.dart';
+import 'package:verify/app/shared/widgets/transactions_not_found_widget.dart';
 
 class SicoobPixListViewBuilder extends StatelessWidget {
   final Future<List<Pix>> future;
@@ -28,7 +31,7 @@ class SicoobPixListViewBuilder extends StatelessWidget {
             if (snapshot.hasData) {
               if (snapshot.data!.isEmpty) {
                 return const Center(
-                  child: Text('Nenhuma transação encontrada'),
+                  child: TransactionsNotFoundWidget(),
                 );
               }
               final listPix = snapshot.data!;
@@ -56,9 +59,9 @@ class SicoobPixListViewBuilder extends StatelessWidget {
               );
             }
             if (snapshot.hasError) {
-              return ErrorWidget(snapshot.error ?? '');
+              return const CustomErrorWidget();
             } else {
-              return ErrorWidget('');
+              return const CustomErrorWidget();
             }
         }
       },

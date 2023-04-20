@@ -3,8 +3,13 @@ import 'package:intl/intl.dart';
 
 class DateCarrouselWidget extends StatefulWidget {
   final void Function(DateTime date) onDateSelected;
+  final ScrollController? controller;
 
-  const DateCarrouselWidget({super.key, required this.onDateSelected});
+  const DateCarrouselWidget({
+    super.key,
+    required this.onDateSelected,
+    this.controller,
+  });
 
   @override
   State<DateCarrouselWidget> createState() => _DateCarrouselWidgetState();
@@ -22,6 +27,7 @@ class _DateCarrouselWidgetState extends State<DateCarrouselWidget> {
       height: 85,
       color: colorScheme.onInverseSurface,
       child: ListView.builder(
+        controller: widget.controller,
         shrinkWrap: true,
         reverse: true,
         itemCount: listDates.length,

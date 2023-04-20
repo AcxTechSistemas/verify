@@ -24,7 +24,9 @@ class _TimelinePageState extends State<TimelinePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Timeline'),
@@ -33,68 +35,88 @@ class _TimelinePageState extends State<TimelinePage> {
           icon: const Icon(Icons.arrow_back),
         ),
       ),
-      body: Observer(builder: (context) {
-        return Column(
-          children: [
-            DateCarrouselWidget(
-              onDateSelected: (date) {
-                setState(() {
-                  controller.onDateSelected(date);
-                });
-              },
-            ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: colorScheme.onInverseSurface,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _TimelineAccountButton(
-                    onTap: () => controller.selectAccout(0),
-                    title: 'Sicoob',
-                    selected: store.selectedSicoob,
-                  ),
-                  const SizedBox(width: 16),
-                  _TimelineAccountButton(
-                    onTap: () => controller.selectAccout(1),
-                    title: 'Banco do Brasil',
-                    selected: store.selectedBB,
-                  ),
-                ],
+      body: Observer(
+        builder: (context) {
+          return Column(
+            children: [
+              DateCarrouselWidget(
+                controller: controller.scrollController,
+                onDateSelected: (date) {
+                  setState(() {
+                    controller.onDateSelected(date);
+                  });
+                },
               ),
-            ),
-            Builder(
-              builder: (context) {
-                if (apiStore.hasApiCredentials) {
-                  if (apiStore.hasBBApiCredentials) {
-                    if (store.selectedBB) {
-                      return Flexible(
-                        child: BBPixListViewBuilder(
-                          future: controller.fetchBBPixTransactions(
-                            apiStore.bbApiCredentialsEntity!,
+              Container(
+                padding: const EdgeInsets.all(16),
+                color: colorScheme.onInverseSurface,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _TimelineAccountButton(
+                      onTap: () => controller.selectAccout(0),
+                      title: 'Sicoob',
+                      selected: store.selectedSicoob,
+                    ),
+                    const SizedBox(width: 16),
+                    _TimelineAccountButton(
+                      onTap: () => controller.selectAccout(1),
+                      title: 'Banco do Brasil',
+                      selected: store.selectedBB,
+                    ),
+                  ],
+                ),
+              ),
+              Builder(
+                builder: (context) {
+                  if (apiStore.hasApiCredentials) {
+                    if (apiStore.hasBBApiCredentials) {
+                      if (store.selectedBB) {
+                        return Flexible(
+                          child: BBPixListViewBuilder(
+                            future: controller.fetchBBPixTransactions(
+                              apiStore.bbApiCredentialsEntity!,
+                              store.selectedDate,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
+                    }
+                    if (apiStore.hasSicoobApiCredentials) {
+                      if (store.selectedSicoob) {
+                        return Flexible(
+                          child: SicoobPixListViewBuilder(
+                            future: controller.fetchSicoobPixTransactions(
+                              apiStore.sicoobApiCredentialsEntity!,
+                              store.selectedDate,
+                            ),
+                          ),
+                        );
+                      }
                     }
                   }
-                  if (apiStore.hasSicoobApiCredentials) {
-                    if (store.selectedSicoob) {
-                      return Flexible(
-                        child: SicoobPixListViewBuilder(
-                          future: controller.fetchSicoobPixTransactions(
-                            apiStore.sicoobApiCredentialsEntity!,
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                }
-                return const Flexible(
-                  child: EmptyAccountWidget(),
-                );
-              },
-            ),
-          ],
+                  return const Flexible(
+                    child: EmptyAccountWidget(),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      ),
+      floatingActionButton: Observer(builder: (context) {
+        return Visibility(
+          visible: store.showTodayFab,
+          child: FloatingActionButton.extended(
+            icon: const Icon(Icons.today),
+            label: const Text('Hoje'),
+            onPressed: () {
+              setState(() {
+                controller.scrollController.jumpTo(0);
+                controller.goToTodayDate();
+              });
+            },
+          ),
         );
       }),
       bottomNavigationBar: const CustomNavigationBar(),

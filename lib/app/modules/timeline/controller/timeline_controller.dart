@@ -13,14 +13,26 @@ class TimelineController {
   final SicoobPixApiService _sicoobPixApiService;
 
   final store = Modular.get<TimelineStore>();
-  DateTime currentDate = DateTime.now();
+
+  final scrollController = ScrollController();
 
   TimelineController(
     this._bbPixApiService,
     this._sicoobPixApiService,
   );
+
+  void goToTodayDate() {
+    final now = DateTime.now();
+    store.setSelectedDate(now);
+    scrollController.animateTo(
+      0,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
   void onDateSelected(DateTime date) {
-    currentDate = date;
+    store.setSelectedDate(date);
   }
 
   void selectAccout(int selected) {
@@ -29,17 +41,18 @@ class TimelineController {
 
   Future<List<bb.Pix>> fetchBBPixTransactions(
     BBApiCredentialsEntity bbApiCredentialsEntity,
+    DateTime selectedDate,
   ) async {
     final initialDate = DateTime(
-      currentDate.year,
-      currentDate.month,
-      currentDate.day,
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
     );
 
     final endDate = DateTime(
-      currentDate.year,
-      currentDate.month,
-      currentDate.day + 1,
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day + 1,
     ).add(const Duration(hours: 1));
 
     final transactions = await _bbPixApiService.fetchTransactions(
@@ -52,17 +65,18 @@ class TimelineController {
 
   Future<List<sicoob.Pix>> fetchSicoobPixTransactions(
     SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
+    DateTime selectedDate,
   ) async {
     final initialDate = DateTime(
-      currentDate.year,
-      currentDate.month,
-      currentDate.day,
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
     );
 
     final endDate = DateTime(
-      currentDate.year,
-      currentDate.month,
-      currentDate.day + 1,
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day + 1,
     ).add(const Duration(hours: 1));
 
     final transactions = await _sicoobPixApiService.fetchTransactions(
