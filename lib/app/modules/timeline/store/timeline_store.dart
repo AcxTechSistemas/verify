@@ -5,8 +5,6 @@ part 'timeline_store.g.dart';
 class TimelineStore = TimelineStoreBase with _$TimelineStore;
 
 abstract class TimelineStoreBase with Store {
-  final currentDate = DateTime.now();
-
   @observable
   DateTime selectedDate = DateTime.now();
 
@@ -14,7 +12,20 @@ abstract class TimelineStoreBase with Store {
   int selectedAccount = 0;
 
   @computed
-  bool get showTodayFab => selectedDate.day != currentDate.day;
+  bool get showTodayFab {
+    final now = DateTime.now();
+    final currentDate = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    );
+    final currentSelectedDate = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
+    return currentDate != currentSelectedDate;
+  }
 
   @computed
   bool get selectedSicoob => selectedAccount == 0;
