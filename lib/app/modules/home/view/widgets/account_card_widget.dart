@@ -64,22 +64,17 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
             ),
             Visibility(
               visible: widget.hasCredentials,
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: constraints.maxHeight * 0.07,
-                    horizontal: constraints.maxWidth * 0.015,
-                  ),
-                  child: IconButton(
-                    onPressed: widget.setFavorite,
-                    icon: Icon(
-                      widget.isFavorite
-                          ? Icons.favorite
-                          : Icons.favorite_border_outlined,
-                      color: const Color(0xFF91D888),
-                      size: constraints.maxHeight * 0.16,
-                    ),
+              child: Positioned(
+                bottom: constraints.maxHeight * 0.15,
+                left: constraints.maxWidth * 0.03,
+                child: IconButton(
+                  onPressed: widget.setFavorite,
+                  icon: Icon(
+                    widget.isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border_outlined,
+                    color: const Color(0xFF91D888),
+                    size: constraints.maxHeight * 0.16,
                   ),
                 ),
               ),

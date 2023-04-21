@@ -40,55 +40,55 @@ class _SettingsPageState extends State<SettingsPage> {
         automaticallyImplyLeading: false,
         title: const Text('Ajustes'),
       ),
-      body: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: colorScheme.onInverseSurface,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    width: screenSize.width * 0.7,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          authStore.userName,
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: textTheme.headlineSmall!.copyWith(
-                            color: colorScheme.primary,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: colorScheme.onInverseSurface,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    SizedBox(
+                      width: screenSize.width * 0.7,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            authStore.userName,
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            style: textTheme.headlineSmall!.copyWith(
+                              color: colorScheme.primary,
+                            ),
                           ),
-                        ),
-                        Text(
-                          authStore.loggedUser?.email ?? '',
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: textTheme.titleSmall!.copyWith(
-                            color: colorScheme.primary,
-                            fontWeight: FontWeight.w300,
+                          Text(
+                            authStore.loggedUser?.email ?? '',
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            style: textTheme.titleSmall!.copyWith(
+                              color: colorScheme.primary,
+                              fontWeight: FontWeight.w300,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: controller.logout,
-                    icon: const Icon(Icons.exit_to_app),
-                  ),
-                ],
+                    const Spacer(),
+                    IconButton(
+                      onPressed: controller.logout,
+                      icon: const Icon(Icons.exit_to_app),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          SingleChildScrollView(
-            child: Padding(
+            Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -163,8 +163,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: const CustomNavigationBar(),
     );

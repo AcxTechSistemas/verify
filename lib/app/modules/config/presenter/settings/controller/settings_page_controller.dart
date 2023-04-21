@@ -25,14 +25,14 @@ class SettingsPageController {
 
   Future<void> goToInstagram() async {
     final instagramUrl = Uri.parse(
-      'https://www.instagram.com/alefe.dev',
+      'instagram://user?username=alefe.dev',
     );
     await launchUrl(instagramUrl);
   }
 
   Future<void> goToWhatsapp() async {
     final whatsappUrl = Uri.parse(
-      'https://wa.me/5562993149401?text=Bem+vindo+a+AcxTech+Sistemas.+Vi+que+vc+veio+pelo+nosso+app%3A+Verify!+em+que+podemos+ajudar%3F',
+      'whatsapp://send?phone=5562993149401&text=Bem%20vindo%20a%20AcxTech%20Sistemas.%20Vi%20que%20vc%20veio%20pelo%20nosso%20app:%20Verify!%20Em%20que%20podemos%20ajudar%3F',
     );
     await launchUrl(whatsappUrl);
   }
