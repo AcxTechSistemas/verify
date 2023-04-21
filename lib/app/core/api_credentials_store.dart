@@ -37,22 +37,34 @@ abstract class ApiCredentialsStoreBase with Store {
   }
 
   @computed
-  List<Map<String, dynamic>>? get listAccounts {
+  bool get hasSicoobApiCredentials => sicoobApiCredentialsEntity != null;
+
+  @computed
+  bool get hasBBApiCredentials => bbApiCredentialsEntity != null;
+
+  @computed
+  bool get firstIsSicoob => listAccounts.first.containsValue('sicoob');
+
+  @computed
+  bool get firstIsBB => listAccounts.first.containsValue('bancoDoBrasil');
+
+  @computed
+  List<Map<String, dynamic>> get listAccounts {
     List<Map<String, dynamic>> list = [];
-    final bbAccount = {
-      'account': 'bancoDoBrasil',
-      'hasCredentials': bbApiCredentialsEntity != null,
-      'isFavorite': bbApiCredentialsEntity?.isFavorite ?? false,
-      'imageAsset': 'assets/images/bancoDoBrasilAccountCard.png',
-    };
     final sicoobAccount = {
       'account': 'sicoob',
       'hasCredentials': sicoobApiCredentialsEntity != null,
       'isFavorite': sicoobApiCredentialsEntity?.isFavorite ?? false,
       'imageAsset': 'assets/images/sicoobAccountCard.png',
     };
-    list.add(bbAccount);
+    final bbAccount = {
+      'account': 'bancoDoBrasil',
+      'hasCredentials': bbApiCredentialsEntity != null,
+      'isFavorite': bbApiCredentialsEntity?.isFavorite ?? false,
+      'imageAsset': 'assets/images/bancoDoBrasilAccountCard.png',
+    };
     list.add(sicoobAccount);
+    list.add(bbAccount);
     list.sort(
       (a, b) {
         if (a['hasCredentials'] && b['hasCredentials']) {

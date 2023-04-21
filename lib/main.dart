@@ -8,6 +8,8 @@ import 'package:verify/app/app_widget.dart';
 import 'package:verify/firebase_options.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -18,14 +20,13 @@ void main() async {
       systemNavigationBarContrastEnforced: true,
     ),
   );
-
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   final sharedPreferences = await SharedPreferences.getInstance();
 

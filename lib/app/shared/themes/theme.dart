@@ -6,8 +6,10 @@ part 'filled_button_theme.g.dart';
 part 'icon_theme.g.dart';
 part 'icon_button_theme.g.dart';
 part 'radio_button_theme.g.dart';
+part 'navigation_bar_theme.g.dart';
 
 ThemeData get lightTheme => ThemeData(
+      useMaterial3: true,
       scaffoldBackgroundColor: _lightColorScheme.background,
       radioTheme: _lightRadioTheme,
       colorScheme: _lightColorScheme,
@@ -16,9 +18,11 @@ ThemeData get lightTheme => ThemeData(
       inputDecorationTheme: _lightInputDecoration,
       filledButtonTheme: _lightFilledButtonThemeData,
       appBarTheme: _lightAppBarTheme,
+      navigationBarTheme: _lightNavigationBarTheme,
     );
 
 ThemeData get darkTheme => ThemeData(
+      useMaterial3: true,
       scaffoldBackgroundColor: _darkColorScheme.background,
       radioTheme: _darkRadioTheme,
       colorScheme: _darkColorScheme,
@@ -27,4 +31,5 @@ ThemeData get darkTheme => ThemeData(
       inputDecorationTheme: _darkInputDecoration,
       filledButtonTheme: _darkFilledButtonThemeData,
       appBarTheme: _darkAppBarTheme,
+      navigationBarTheme: _darkNavigationBarTheme,
     );

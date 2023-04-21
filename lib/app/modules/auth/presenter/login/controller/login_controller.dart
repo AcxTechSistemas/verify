@@ -3,7 +3,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/auth_store.dart';
-import 'package:verify/app/modules/auth/domain/entities/logged_user_entity.dart';
 import 'package:verify/app/modules/auth/domain/entities/logged_user_info.dart';
 import 'package:verify/app/modules/auth/domain/entities/login_credentials_entity.dart';
 import 'package:verify/app/modules/auth/domain/usecase/login_with_email_usecase.dart';
@@ -76,7 +75,7 @@ class LoginController {
         authStore.setUser(user);
         _loginStore.loggingInWithEmailInProgress(false);
         await _fetchCloudApiCredentials(user);
-        Modular.to.pushReplacementNamed('/settings/');
+        Modular.to.pushReplacementNamed('/home/');
         return null;
       },
       (failure) {
@@ -97,7 +96,7 @@ class LoginController {
         authStore.setUser(user);
         await _fetchCloudApiCredentials(user);
         _loginStore.loggingInWithGoogleInProgress(false);
-        Modular.to.pushReplacementNamed('/settings/');
+        Modular.to.pushReplacementNamed('/home/');
         return null;
       },
       (failure) {

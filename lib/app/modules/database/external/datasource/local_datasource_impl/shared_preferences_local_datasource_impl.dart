@@ -228,12 +228,12 @@ class SharedPreferencesLocalDataSourceImpl
     required bool isFavorite,
   }) async {
     try {
-      final bbCredentialsJson = _sharedPreferences.getString(
-        DocumentName.bbApiCredential.name,
+      final sicoobCredentialsJson = _sharedPreferences.getString(
+        DocumentName.sicoobApiCredential.name,
       );
-      if (bbCredentialsJson != null) {
+      if (sicoobCredentialsJson != null) {
         final sicoobCredentials = SicoobApiCredentialsModel.fromJson(
-          bbCredentialsJson,
+          sicoobCredentialsJson,
         );
         final updatedBbCredentials = sicoobCredentials.copyWith(
           clientID: clientID,
@@ -257,7 +257,7 @@ class SharedPreferencesLocalDataSourceImpl
         }
       } else {
         const logError =
-            'SharedPreferencesError: Error on Update BBApiCredentials, BBApiCredentials not found';
+            'SharedPreferencesError: Error on Update SicoobApiCredentials, SicoobApiCredentials not found';
         _sendLogsToWeb(logError);
         _registerLog(logError);
         throw ErrorReadingApiCredentials(

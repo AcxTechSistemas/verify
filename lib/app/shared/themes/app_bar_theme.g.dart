@@ -1,6 +1,7 @@
 part of 'theme.dart';
 
 AppBarTheme get _lightAppBarTheme => AppBarTheme(
+      surfaceTintColor: _lightColorScheme.onInverseSurface,
       foregroundColor: _lightColorScheme.primary,
       centerTitle: true,
       backgroundColor: _lightColorScheme.onInverseSurface,
@@ -10,6 +11,7 @@ AppBarTheme get _lightAppBarTheme => AppBarTheme(
       ),
     );
 AppBarTheme get _darkAppBarTheme => AppBarTheme(
+      surfaceTintColor: _darkColorScheme.onInverseSurface,
       foregroundColor: _darkColorScheme.primary,
       centerTitle: true,
       backgroundColor: _darkColorScheme.onInverseSurface,

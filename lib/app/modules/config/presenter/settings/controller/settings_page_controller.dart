@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/core/auth_store.dart';
@@ -21,12 +22,41 @@ class SettingsPageController {
     this._removeSicoobApiCredentialsUseCase,
     this._removeUserThemeModePreferencesUseCase,
   );
+
+  Future<void> goToInstagram() async {
+    final instagramUrl = Uri.parse(
+      'instagram://user?username=alefe.dev',
+    );
+    await launchUrl(instagramUrl);
+  }
+
+  Future<void> goToWhatsapp() async {
+    final whatsappUrl = Uri.parse(
+      'whatsapp://send?phone=5562993149401&text=Bem%20vindo%20a%20AcxTech%20Sistemas.%20Vi%20que%20vc%20veio%20pelo%20nosso%20app:%20Verify!%20Em%20que%20podemos%20ajudar%3F',
+    );
+    await launchUrl(whatsappUrl);
+  }
+
+  Future<void> goToGithub() async {
+    final githubUrl = Uri.parse(
+      'https://github.com/AcxTechSistemas',
+    );
+    await launchUrl(githubUrl);
+  }
+
+  Future<void> goToLinkedin() async {
+    final linkedinUrl = Uri.parse(
+      'https://www.linkedin.com/in/alefealvessilva',
+    );
+    await launchUrl(linkedinUrl);
+  }
+
   void goToSicoobSettings() {
-    Modular.to.pushReplacementNamed('./sicoob-settings');
+    Modular.to.pushNamed('./sicoob-settings');
   }
 
   void goToBBSettings() {
-    Modular.to.pushReplacementNamed('./bb-settings');
+    Modular.to.pushNamed('./bb-settings');
   }
 
   Future<void> logout() async {

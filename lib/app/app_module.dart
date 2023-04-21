@@ -9,9 +9,13 @@ import 'package:verify/app/core/auth_store.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/read_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/remove_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/update_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/read_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/remove_sicoob_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/update_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/remove_user_theme_mode_preference_usecase.dart';
+import 'package:verify/app/modules/home/home_module.dart';
+import 'package:verify/app/modules/timeline/timeline_module.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/auth/auth_module.dart';
@@ -40,12 +44,12 @@ import 'package:verify/app/modules/database/infra/datasource/local_api_credentia
 import 'package:verify/app/modules/database/infra/datasource/user_preferences_datasource.dart';
 import 'package:verify/app/modules/database/infra/repository/api_credentials_repository_impl.dart';
 import 'package:verify/app/modules/database/infra/repository/user_preferences_repository_impl.dart';
-import 'package:verify/app/shared/services/bb_pix_api_service/bb_pix_api_service.dart';
-import 'package:verify/app/shared/services/bb_pix_api_service/error_handler/bb_pix_api_error_handler.dart';
+import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/bb_pix_api_service.dart';
+import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/error_handler/bb_pix_api_error_handler.dart';
 import 'package:verify/app/shared/services/client_service/client_service.dart';
 import 'package:verify/app/shared/services/client_service/dio_client_service.dart';
-import 'package:verify/app/shared/services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
-import 'package:verify/app/shared/services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
+import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
+import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
 
 class AppModule extends Module {
   final SharedPreferences sharedPreferences;
@@ -124,20 +128,28 @@ class AppModule extends Module {
         AutoBind.factory<ReadUserThemeModePreferencesUseCase>(
           ReadUserThemeModePreferencesUseCaseImpl.new,
         ),
+
         AutoBind.factory<SaveSicoobApiCredentialsUseCase>(
           SaveSicoobApiCredentialsUseCaseImpl.new,
         ),
         AutoBind.factory<ReadSicoobApiCredentialsUseCase>(
           ReadSicoobApiCredentialsUseCaseImpl.new,
         ),
+        AutoBind.factory<UpdateSicoobApiCredentialsUseCase>(
+          UpdateSicoobApiCredentialsUseCaseImpl.new,
+        ),
         AutoBind.factory<RemoveSicoobApiCredentialsUseCase>(
           RemoveSicoobApiCredentialsUseCaseImpl.new,
+        ),
+        AutoBind.factory<SaveBBApiCredentialsUseCase>(
+          SaveBBApiCredentialsUseCaseImpl.new,
         ),
         AutoBind.factory<ReadBBApiCredentialsUseCase>(
           ReadBBApiCredentialsUseCaseImpl.new,
         ),
-        AutoBind.factory<SaveBBApiCredentialsUseCase>(
-          SaveBBApiCredentialsUseCaseImpl.new,
+
+        AutoBind.factory<UpdateBBApiCredentialsUseCase>(
+          UpdateBBApiCredentialsUseCaseImpl.new,
         ),
         AutoBind.factory<RemoveBBApiCredentialsUseCase>(
           RemoveBBApiCredentialsUseCaseImpl.new,
@@ -150,10 +162,31 @@ class AppModule extends Module {
           UserPreferencesRepositoryImpl.new,
         ),
       ];
-
   @override
   List<ModularRoute> get routes => [
-        ModuleRoute('/auth', module: AuthModule()),
-        ModuleRoute('/settings', module: SettingsModule()),
+        ModuleRoute(
+          '/auth',
+          module: AuthModule(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
+        ModuleRoute(
+          '/settings',
+          module: SettingsModule(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
+        ModuleRoute(
+          '/home',
+          module: HomeModule(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
+        ModuleRoute(
+          '/timeline',
+          module: TimelineModule(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
       ];
 }

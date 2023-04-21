@@ -28,7 +28,7 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: controller.backToSettings,
+          onPressed: controller.popPage,
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text(
@@ -167,7 +167,7 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
                       child: Row(
                         children: [
                           TextButton(
-                            onPressed: controller.backToSettings,
+                            onPressed: controller.popPage,
                             child: const Text('Cancelar'),
                           ),
                           const Spacer(),

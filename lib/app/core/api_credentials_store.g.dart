@@ -16,11 +16,39 @@ mixin _$ApiCredentialsStore on ApiCredentialsStoreBase, Store {
           () => super.hasApiCredentials,
           name: 'ApiCredentialsStoreBase.hasApiCredentials'))
       .value;
-  Computed<List<Map<String, dynamic>>?>? _$listAccountsComputed;
+  Computed<bool>? _$hasSicoobApiCredentialsComputed;
 
   @override
-  List<Map<String, dynamic>>? get listAccounts => (_$listAccountsComputed ??=
-          Computed<List<Map<String, dynamic>>?>(() => super.listAccounts,
+  bool get hasSicoobApiCredentials => (_$hasSicoobApiCredentialsComputed ??=
+          Computed<bool>(() => super.hasSicoobApiCredentials,
+              name: 'ApiCredentialsStoreBase.hasSicoobApiCredentials'))
+      .value;
+  Computed<bool>? _$hasBBApiCredentialsComputed;
+
+  @override
+  bool get hasBBApiCredentials => (_$hasBBApiCredentialsComputed ??=
+          Computed<bool>(() => super.hasBBApiCredentials,
+              name: 'ApiCredentialsStoreBase.hasBBApiCredentials'))
+      .value;
+  Computed<bool>? _$firstIsSicoobComputed;
+
+  @override
+  bool get firstIsSicoob =>
+      (_$firstIsSicoobComputed ??= Computed<bool>(() => super.firstIsSicoob,
+              name: 'ApiCredentialsStoreBase.firstIsSicoob'))
+          .value;
+  Computed<bool>? _$firstIsBBComputed;
+
+  @override
+  bool get firstIsBB =>
+      (_$firstIsBBComputed ??= Computed<bool>(() => super.firstIsBB,
+              name: 'ApiCredentialsStoreBase.firstIsBB'))
+          .value;
+  Computed<List<Map<String, dynamic>>>? _$listAccountsComputed;
+
+  @override
+  List<Map<String, dynamic>> get listAccounts => (_$listAccountsComputed ??=
+          Computed<List<Map<String, dynamic>>>(() => super.listAccounts,
               name: 'ApiCredentialsStoreBase.listAccounts'))
       .value;
 
@@ -126,6 +154,10 @@ loading: ${loading},
 bbApiCredentialsEntity: ${bbApiCredentialsEntity},
 sicoobApiCredentialsEntity: ${sicoobApiCredentialsEntity},
 hasApiCredentials: ${hasApiCredentials},
+hasSicoobApiCredentials: ${hasSicoobApiCredentials},
+hasBBApiCredentials: ${hasBBApiCredentials},
+firstIsSicoob: ${firstIsSicoob},
+firstIsBB: ${firstIsBB},
 listAccounts: ${listAccounts}
     ''';
   }

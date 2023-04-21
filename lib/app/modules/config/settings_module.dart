@@ -29,7 +29,12 @@ class SettingsModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute('/', child: (context, _) => const SettingsPage()),
+        ChildRoute(
+          '/',
+          child: (context, _) => const SettingsPage(),
+          transition: TransitionType.fadeIn,
+          duration: const Duration(milliseconds: 300),
+        ),
         ChildRoute(
           '/sicoob-settings',
           child: (context, _) => const SicoobSettingsPage(),

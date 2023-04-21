@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/modules/auth/domain/entities/register_credentials_entity.dart';
-import 'package:verify/app/modules/auth/domain/usecase/login_with_google_usecase.dart';
 import 'package:verify/app/modules/auth/domain/usecase/register_with_email_usecase.dart';
 import 'package:verify/app/modules/auth/presenter/register/store/register_store.dart';
 import 'package:verify/app/modules/auth/utils/email_regex.dart';
@@ -10,7 +9,6 @@ import 'package:verify/app/modules/auth/utils/password_regex.dart';
 class RegisterController {
   final RegisterStore _registerStore;
   final RegisterWithEmailUseCase _registerWithEmailUseCase;
-  final LoginWithGoogleUseCase _loginWithGoogleUseCase;
 
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -23,7 +21,6 @@ class RegisterController {
   RegisterController(
     this._registerStore,
     this._registerWithEmailUseCase,
-    this._loginWithGoogleUseCase,
   );
 
   void goToLoginPage() {
@@ -50,25 +47,6 @@ class RegisterController {
       },
       (failure) {
         _registerStore.registeringWithEmailInProgress(false);
-        return failure.message;
-      },
-    );
-  }
-
-  Future<String?> loginWithGoogle() async {
-    emailFocus.unfocus();
-    passwordFocus.unfocus();
-    confirmPasswordFocus.unfocus();
-    _registerStore.registeringWithGoogleInProgress(true);
-    final result = await _loginWithGoogleUseCase.call();
-
-    return result.fold(
-      (success) {
-        _registerStore.registeringWithGoogleInProgress(false);
-        return null;
-      },
-      (failure) {
-        _registerStore.registeringWithGoogleInProgress(false);
         return failure.message;
       },
     );
