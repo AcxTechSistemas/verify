@@ -83,13 +83,12 @@ class HomePageController {
       currentDate.year,
       currentDate.month,
       1,
-    );
+    ).add(const Duration(hours: 1));
 
     final endDate = DateTime(
       currentDate.year,
       currentDate.month + 1,
-      1,
-    ).subtract(const Duration(seconds: 1));
+    ).subtract(const Duration(days: 1));
 
     final transactions = await _sicoobPixApiService.fetchTransactions(
       dateTimeRange: DateTimeRange(start: initialDate, end: endDate),

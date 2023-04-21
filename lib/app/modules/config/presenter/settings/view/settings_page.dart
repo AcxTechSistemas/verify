@@ -1,3 +1,4 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -157,6 +158,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         apiCredentialsStore.bbApiCredentialsEntity != null,
                     onTap: controller.goToBBSettings,
                   ),
+                  const SizedBox(height: 32),
+                  _DevelopedWith(),
                 ],
               ),
             ),
@@ -164,6 +167,69 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       bottomNavigationBar: const CustomNavigationBar(),
+    );
+  }
+}
+
+class _DevelopedWith extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final textStyle = textTheme.titleSmall!.copyWith(
+      color: colorScheme.outline,
+    );
+
+    final controller = Modular.get<SettingsPageController>();
+
+    return Column(
+      children: [
+        Text(
+          'Developed with',
+          style: textStyle,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const FlutterLogo(),
+            Text(
+              'Flutter',
+              style: textStyle,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'By AcxTech Sistemas',
+          style: textStyle,
+          textAlign: TextAlign.center,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () async => await controller.goToInstagram(),
+              icon: const Icon(CommunityMaterialIcons.instagram),
+            ),
+            IconButton(
+              onPressed: () async => await controller.goToWhatsapp(),
+              icon: const Icon(CommunityMaterialIcons.whatsapp),
+            ),
+            IconButton(
+              onPressed: () async => await controller.goToGithub(),
+              icon: const Icon(CommunityMaterialIcons.github),
+            ),
+            IconButton(
+              onPressed: () async => await controller.goToLinkedin(),
+              icon: const Icon(CommunityMaterialIcons.linkedin),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

@@ -70,13 +70,16 @@ class TimelineController {
       selectedDate.year,
       selectedDate.month,
       selectedDate.day,
-    );
+    ).add(const Duration(hours: 1));
 
     final endDate = DateTime(
       selectedDate.year,
       selectedDate.month,
-      selectedDate.day + 1,
-    ).add(const Duration(hours: 1));
+      selectedDate.day,
+      23,
+      59,
+      59,
+    );
 
     final transactions = await _sicoobPixApiService.fetchTransactions(
       dateTimeRange: DateTimeRange(start: initialDate, end: endDate),
