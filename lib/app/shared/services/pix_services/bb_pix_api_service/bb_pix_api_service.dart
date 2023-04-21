@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pix_bb/pix_bb.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
-import 'package:verify/app/shared/services/bb_pix_api_service/error_handler/bb_pix_api_error_handler.dart';
+import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/error_handler/bb_pix_api_error_handler.dart';
+import 'package:verify/app/shared/services/pix_services/models/verify_pix_model.dart';
 
 abstract class BBPixApiService {
   Future<String?> validateCredentials({
     required String applicationDeveloperKey,
     required String basicKey,
   });
-  Future<List<Pix>> fetchTransactions({
+  Future<List<VerifyPixModel>> fetchTransactions({
     required String applicationDeveloperKey,
     required String basicKey,
     DateTimeRange? dateTimeRange,
@@ -51,7 +52,7 @@ class BBPixApiServiceImpl implements BBPixApiService {
   }
 
   @override
-  Future<List<Pix>> fetchTransactions({
+  Future<List<VerifyPixModel>> fetchTransactions({
     required String applicationDeveloperKey,
     required String basicKey,
     DateTimeRange? dateTimeRange,
@@ -67,7 +68,15 @@ class BBPixApiServiceImpl implements BBPixApiService {
         token: token,
         dateTimeRange: dateTimeRange,
       );
-      return transactions;
+      final verifyPixList = transactions
+          .map((pix) => VerifyPixModel(
+                clientName: pix.pagador.nome,
+                documment: pix.pagador.cpf ?? pix.pagador.cnpj,
+                value: double.parse(pix.valor),
+                date: DateTime.parse(pix.horario),
+              ))
+          .toList();
+      return verifyPixList;
     } catch (e) {
       await _sendLogsToWeb(e);
       _registerLog(e);

@@ -5,10 +5,9 @@ import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/timeline/controller/timeline_controller.dart';
 import 'package:verify/app/modules/timeline/store/timeline_store.dart';
 import 'package:verify/app/modules/timeline/view/widgets/date_carrousel_widget.dart';
-import 'package:verify/app/shared/widgets/bb_pix_list_view_builder_widget.dart';
 import 'package:verify/app/shared/widgets/custom_navigation_bar.dart';
 import 'package:verify/app/shared/widgets/empty_account_widget.dart';
-import 'package:verify/app/shared/widgets/sicoob_pix_list_view_builder.dart';
+import 'package:verify/app/shared/widgets/pix_list_view_builder_widget.dart';
 
 class TimelinePage extends StatefulWidget {
   const TimelinePage({super.key});
@@ -24,16 +23,11 @@ class _TimelinePageState extends State<TimelinePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Timeline'),
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.arrow_back),
-        ),
       ),
       body: Observer(
         builder: (context) {
@@ -43,7 +37,7 @@ class _TimelinePageState extends State<TimelinePage> {
                 controller: controller.scrollController,
                 onDateSelected: (date) {
                   setState(() {
-                    controller.onDateSelected(date);
+                    controller.selectDateOnCarrousel(date);
                   });
                 },
               ),
@@ -73,7 +67,7 @@ class _TimelinePageState extends State<TimelinePage> {
                     if (apiStore.hasBBApiCredentials) {
                       if (store.selectedBB) {
                         return Flexible(
-                          child: BBPixListViewBuilder(
+                          child: PixListViewBuilder(
                             future: controller.fetchBBPixTransactions(
                               apiStore.bbApiCredentialsEntity!,
                               store.selectedDate,
@@ -85,7 +79,7 @@ class _TimelinePageState extends State<TimelinePage> {
                     if (apiStore.hasSicoobApiCredentials) {
                       if (store.selectedSicoob) {
                         return Flexible(
-                          child: SicoobPixListViewBuilder(
+                          child: PixListViewBuilder(
                             future: controller.fetchSicoobPixTransactions(
                               apiStore.sicoobApiCredentialsEntity!,
                               store.selectedDate,
@@ -108,6 +102,7 @@ class _TimelinePageState extends State<TimelinePage> {
         return Visibility(
           visible: store.showTodayFab,
           child: FloatingActionButton.extended(
+            backgroundColor: colorScheme.secondaryContainer,
             icon: const Icon(Icons.today),
             label: const Text('Hoje'),
             onPressed: () {

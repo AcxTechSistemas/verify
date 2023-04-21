@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pix_sicoob/pix_sicoob.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
-import 'package:verify/app/shared/services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
+import 'package:verify/app/shared/services/pix_services/models/verify_pix_model.dart';
+import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
 
 abstract class SicoobPixApiService {
   Future<String?> validateCredentials({
@@ -10,7 +11,7 @@ abstract class SicoobPixApiService {
     required String certificateBase64String,
     required String certificatePassword,
   });
-  Future<List<Pix>> fetchTransactions({
+  Future<List<VerifyPixModel>> fetchTransactions({
     required String clientID,
     required String certificateBase64String,
     required String certificatePassword,
@@ -56,7 +57,7 @@ class SicoobPixApiServiceImpl implements SicoobPixApiService {
   }
 
   @override
-  Future<List<Pix>> fetchTransactions({
+  Future<List<VerifyPixModel>> fetchTransactions({
     required String clientID,
     required String certificateBase64String,
     required String certificatePassword,
@@ -73,7 +74,15 @@ class SicoobPixApiServiceImpl implements SicoobPixApiService {
         token: token,
         dateTimeRange: dateTimeRange,
       );
-      return transactions;
+      final verifyPixList = transactions
+          .map((pix) => VerifyPixModel(
+                clientName: pix.pagador.nome,
+                documment: pix.pagador.cpf ?? pix.pagador.cnpj,
+                value: double.parse(pix.valor),
+                date: DateTime.parse(pix.horario),
+              ))
+          .toList();
+      return verifyPixList;
     } catch (e) {
       _sendLogsToWeb(e);
       _registerLog(e);

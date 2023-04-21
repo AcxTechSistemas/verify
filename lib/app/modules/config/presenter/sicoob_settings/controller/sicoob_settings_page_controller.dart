@@ -11,7 +11,7 @@ import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentia
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/remove_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/save_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/utils/database_enums.dart';
-import 'package:verify/app/shared/services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
+import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
 
 class SicoobSettingsPageController {
   final SicoobPixApiService _pixSicoobService;
@@ -35,14 +35,15 @@ class SicoobSettingsPageController {
     this._getLoggedUserUseCase,
     this._removeSicoobApiCredentialsUseCase,
   );
-  void backToSettings() {
+  void popPage() async {
     clientIDFocus.unfocus();
     certificatePasswordFocus.unfocus();
     certificateString = '';
     certificatePasswordController.clear();
     clientIDController.clear();
-    Modular.to.pushReplacementNamed('./');
     clearStore();
+    await Future.delayed(const Duration(milliseconds: 200));
+    Modular.to.pop();
   }
 
   Future<void> goToSicoobDevelopersPortal() async {

@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:pix_bb/pix_bb.dart';
+import 'package:verify/app/shared/services/pix_services/models/verify_pix_model.dart';
 import 'package:verify/app/shared/widgets/custom_error_widget.dart';
 import 'package:verify/app/shared/widgets/found_transactions_count_widget.dart';
 import 'package:verify/app/shared/widgets/pix_transaction_tile_widget.dart';
 import 'package:verify/app/shared/widgets/transactions_not_found_widget.dart';
 
-class BBPixListViewBuilder extends StatefulWidget {
-  final Future<List<Pix>> future;
-  const BBPixListViewBuilder({
+class PixListViewBuilder extends StatelessWidget {
+  final Future<List<VerifyPixModel>> future;
+  final String? replacementTitle;
+  const PixListViewBuilder({
     super.key,
     required this.future,
+    this.replacementTitle,
   });
 
   @override
-  State<BBPixListViewBuilder> createState() => _BBPixListViewBuilderState();
-}
-
-class _BBPixListViewBuilderState extends State<BBPixListViewBuilder> {
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.future,
+      future: future,
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -37,27 +34,27 @@ class _BBPixListViewBuilderState extends State<BBPixListViewBuilder> {
                 );
               }
               final listPix = snapshot.data!;
-              return Column(
-                children: [
-                  FoundTransactionsCountWidget(length: listPix.length),
-                  Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: listPix.length,
-                      itemBuilder: (context, index) {
-                        final pix = listPix[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: PixTransactionTileWidget(
-                            clientName: pix.pagador.nome,
-                            value: pix.valor,
-                            date: pix.horario,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              return ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: listPix.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return FoundTransactionsCountWidget(
+                      replacementTitle: replacementTitle,
+                      length: listPix.length,
+                    );
+                  } else {
+                    final pix = listPix[index - 1];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: PixTransactionTileWidget(
+                        clientName: pix.clientName,
+                        value: pix.value,
+                        date: pix.date,
+                      ),
+                    );
+                  }
+                },
               );
             }
             if (snapshot.hasError) {

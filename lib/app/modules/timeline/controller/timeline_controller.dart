@@ -3,10 +3,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_entity.dart';
 import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentials_entity.dart';
 import 'package:verify/app/modules/timeline/store/timeline_store.dart';
-import 'package:pix_bb/pix_bb.dart' as bb;
-import 'package:pix_sicoob/pix_sicoob.dart' as sicoob;
-import 'package:verify/app/shared/services/bb_pix_api_service/bb_pix_api_service.dart';
-import 'package:verify/app/shared/services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
+import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/bb_pix_api_service.dart';
+import 'package:verify/app/shared/services/pix_services/models/verify_pix_model.dart';
+import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
 
 class TimelineController {
   final BBPixApiService _bbPixApiService;
@@ -26,12 +25,12 @@ class TimelineController {
     store.setSelectedDate(now);
     scrollController.animateTo(
       0,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
   }
 
-  void onDateSelected(DateTime date) {
+  void selectDateOnCarrousel(DateTime date) {
     store.setSelectedDate(date);
   }
 
@@ -39,7 +38,7 @@ class TimelineController {
     store.setselectedAccount(selected);
   }
 
-  Future<List<bb.Pix>> fetchBBPixTransactions(
+  Future<List<VerifyPixModel>> fetchBBPixTransactions(
     BBApiCredentialsEntity bbApiCredentialsEntity,
     DateTime selectedDate,
   ) async {
@@ -63,7 +62,7 @@ class TimelineController {
     return transactions;
   }
 
-  Future<List<sicoob.Pix>> fetchSicoobPixTransactions(
+  Future<List<VerifyPixModel>> fetchSicoobPixTransactions(
     SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
     DateTime selectedDate,
   ) async {

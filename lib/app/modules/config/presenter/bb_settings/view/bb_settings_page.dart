@@ -28,7 +28,7 @@ class _BBSettingsPageState extends State<BBSettingsPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: controller.backToSettings,
+          onPressed: controller.popPage,
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text(
@@ -129,7 +129,7 @@ class _BBSettingsPageState extends State<BBSettingsPage> {
                       child: Row(
                         children: [
                           TextButton(
-                            onPressed: controller.backToSettings,
+                            onPressed: controller.popPage,
                             child: const Text('Cancelar'),
                           ),
                           const Spacer(),

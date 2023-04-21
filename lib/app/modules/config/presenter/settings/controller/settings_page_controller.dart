@@ -22,11 +22,11 @@ class SettingsPageController {
     this._removeUserThemeModePreferencesUseCase,
   );
   void goToSicoobSettings() {
-    Modular.to.pushReplacementNamed('./sicoob-settings');
+    Modular.to.pushNamed('./sicoob-settings');
   }
 
   void goToBBSettings() {
-    Modular.to.pushReplacementNamed('./bb-settings');
+    Modular.to.pushNamed('./bb-settings');
   }
 
   Future<void> logout() async {

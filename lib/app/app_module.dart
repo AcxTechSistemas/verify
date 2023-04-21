@@ -44,12 +44,12 @@ import 'package:verify/app/modules/database/infra/datasource/local_api_credentia
 import 'package:verify/app/modules/database/infra/datasource/user_preferences_datasource.dart';
 import 'package:verify/app/modules/database/infra/repository/api_credentials_repository_impl.dart';
 import 'package:verify/app/modules/database/infra/repository/user_preferences_repository_impl.dart';
-import 'package:verify/app/shared/services/bb_pix_api_service/bb_pix_api_service.dart';
-import 'package:verify/app/shared/services/bb_pix_api_service/error_handler/bb_pix_api_error_handler.dart';
+import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/bb_pix_api_service.dart';
+import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/error_handler/bb_pix_api_error_handler.dart';
 import 'package:verify/app/shared/services/client_service/client_service.dart';
 import 'package:verify/app/shared/services/client_service/dio_client_service.dart';
-import 'package:verify/app/shared/services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
-import 'package:verify/app/shared/services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
+import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/error_handler/sicoob_pix_api_error_handler.dart';
+import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
 
 class AppModule extends Module {
   final SharedPreferences sharedPreferences;

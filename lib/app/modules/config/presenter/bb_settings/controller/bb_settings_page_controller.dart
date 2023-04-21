@@ -7,7 +7,7 @@ import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_e
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/remove_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/utils/database_enums.dart';
-import 'package:verify/app/shared/services/bb_pix_api_service/bb_pix_api_service.dart';
+import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/bb_pix_api_service.dart';
 
 class BBSettingsPageController {
   final BBPixApiService _bbPixApiService;
@@ -30,13 +30,14 @@ class BBSettingsPageController {
     this._getLoggedUserUseCase,
     this._removeBBApiCredentialsUseCase,
   );
-  void backToSettings() {
+  void popPage() async {
     appDevKeyFocus.unfocus();
     basicKeyFocus.unfocus();
     appDevKeyController.clear();
     basicKeyController.clear();
-    Modular.to.pushReplacementNamed('./');
     clearStore();
+    await Future.delayed(const Duration(milliseconds: 200));
+    Modular.to.pop();
   }
 
   Future<void> goToBBDevelopersPortal() async {

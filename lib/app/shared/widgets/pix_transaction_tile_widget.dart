@@ -1,11 +1,12 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:verify/app/shared/extensions/string_capitalize.dart';
 
 class PixTransactionTileWidget extends StatelessWidget {
   final String clientName;
-  final String value;
-  final String date;
+  final double value;
+  final DateTime date;
   const PixTransactionTileWidget({
     super.key,
     required this.clientName,
@@ -18,9 +19,8 @@ class PixTransactionTileWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
-    final doubleValue = double.parse(value);
-    final brazilianValue = UtilBrasilFields.obterReal(doubleValue);
-    final dateTime = DateTime.parse(date).subtract(const Duration(hours: 3));
+    final brazilianValue = UtilBrasilFields.obterReal(value);
+    final dateTime = date.subtract(const Duration(hours: 3));
     final formattedDate = DateFormat('dd-MMM HH:mm:ss').format(dateTime);
     return ListTile(
       contentPadding: EdgeInsets.zero,
@@ -30,7 +30,7 @@ class PixTransactionTileWidget extends StatelessWidget {
         child: const Icon(Icons.pix),
       ),
       title: Text(
-        clientName,
+        clientName.capitalize(),
         style: textTheme.titleSmall,
         overflow: TextOverflow.ellipsis,
       ),

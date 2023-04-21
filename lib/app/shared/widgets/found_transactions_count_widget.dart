@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 class FoundTransactionsCountWidget extends StatelessWidget {
   final int length;
-  const FoundTransactionsCountWidget({super.key, required this.length});
+  final String? replacementTitle;
+  const FoundTransactionsCountWidget({
+    super.key,
+    required this.length,
+    this.replacementTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +19,7 @@ class FoundTransactionsCountWidget extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'Transações encontradas',
+            replacementTitle ?? 'Transações encontradas',
             style: textTheme.titleSmall!.copyWith(
               color: colorScheme.outline,
             ),

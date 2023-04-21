@@ -6,6 +6,7 @@ part 'filled_button_theme.g.dart';
 part 'icon_theme.g.dart';
 part 'icon_button_theme.g.dart';
 part 'radio_button_theme.g.dart';
+part 'navigation_bar_theme.g.dart';
 
 ThemeData get lightTheme => ThemeData(
       useMaterial3: true,
@@ -30,17 +31,5 @@ ThemeData get darkTheme => ThemeData(
       inputDecorationTheme: _darkInputDecoration,
       filledButtonTheme: _darkFilledButtonThemeData,
       appBarTheme: _darkAppBarTheme,
-    );
-
-NavigationBarThemeData get _lightNavigationBarTheme => NavigationBarThemeData(
-      backgroundColor: _lightColorScheme.inverseSurface,
-      indicatorColor: _lightColorScheme.secondaryContainer,
-      iconTheme: MaterialStateProperty.resolveWith<IconThemeData?>((states) {
-        if (states.contains(MaterialState.selected)) {
-          return IconThemeData(
-            color: _lightColorScheme.primary,
-          );
-        }
-        return null;
-      }),
+      navigationBarTheme: _darkNavigationBarTheme,
     );

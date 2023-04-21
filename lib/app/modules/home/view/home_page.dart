@@ -6,12 +6,10 @@ import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/home/controller/home_page_controller.dart';
 import 'package:verify/app/modules/home/store/home_store.dart';
 import 'package:verify/app/modules/home/view/widgets/account_card_widget.dart';
-import 'package:verify/app/shared/widgets/bb_pix_list_view_builder_widget.dart';
+import 'package:verify/app/shared/widgets/pix_list_view_builder_widget.dart';
 import 'package:verify/app/shared/widgets/custom_navigation_bar.dart';
 import 'package:verify/app/shared/widgets/custom_snack_bar.dart';
 import 'package:verify/app/shared/widgets/empty_account_widget.dart';
-import 'package:verify/app/shared/widgets/menu_title_widget.dart';
-import 'package:verify/app/shared/widgets/sicoob_pix_list_view_builder.dart';
 import 'widgets/selected_page_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -49,22 +47,48 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SvgPicture.asset(
-                        'assets/svg/logo.svg',
-                        height: 20,
-                        alignment: Alignment.centerLeft,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  controller.greetingDayMessage,
+                                  style: textTheme.titleMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: colorScheme.outline,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: controller.hasUserMessage,
+                                  child: Text(
+                                    controller.greetingUserMessage,
+                                    style: textTheme.titleMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: colorScheme.outline,
+                                      fontSize: 18,
+                                    ),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Flexible(
+                            flex: 2,
+                            child: SvgPicture.asset(
+                              'assets/svg/logo.svg',
+                              height: 20,
+                              alignment: Alignment.centerLeft,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 16),
-                      Text(
-                        controller.dayTimeMessage,
-                        style: textTheme.titleMedium!.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      const MenuTitleWidget(
-                        title: 'Contas',
-                      ),
                     ],
                   ),
                 ),
@@ -80,10 +104,18 @@ class _HomePageState extends State<HomePage> {
                   itemCount: apiStore.listAccounts.length,
                   itemBuilder: (context, index) {
                     final account = apiStore.listAccounts[index];
+                    final isSicoob = account.containsValue('sicoob');
+                    final isBB = account.containsValue('bancoDoBrasil');
                     return AccountCardWidget(
+                      onTap: () {
+                        if (isSicoob) {
+                          controller.goToSicoobSettings();
+                        }
+                        if (isBB) {
+                          controller.goToBBSettings();
+                        }
+                      },
                       setFavorite: () async {
-                        final isSicoob = account.containsValue('sicoob');
-                        final isBB = account.containsValue('bancoDoBrasil');
                         if (isSicoob) {
                           await _setSicoobFavorite();
                         }
@@ -119,7 +151,8 @@ class _HomePageState extends State<HomePage> {
                               controller.refreshCurrentDate();
                             });
                           },
-                          child: BBPixListViewBuilder(
+                          child: PixListViewBuilder(
+                            replacementTitle: 'Transações recentes',
                             future: controller.fetchBBPixTransactions(
                               apiStore.bbApiCredentialsEntity!,
                             ),
@@ -139,7 +172,8 @@ class _HomePageState extends State<HomePage> {
                               controller.refreshCurrentDate();
                             });
                           },
-                          child: SicoobPixListViewBuilder(
+                          child: PixListViewBuilder(
+                            replacementTitle: 'Transações recentes',
                             future: controller.fetchSicoobPixTransactions(
                               apiStore.sicoobApiCredentialsEntity!,
                             ),
