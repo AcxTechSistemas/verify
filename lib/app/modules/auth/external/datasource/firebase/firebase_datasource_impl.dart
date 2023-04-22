@@ -125,7 +125,6 @@ class FirebaseDataSourceImpl implements AuthDataSource {
       );
       final user = credential.user!;
       await _sendEmailVerification(user);
-      await user.sendEmailVerification();
       return UserModel(
         id: user.uid,
         email: user.email!,

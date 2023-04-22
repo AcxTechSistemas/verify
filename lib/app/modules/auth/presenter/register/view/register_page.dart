@@ -27,10 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
             height: constraints.maxHeight,
             child: Column(
               children: [
-                const Flexible(
-                  flex: 20,
-                  child: AuthHeaderWidget(),
-                ),
+                AuthHeaderWidget(),
                 Flexible(
                   flex: 80,
                   child: Padding(
@@ -83,12 +80,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             }),
                           ),
                           const Spacer(),
-                          const Spacer(),
                           TextButton.icon(
                             onPressed: controller.goToLoginPage,
                             icon: const Icon(Icons.arrow_back),
                             label: const Text('Voltar ao login'),
                           ),
+                          const Spacer(),
                         ],
                       ),
                     ),
@@ -110,6 +107,14 @@ class _RegisterPageState extends State<RegisterPage> {
           CustomSnackBar(
             message: errorMessage,
             snackBarType: SnackBarType.error,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          CustomSnackBar(
+            message: 'Confirme seu email no link enviado',
+            snackBarType: SnackBarType.info,
           ),
         );
       }

@@ -43,7 +43,7 @@ class RegisterController {
     return result.fold(
       (user) {
         _registerStore.registeringWithEmailInProgress(false);
-        return 'Confirme seu email no link enviado';
+        return null;
       },
       (failure) {
         _registerStore.registeringWithEmailInProgress(false);
