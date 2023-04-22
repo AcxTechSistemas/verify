@@ -60,7 +60,9 @@ class FirebaseDataSourceImpl implements AuthDataSource {
         password: password,
       );
       final user = result.user!;
-      await _sendEmailVerification(user);
+      if (!user.emailVerified) {
+        await _sendEmailVerification(user);
+      }
       return UserModel(
         id: user.uid,
         email: user.email!,

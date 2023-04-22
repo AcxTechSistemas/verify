@@ -35,6 +35,9 @@ class _HomePageState extends State<HomePage> {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
+    final screenSize = MediaQuery.of(context).size;
+    final screenWidth = screenSize.width;
+    final viewportWidth = screenWidth * 0.8;
     return Scaffold(
       body: Observer(builder: (context) {
         return Column(
@@ -100,7 +103,9 @@ class _HomePageState extends State<HomePage> {
                 color: colorScheme.onInverseSurface,
                 child: PageView.builder(
                   onPageChanged: controller.onAccountChanged,
-                  controller: controller.pageController,
+                  controller: PageController(
+                    viewportFraction: viewportWidth / screenWidth,
+                  ),
                   itemCount: apiStore.listAccounts.length,
                   itemBuilder: (context, index) {
                     final account = apiStore.listAccounts[index];
