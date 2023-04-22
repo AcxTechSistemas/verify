@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,6 +21,7 @@ class GoogleSignInButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       onTap: onTap,
       child: Container(
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
@@ -34,7 +34,7 @@ class GoogleSignInButton extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(13, 10, 0, 10),
+                padding: const EdgeInsets.fromLTRB(13, 13, 0, 13),
                 child: Row(
                   children: [
                     SvgPicture.asset('assets/svg/google_logo.svg'),

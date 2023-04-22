@@ -114,8 +114,8 @@ class HomePageController {
         bbApiCredentialsEntity: bbCredentials,
       );
       return result.fold(
-        (success) {
-          apiStore.loadData();
+        (success) async {
+          await apiStore.loadData();
           return null;
         },
         (failure) => failure.message,

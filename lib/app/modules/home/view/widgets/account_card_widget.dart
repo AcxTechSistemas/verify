@@ -73,7 +73,9 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
                     widget.isFavorite
                         ? Icons.favorite
                         : Icons.favorite_border_outlined,
-                    color: const Color(0xFF91D888),
+                    color: widget.isFavorite
+                        ? Colors.red
+                        : colorScheme.onInverseSurface,
                     size: constraints.maxHeight * 0.16,
                   ),
                 ),

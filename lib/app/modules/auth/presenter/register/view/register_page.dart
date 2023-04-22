@@ -27,7 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
             height: constraints.maxHeight,
             child: Column(
               children: [
-                AuthHeaderWidget(),
+                const AuthHeaderWidget(),
                 Flexible(
                   flex: 80,
                   child: Padding(

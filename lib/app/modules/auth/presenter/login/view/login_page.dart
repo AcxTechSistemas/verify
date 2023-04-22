@@ -29,10 +29,7 @@ class _LoginPageState extends State<LoginPage> {
               height: constraints.maxHeight,
               child: Column(
                 children: [
-                  const Flexible(
-                    flex: 40,
-                    child: AuthHeaderWidget(),
-                  ),
+                  const AuthHeaderWidget(),
                   Flexible(
                     flex: 60,
                     child: Padding(
@@ -42,47 +39,53 @@ class _LoginPageState extends State<LoginPage> {
                         key: controller.formKey,
                         onChanged: controller.validateFields,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            AuthFieldWidget(
-                              labelText: 'Email',
-                              keyboardType: TextInputType.emailAddress,
-                              validator: controller.autoValidateEmail,
-                              controller: controller.emailController,
-                              focusNode: controller.emailFocus,
-                              onEditingComplete:
-                                  controller.passwordFocus.requestFocus,
-                            ),
-                            const SizedBox(height: 25),
-                            AuthFieldWidget(
-                              labelText: 'Senha',
-                              isSecret: true,
-                              validator: controller.autoValidatePassword,
-                              controller: controller.passwordController,
-                              focusNode: controller.passwordFocus,
-                              onEditingComplete:
-                                  controller.passwordFocus.unfocus,
-                            ),
-                            const SizedBox(height: 24),
-                            Row(
+                            Column(
                               children: [
-                                TextButton(
-                                  onPressed: controller.goToRecoverAccountPage,
-                                  child: const Text('Esqueceu a senha?'),
+                                AuthFieldWidget(
+                                  labelText: 'Email',
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: controller.autoValidateEmail,
+                                  controller: controller.emailController,
+                                  focusNode: controller.emailFocus,
+                                  onEditingComplete:
+                                      controller.passwordFocus.requestFocus,
                                 ),
-                                const Spacer(),
-                                Observer(
-                                  builder: (context) {
-                                    return AuthActionButton(
-                                      title: 'Login',
-                                      enabled: store.loginButtonEnabled,
-                                      onPressed: _loginWithEmail,
-                                      isLoading: store.loggingInWithEmail,
-                                    );
-                                  },
+                                const SizedBox(height: 24),
+                                AuthFieldWidget(
+                                  labelText: 'Senha',
+                                  isSecret: true,
+                                  validator: controller.autoValidatePassword,
+                                  controller: controller.passwordController,
+                                  focusNode: controller.passwordFocus,
+                                  onEditingComplete:
+                                      controller.passwordFocus.unfocus,
+                                ),
+                                const SizedBox(height: 24),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                      onPressed:
+                                          controller.goToRecoverAccountPage,
+                                      child: const Text('Esqueceu a senha?'),
+                                    ),
+                                    Observer(
+                                      builder: (context) {
+                                        return AuthActionButton(
+                                          title: 'Login',
+                                          enabled: store.loginButtonEnabled,
+                                          onPressed: _loginWithEmail,
+                                          isLoading: store.loggingInWithEmail,
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            const Spacer(),
                             Observer(
                               builder: (context) {
                                 return GoogleSignInButton(
@@ -91,7 +94,6 @@ class _LoginPageState extends State<LoginPage> {
                                 );
                               },
                             ),
-                            const Spacer(),
                             TextButton.icon(
                               onPressed: controller.goToRegisterPage,
                               icon: const Icon(Icons.app_registration_rounded),

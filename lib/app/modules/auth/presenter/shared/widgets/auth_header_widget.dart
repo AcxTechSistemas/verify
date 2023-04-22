@@ -17,6 +17,7 @@ class AuthHeaderWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 24),
             SvgPicture.asset(
               'assets/svg/logo.svg',
               // ignore: deprecated_member_use
