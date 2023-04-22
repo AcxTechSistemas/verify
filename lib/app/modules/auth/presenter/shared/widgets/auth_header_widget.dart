@@ -18,10 +18,14 @@ class AuthHeaderWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 24),
-            SvgPicture.asset(
-              'assets/svg/logo.svg',
-              // ignore: deprecated_member_use
-              color: colorScheme.primary,
+            ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                colorScheme.primary,
+                BlendMode.srcIn,
+              ),
+              child: SvgPicture.asset(
+                'assets/svg/logo.svg',
+              ),
             ),
             const SizedBox(height: 16),
             const Text(

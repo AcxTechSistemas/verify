@@ -30,55 +30,65 @@ class _RecoverAccountPageState extends State<RecoverAccountPage> {
           icon: const Icon(Icons.arrow_back),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Recupere sua conta',
-                style: textTheme.headlineSmall,
-                textAlign: TextAlign.start,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Digite o e-mail associado à sua conta e enviaremos um e-mail com instruções para redefinir sua senha',
-                style: textTheme.titleSmall!
-                    .copyWith(color: colorScheme.onSurfaceVariant),
-                textAlign: TextAlign.start,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    Form(
-                      key: controller.formKey,
-                      onChanged: controller.validateField,
-                      child: AuthFieldWidget(
-                        labelText: 'Email',
-                        keyboardType: TextInputType.emailAddress,
-                        validator: controller.autoValidateEmail,
-                        controller: controller.emailController,
-                        focusNode: controller.emailFocus,
-                        onEditingComplete: controller.emailFocus.unfocus,
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    Observer(
-                      builder: (context) {
-                        return AuthActionButton(
-                          title: 'Enviar instruções',
-                          enabled: store.enableRecoverButton,
-                          onPressed: _sendRecoverInstructions,
-                          isLoading: store.recovertingWithEmail,
-                        );
-                      },
-                    ),
-                  ],
+      body: Semantics(
+        label: 'Tela de recuperação de senha',
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Recupere sua conta',
+                  style: textTheme.headlineSmall,
+                  textAlign: TextAlign.start,
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+                Text(
+                  'Digite o e-mail associado à sua conta e enviaremos um e-mail com instruções para redefinir sua senha',
+                  style: textTheme.titleSmall!
+                      .copyWith(color: colorScheme.onSurfaceVariant),
+                  textAlign: TextAlign.start,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      Form(
+                        key: controller.formKey,
+                        onChanged: controller.validateField,
+                        child: Semantics(
+                          label: 'Campo de email',
+                          child: AuthFieldWidget(
+                            labelText: 'Email',
+                            keyboardType: TextInputType.emailAddress,
+                            validator: controller.autoValidateEmail,
+                            controller: controller.emailController,
+                            focusNode: controller.emailFocus,
+                            onEditingComplete: controller.emailFocus.unfocus,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 50),
+                      Observer(
+                        builder: (context) {
+                          return Semantics(
+                            label:
+                                'Botão para enviar as instruções de recuperação para o email',
+                            child: AuthActionButton(
+                              title: 'Enviar instruções',
+                              enabled: store.enableRecoverButton,
+                              onPressed: _sendRecoverInstructions,
+                              isLoading: store.recovertingWithEmail,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

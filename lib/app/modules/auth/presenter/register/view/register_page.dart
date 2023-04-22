@@ -22,76 +22,96 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: constraints.maxHeight,
-            child: Column(
-              children: [
-                const AuthHeaderWidget(),
-                Flexible(
-                  flex: 80,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(40, 25, 40, 39),
-                    child: Form(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      key: controller.formKey,
-                      onChanged: controller.validateFields,
-                      child: Column(
-                        children: [
-                          AuthFieldWidget(
-                            labelText: 'Email',
-                            keyboardType: TextInputType.emailAddress,
-                            validator: controller.autoValidateEmail,
-                            controller: controller.emailController,
-                            focusNode: controller.emailFocus,
-                            onEditingComplete:
-                                controller.passwordFocus.requestFocus,
-                          ),
-                          const SizedBox(height: 24),
-                          AuthFieldWidget(
-                            labelText: 'Senha',
-                            isSecret: true,
-                            validator: controller.autoValidatePassword,
-                            controller: controller.passwordController,
-                            focusNode: controller.passwordFocus,
-                            onEditingComplete:
-                                controller.confirmPasswordFocus.requestFocus,
-                          ),
-                          const SizedBox(height: 24),
-                          AuthFieldWidget(
-                            labelText: 'Confirme a senha',
-                            isSecret: true,
-                            validator: controller.autoValidateConfirmPassword,
-                            controller: controller.confirmPasswordController,
-                            focusNode: controller.confirmPasswordFocus,
-                            onEditingComplete:
-                                controller.confirmPasswordFocus.unfocus,
-                          ),
-                          const SizedBox(height: 24),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Observer(builder: (context) {
-                              return AuthActionButton(
-                                title: 'Cadastrar',
-                                enabled: store.registerButtonEnabled,
-                                isLoading: store.registeringWithEmail,
-                                onPressed: _registerWithEmail,
-                              );
-                            }),
-                          ),
-                          const Spacer(),
-                          TextButton.icon(
-                            onPressed: controller.goToLoginPage,
-                            icon: const Icon(Icons.arrow_back),
-                            label: const Text('Voltar ao login'),
-                          ),
-                          const Spacer(),
-                        ],
+        body: Semantics(
+          label: 'Tela de Registro',
+          child: SingleChildScrollView(
+            child: SizedBox(
+              height: constraints.maxHeight,
+              child: Column(
+                children: [
+                  const AuthHeaderWidget(),
+                  Flexible(
+                    flex: 80,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(40, 25, 40, 39),
+                      child: Form(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        key: controller.formKey,
+                        onChanged: controller.validateFields,
+                        child: Column(
+                          children: [
+                            Semantics(
+                              label: 'Campo de email',
+                              child: AuthFieldWidget(
+                                labelText: 'Email',
+                                keyboardType: TextInputType.emailAddress,
+                                validator: controller.autoValidateEmail,
+                                controller: controller.emailController,
+                                focusNode: controller.emailFocus,
+                                onEditingComplete:
+                                    controller.passwordFocus.requestFocus,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Semantics(
+                              label: 'Campo de senha',
+                              child: AuthFieldWidget(
+                                labelText: 'Senha',
+                                isSecret: true,
+                                validator: controller.autoValidatePassword,
+                                controller: controller.passwordController,
+                                focusNode: controller.passwordFocus,
+                                onEditingComplete: controller
+                                    .confirmPasswordFocus.requestFocus,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Semantics(
+                              label: 'Campo para confirmar a senha',
+                              child: AuthFieldWidget(
+                                labelText: 'Confirme a senha',
+                                isSecret: true,
+                                validator:
+                                    controller.autoValidateConfirmPassword,
+                                controller:
+                                    controller.confirmPasswordController,
+                                focusNode: controller.confirmPasswordFocus,
+                                onEditingComplete:
+                                    controller.confirmPasswordFocus.unfocus,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Observer(builder: (context) {
+                                return Semantics(
+                                  label: 'Botão para cadastrar',
+                                  child: AuthActionButton(
+                                    title: 'Cadastrar',
+                                    enabled: store.registerButtonEnabled,
+                                    isLoading: store.registeringWithEmail,
+                                    onPressed: _registerWithEmail,
+                                  ),
+                                );
+                              }),
+                            ),
+                            const Spacer(),
+                            Semantics(
+                              label: 'Botao para voltar ao login',
+                              child: TextButton.icon(
+                                onPressed: controller.goToLoginPage,
+                                icon: const Icon(Icons.arrow_back),
+                                label: const Text('Voltar ao login'),
+                              ),
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

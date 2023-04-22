@@ -24,87 +24,112 @@ class _LoginPageState extends State<LoginPage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
-          body: SingleChildScrollView(
-            child: SizedBox(
-              height: constraints.maxHeight,
-              child: Column(
-                children: [
-                  const AuthHeaderWidget(),
-                  Flexible(
-                    flex: 60,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(40, 25, 40, 39),
-                      child: Form(
-                        autovalidateMode: AutovalidateMode.always,
-                        key: controller.formKey,
-                        onChanged: controller.validateFields,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              children: [
-                                AuthFieldWidget(
-                                  labelText: 'Email',
-                                  keyboardType: TextInputType.emailAddress,
-                                  validator: controller.autoValidateEmail,
-                                  controller: controller.emailController,
-                                  focusNode: controller.emailFocus,
-                                  onEditingComplete:
-                                      controller.passwordFocus.requestFocus,
-                                ),
-                                const SizedBox(height: 24),
-                                AuthFieldWidget(
-                                  labelText: 'Senha',
-                                  isSecret: true,
-                                  validator: controller.autoValidatePassword,
-                                  controller: controller.passwordController,
-                                  focusNode: controller.passwordFocus,
-                                  onEditingComplete:
-                                      controller.passwordFocus.unfocus,
-                                ),
-                                const SizedBox(height: 24),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextButton(
-                                      onPressed:
-                                          controller.goToRecoverAccountPage,
-                                      child: const Text('Esqueceu a senha?'),
+          body: Semantics(
+            label: 'Tela de login',
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: constraints.maxHeight,
+                child: Column(
+                  children: [
+                    const AuthHeaderWidget(),
+                    Flexible(
+                      flex: 60,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 25, 40, 39),
+                        child: Form(
+                          autovalidateMode: AutovalidateMode.always,
+                          key: controller.formKey,
+                          onChanged: controller.validateFields,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  Semantics(
+                                    label: 'Campo de email',
+                                    child: AuthFieldWidget(
+                                      labelText: 'Email',
+                                      keyboardType: TextInputType.emailAddress,
+                                      validator: controller.autoValidateEmail,
+                                      controller: controller.emailController,
+                                      focusNode: controller.emailFocus,
+                                      onEditingComplete:
+                                          controller.passwordFocus.requestFocus,
                                     ),
-                                    Observer(
-                                      builder: (context) {
-                                        return AuthActionButton(
-                                          title: 'Login',
-                                          enabled: store.loginButtonEnabled,
-                                          onPressed: _loginWithEmail,
-                                          isLoading: store.loggingInWithEmail,
-                                        );
-                                      },
+                                  ),
+                                  const SizedBox(height: 24),
+                                  Semantics(
+                                    label: 'Campo de senha',
+                                    child: AuthFieldWidget(
+                                      labelText: 'Senha',
+                                      isSecret: true,
+                                      validator:
+                                          controller.autoValidatePassword,
+                                      controller: controller.passwordController,
+                                      focusNode: controller.passwordFocus,
+                                      onEditingComplete:
+                                          controller.passwordFocus.unfocus,
                                     ),
-                                  ],
+                                  ),
+                                  const SizedBox(height: 24),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Semantics(
+                                        label: 'Botão para recuperar a senha',
+                                        child: TextButton(
+                                          onPressed:
+                                              controller.goToRecoverAccountPage,
+                                          child:
+                                              const Text('Esqueceu a senha?'),
+                                        ),
+                                      ),
+                                      Semantics(
+                                        label: 'Botão de login',
+                                        child: Observer(
+                                          builder: (context) {
+                                            return AuthActionButton(
+                                              title: 'Login',
+                                              enabled: store.loginButtonEnabled,
+                                              onPressed: _loginWithEmail,
+                                              isLoading:
+                                                  store.loggingInWithEmail,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Observer(
+                                builder: (context) {
+                                  return Semantics(
+                                    label: 'Botão para entrar com o Google',
+                                    child: GoogleSignInButton(
+                                      onTap: _loginWithGoogle,
+                                      isLoading: store.loggingInWithGoogle,
+                                    ),
+                                  );
+                                },
+                              ),
+                              Semantics(
+                                label: 'Botão de cadastro',
+                                child: TextButton.icon(
+                                  onPressed: controller.goToRegisterPage,
+                                  icon: const Icon(
+                                      Icons.app_registration_rounded),
+                                  label: const Text('Cadastre-se'),
                                 ),
-                              ],
-                            ),
-                            Observer(
-                              builder: (context) {
-                                return GoogleSignInButton(
-                                  onTap: _loginWithGoogle,
-                                  isLoading: store.loggingInWithGoogle,
-                                );
-                              },
-                            ),
-                            TextButton.icon(
-                              onPressed: controller.goToRegisterPage,
-                              icon: const Icon(Icons.app_registration_rounded),
-                              label: const Text('Cadastre-se'),
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),

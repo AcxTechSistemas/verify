@@ -78,12 +78,16 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Flexible(
                           flex: 2,
-                          child: SvgPicture.asset(
-                            'assets/svg/logo.svg',
-                            height: 20,
-                            alignment: Alignment.centerLeft,
-                            // ignore: deprecated_member_use
-                            color: colorScheme.primary,
+                          child: ColorFiltered(
+                            colorFilter: ColorFilter.mode(
+                              colorScheme.primary,
+                              BlendMode.srcIn,
+                            ),
+                            child: SvgPicture.asset(
+                              'assets/svg/logo.svg',
+                              height: 20,
+                              alignment: Alignment.centerLeft,
+                            ),
                           ),
                         ),
                       ],
