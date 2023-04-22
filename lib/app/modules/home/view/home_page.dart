@@ -87,6 +87,8 @@ class _HomePageState extends State<HomePage> {
                               'assets/svg/logo.svg',
                               height: 20,
                               alignment: Alignment.centerLeft,
+                              // ignore: deprecated_member_use
+                              color: colorScheme.primary,
                             ),
                           ),
                         ],

@@ -17,7 +17,11 @@ class AuthHeaderWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset('assets/svg/logo.svg'),
+            SvgPicture.asset(
+              'assets/svg/logo.svg',
+              // ignore: deprecated_member_use
+              color: colorScheme.primary,
+            ),
             const SizedBox(height: 16),
             const Text(
               'Rapido, Simples e Seguro!',
