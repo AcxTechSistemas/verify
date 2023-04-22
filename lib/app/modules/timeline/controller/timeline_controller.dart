@@ -46,6 +46,7 @@ class TimelineController {
       selectedDate.year,
       selectedDate.month,
       selectedDate.day,
+      01,
     );
 
     final endDate = DateTime(

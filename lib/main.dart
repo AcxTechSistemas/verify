@@ -15,8 +15,6 @@ void main() async {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
       statusBarBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.dark,
       systemNavigationBarContrastEnforced: true,
     ),
   );
