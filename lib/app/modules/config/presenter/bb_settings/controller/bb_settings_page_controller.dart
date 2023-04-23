@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/auth/domain/usecase/get_logged_user_usecase.dart';
 import 'package:verify/app/modules/config/presenter/bb_settings/store/bb_settings_store.dart';
 import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_entity.dart';
@@ -22,6 +23,8 @@ class BBSettingsPageController {
   final appDevKeyFocus = FocusNode();
   final basicKeyFocus = FocusNode();
   final formKey = GlobalKey<FormState>();
+
+  final apiStore = Modular.get<ApiCredentialsStore>();
 
   BBSettingsPageController(
     this._bbPixApiService,
@@ -80,13 +83,25 @@ class BBSettingsPageController {
   }
 
   Future<String?> validateCredentials() async {
+    String? errorValidating;
+
     _store.validatingCredentials(true);
-    final response = await _bbPixApiService.validateCredentials(
+    errorValidating = await _bbPixApiService.validateCredentials(
       applicationDeveloperKey: appDevKeyController.text,
       basicKey: basicKeyController.text,
     );
+
+    errorValidating = await saveCredentials();
     _store.validatingCredentials(false);
-    return response;
+    return errorValidating;
+  }
+
+  Future<String?> saveCredentials() async {
+    String? errorInSaving;
+    errorInSaving = await saveCredentialsinCloud();
+    errorInSaving = await saveCredentialsinLocal();
+    await apiStore.loadData();
+    return errorInSaving;
   }
 
   Future<String?> saveCredentialsinCloud() async {
@@ -123,6 +138,14 @@ class BBSettingsPageController {
       );
       return null;
     }
+  }
+
+  Future<String?> removeCredentials() async {
+    String? errorInRemoving;
+    errorInRemoving = await removeCredentialsinCloud();
+    errorInRemoving = await removeCredentialsinLocal();
+    await apiStore.loadData();
+    return errorInRemoving;
   }
 
   Future<String?> removeCredentialsinCloud() async {

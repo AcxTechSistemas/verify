@@ -20,7 +20,6 @@ class _SettingsPageState extends State<SettingsPage> {
   final appStore = Modular.get<AppStore>();
   final authStore = Modular.get<AuthStore>();
   final apiStore = Modular.get<ApiCredentialsStore>();
-  final apiCredentialsStore = Modular.get<ApiCredentialsStore>();
   final controller = Modular.get<SettingsPageController>();
   @override
   void initState() {
@@ -41,61 +40,61 @@ class _SettingsPageState extends State<SettingsPage> {
         title: const Text('Ajustes'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: colorScheme.onInverseSurface,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      width: screenSize.width * 0.7,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            authStore.userName,
-                            maxLines: 1,
-                            overflow: TextOverflow.fade,
-                            style: textTheme.headlineSmall!.copyWith(
-                              color: colorScheme.primary,
+        child: Observer(builder: (context) {
+          return Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.onInverseSurface,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: screenSize.width * 0.7,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              authStore.userName,
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                              style: textTheme.headlineSmall!.copyWith(
+                                color: colorScheme.primary,
+                              ),
                             ),
-                          ),
-                          Text(
-                            authStore.loggedUser?.email ?? '',
-                            maxLines: 1,
-                            overflow: TextOverflow.fade,
-                            style: textTheme.titleSmall!.copyWith(
-                              color: colorScheme.primary,
-                              fontWeight: FontWeight.w300,
+                            Text(
+                              authStore.loggedUser?.email ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                              style: textTheme.titleSmall!.copyWith(
+                                color: colorScheme.primary,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: controller.logout,
-                      icon: const Icon(Icons.exit_to_app),
-                    ),
-                  ],
+                      const Spacer(),
+                      IconButton(
+                        onPressed: controller.logout,
+                        icon: const Icon(Icons.exit_to_app),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text('Tema'),
-                  Observer(builder: (context) {
-                    return RadioListTile<ThemeMode>(
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text('Tema'),
+                    RadioListTile<ThemeMode>(
                       title: Row(children: [
                         const Text('Sistema'),
                         const Spacer(),
@@ -107,10 +106,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       value: ThemeMode.system,
                       groupValue: appStore.themeMode.value,
                       onChanged: controller.changeTheme,
-                    );
-                  }),
-                  Observer(builder: (context) {
-                    return RadioListTile<ThemeMode>(
+                    ),
+                    RadioListTile<ThemeMode>(
                       title: Row(children: [
                         const Text('Claro'),
                         const Spacer(),
@@ -122,10 +119,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       value: ThemeMode.light,
                       groupValue: appStore.themeMode.value,
                       onChanged: controller.changeTheme,
-                    );
-                  }),
-                  Observer(builder: (context) {
-                    return RadioListTile<ThemeMode>(
+                    ),
+                    RadioListTile<ThemeMode>(
                       title: Row(children: [
                         const Text('Escuro'),
                         const Spacer(),
@@ -137,34 +132,33 @@ class _SettingsPageState extends State<SettingsPage> {
                       value: ThemeMode.dark,
                       groupValue: appStore.themeMode.value,
                       onChanged: controller.changeTheme,
-                    );
-                  }),
-                  Divider(
-                    color: colorScheme.primary,
-                  ),
-                  const SizedBox(height: 24),
-                  const Text('Suas Contas'),
-                  const SizedBox(height: 16),
-                  AccountListTile(
-                    bank: Bank.sicoob,
-                    hasCredentials:
-                        apiCredentialsStore.sicoobApiCredentialsEntity != null,
-                    onTap: controller.goToSicoobSettings,
-                  ),
-                  const SizedBox(height: 16),
-                  AccountListTile(
-                    bank: Bank.bancoDoBrasil,
-                    hasCredentials:
-                        apiCredentialsStore.bbApiCredentialsEntity != null,
-                    onTap: controller.goToBBSettings,
-                  ),
-                  const SizedBox(height: 32),
-                  _DevelopedWith(),
-                ],
+                    ),
+                    Divider(
+                      color: colorScheme.primary,
+                    ),
+                    const SizedBox(height: 24),
+                    const Text('Suas Contas'),
+                    const SizedBox(height: 16),
+                    AccountListTile(
+                      bank: Bank.sicoob,
+                      hasCredentials:
+                          apiStore.sicoobApiCredentialsEntity != null,
+                      onTap: controller.goToSicoobSettings,
+                    ),
+                    const SizedBox(height: 16),
+                    AccountListTile(
+                      bank: Bank.bancoDoBrasil,
+                      hasCredentials: apiStore.bbApiCredentialsEntity != null,
+                      onTap: controller.goToBBSettings,
+                    ),
+                    const SizedBox(height: 32),
+                    _DevelopedWith(),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
       ),
       bottomNavigationBar: const CustomNavigationBar(),
     );

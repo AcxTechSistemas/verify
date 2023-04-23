@@ -32,8 +32,8 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
             Visibility(
               visible: !widget.hasCredentials,
               child: SizedBox(
-                width: constraints.maxHeight * 1.3,
-                height: constraints.maxHeight,
+                width: constraints.maxWidth * 1.3,
+                height: constraints.maxHeight * 0.9,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
