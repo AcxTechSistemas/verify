@@ -77,7 +77,11 @@ class BBPixApiServiceImpl implements BBPixApiService {
               ))
           .toList();
       return verifyPixList;
-    } catch (e) {
+    } on PixException catch (e) {
+      final error = e.errorDescription ?? '';
+      if (error.contains('4769515')) {
+        return [];
+      }
       await _sendLogsToWeb(e);
       _registerLog(e);
       rethrow;
