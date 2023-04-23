@@ -116,7 +116,9 @@ class AppModule extends Module {
         AutoBind.factory<CloudApiCredentialsDataSource>(
           CloudApiCredentialsDataSourceImpl.new,
         ),
-        AutoBind.instance<FlutterSecureStorage>(const FlutterSecureStorage()),
+        AutoBind.instance<FlutterSecureStorage>(const FlutterSecureStorage(
+          aOptions: AndroidOptions(encryptedSharedPreferences: true),
+        )),
         AutoBind.factory<LocalApiCredentialsDataSource>(
           LocalApiCredentialsDataSourceImpl.new,
         ),
