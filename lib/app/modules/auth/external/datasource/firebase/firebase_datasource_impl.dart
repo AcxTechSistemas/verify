@@ -84,8 +84,14 @@ class FirebaseDataSourceImpl implements AuthDataSource {
     try {
       final googleUser = await _googleSignIn.signIn();
 
+      if (googleUser == null) {
+        throw (ErrorGoogleLogin(
+          message: 'Operação de login encerrada pelo usuario',
+        ));
+      }
+
       final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -103,6 +109,8 @@ class FirebaseDataSourceImpl implements AuthDataSource {
         name: user.displayName!,
         emailVerified: user.emailVerified,
       );
+    } on ErrorGoogleLogin {
+      rethrow;
     } on FirebaseAuthException catch (e) {
       final errorMessage = await _firebaseAuthErrorHandler(e);
       throw ErrorGoogleLogin(message: errorMessage);

@@ -30,6 +30,7 @@ class _AccountCardPageViewState extends State<AccountCardPageView> {
                 onPageChanged: controller.onAccountChanged,
                 controller: PageController(
                   viewportFraction: constraints.maxHeight * 0.0037,
+                  initialPage: 0,
                 ),
                 itemCount: apiStore.listAccounts.length,
                 itemBuilder: (context, index) {

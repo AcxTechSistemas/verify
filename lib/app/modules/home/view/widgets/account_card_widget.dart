@@ -32,7 +32,7 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
             Visibility(
               visible: !widget.hasCredentials,
               child: SizedBox(
-                width: constraints.maxWidth * 0.9,
+                width: constraints.maxHeight * 1.3,
                 height: constraints.maxHeight,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -43,11 +43,12 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
                       style: textTheme.titleMedium!.copyWith(
                         fontWeight: FontWeight.w900,
                         color: colorScheme.primary,
+                        fontSize: constraints.maxHeight * 0.09,
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.touch_app,
-                      size: 32,
+                      size: constraints.maxHeight * 0.15,
                     ),
                   ],
                 ),

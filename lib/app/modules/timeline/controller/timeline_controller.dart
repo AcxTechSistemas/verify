@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_entity.dart';
 import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentials_entity.dart';
 import 'package:verify/app/modules/timeline/store/timeline_store.dart';
+import 'package:verify/app/shared/extensions/date_time.dart';
 import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/bb_pix_api_service.dart';
 import 'package:verify/app/shared/services/pix_services/models/verify_pix_model.dart';
 import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
@@ -21,7 +22,7 @@ class TimelineController {
   );
 
   void goToTodayDate() {
-    final now = DateTime.now();
+    final now = DateTime.now().toBrazilianTimeZone();
     store.setSelectedDate(now);
     scrollController.animateTo(
       0,
@@ -42,11 +43,12 @@ class TimelineController {
     BBApiCredentialsEntity bbApiCredentialsEntity,
     DateTime selectedDate,
   ) async {
+    selectedDate = selectedDate.toBrazilianTimeZone();
     final initialDate = DateTime(
       selectedDate.year,
       selectedDate.month,
       selectedDate.day,
-      01,
+      1,
     );
 
     final endDate = DateTime(
@@ -70,6 +72,7 @@ class TimelineController {
     SicoobApiCredentialsEntity sicoobApiCredentialsEntity,
     DateTime selectedDate,
   ) async {
+    selectedDate = selectedDate.toBrazilianTimeZone();
     final initialDate = DateTime(
       selectedDate.year,
       selectedDate.month,
