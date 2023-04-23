@@ -39,6 +39,7 @@ void main() {
   late RegisterLog registerLog;
   late SendLogsToWeb sendLogsToWeb;
   late DocumentSnapshot<Map<String, dynamic>> documentSnapshot;
+  late DataCrypto dataCrypto;
 
   setUp(() {
     firestoreMock = MockFirebaseFirestore();
@@ -50,13 +51,13 @@ void main() {
       registerLog,
       sendLogsToWeb,
     );
-
+    dataCrypto = DataCryptoImpl();
     fireStoreCloudDataSource = CloudApiCredentialsDataSourceImpl(
       firestoreMock,
       firebaseFirestoreErrorHandler,
       registerLog,
       sendLogsToWeb,
-      DataCryptoImpl(),
+      dataCrypto,
     );
 
     documentSnapshot = MockDocumentSnapshot();
@@ -105,11 +106,18 @@ void main() {
             .thenAnswer((_) async => documentSnapshot);
 
         const id = '123';
-
+        final key = dataCrypto.generateKey(userId: id);
+        final applicationDeveloperKey = dataCrypto.encrypt(
+          plainText: 'appDevKey',
+          key: key,
+        );
+        final basicKey = dataCrypto.encrypt(
+          plainText: 'basicKey',
+          key: key,
+        );
         final bbCredentials = BBApiCredentialsModel(
-          applicationDeveloperKey:
-              'a+5H2oLePtd2TRs2MtCPxA==|AAAAAAAAAAAAAAAAAAAAAA==',
-          basicKey: 'a+5H2oLePtd2TRs2MtCPxA==|AAAAAAAAAAAAAAAAAAAAAA==',
+          applicationDeveloperKey: applicationDeveloperKey,
+          basicKey: basicKey,
           isFavorite: true,
         );
 
@@ -272,10 +280,23 @@ void main() {
 
         const id = '123';
 
+        final key = dataCrypto.generateKey(userId: id);
+        final certificateBase64String = dataCrypto.encrypt(
+          plainText: 'certString',
+          key: key,
+        );
+        final certificatePassword = dataCrypto.encrypt(
+          plainText: 'certPassword',
+          key: key,
+        );
+        final clientID = dataCrypto.encrypt(
+          plainText: 'clientID',
+          key: key,
+        );
         final sicoobCredentials = SicoobApiCredentialsModel(
-          certificateBase64String: 'certString',
-          certificatePassword: 'certPassword',
-          clientID: 'clientID',
+          certificateBase64String: certificateBase64String,
+          certificatePassword: certificatePassword,
+          clientID: clientID,
           isFavorite: true,
         );
 
