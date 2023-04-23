@@ -58,7 +58,7 @@ class TimelineController {
       23,
       59,
       59,
-    ).add(const Duration(hours: 4));
+    );
 
     final transactions = await _bbPixApiService.fetchTransactions(
       dateTimeRange: DateTimeRange(start: initialDate, end: endDate),
