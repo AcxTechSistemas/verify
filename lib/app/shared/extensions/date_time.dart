@@ -1,4 +1,4 @@
-extension DateTimeExtension on DateTime {
+extension BrazilianTimeZone on DateTime {
   DateTime toBrazilianTimeZone() {
     final currentTimeZone = timeZoneOffset.inHours;
     const brazilianTimeZone = 3;

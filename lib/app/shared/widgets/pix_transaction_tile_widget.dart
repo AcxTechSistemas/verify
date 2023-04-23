@@ -1,7 +1,8 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:verify/app/shared/extensions/string_capitalize.dart';
+import 'package:verify/app/shared/extensions/date_time.dart';
+import 'package:verify/app/shared/extensions/string.dart';
 
 class PixTransactionTileWidget extends StatelessWidget {
   final String clientName;
@@ -19,9 +20,7 @@ class PixTransactionTileWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
-    final brazilianValue = UtilBrasilFields.obterReal(value);
-    final dateTime = date.subtract(const Duration(hours: 3));
-    final formattedDate = DateFormat('dd-MMM HH:mm:ss').format(dateTime);
+
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
@@ -35,17 +34,28 @@ class PixTransactionTileWidget extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        formattedDate,
+        _formattedDateTime(),
         style: textTheme.bodySmall!.copyWith(
           color: colorScheme.secondary,
         ),
       ),
       trailing: Text(
-        brazilianValue,
+        _brazilianValue(),
         style: textTheme.titleSmall!.copyWith(
           color: colorScheme.primary,
         ),
       ),
     );
+  }
+
+  String _brazilianValue() {
+    final brazilianValue = UtilBrasilFields.obterReal(value);
+    return brazilianValue;
+  }
+
+  String _formattedDateTime() {
+    final dateTime = date.toBrazilianTimeZone();
+    final formattedDate = DateFormat('dd-MMM HH:mm:ss').format(dateTime);
+    return formattedDate;
   }
 }
