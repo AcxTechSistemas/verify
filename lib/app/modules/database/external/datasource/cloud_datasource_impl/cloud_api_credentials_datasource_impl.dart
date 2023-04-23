@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:verify/app/modules/database/utils/data_crypto.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
@@ -14,12 +15,14 @@ class CloudApiCredentialsDataSourceImpl
   final FirebaseFirestoreErrorHandler _firebaseFirestoreErrorHandler;
   final RegisterLog _registerLog;
   final SendLogsToWeb _sendLogsToWeb;
+  final DataCrypto _dataCrypto;
 
   CloudApiCredentialsDataSourceImpl(
     this._firestore,
     this._firebaseFirestoreErrorHandler,
     this._registerLog,
     this._sendLogsToWeb,
+    this._dataCrypto,
   );
   @override
   Future<void> saveBBApiCredentials({
@@ -28,9 +31,18 @@ class CloudApiCredentialsDataSourceImpl
     required String basicKey,
     required bool isFavorite,
   }) async {
+    final key = _dataCrypto.generateKey(userId: id);
+    final encyptedApplicationDeveloperKey = _dataCrypto.encrypt(
+      plainText: applicationDeveloperKey,
+      key: key,
+    );
+    final encyptedBasicKey = _dataCrypto.encrypt(
+      plainText: basicKey,
+      key: key,
+    );
     final bbCredentials = BBApiCredentialsModel(
-      applicationDeveloperKey: applicationDeveloperKey,
-      basicKey: basicKey,
+      applicationDeveloperKey: encyptedApplicationDeveloperKey,
+      basicKey: encyptedBasicKey,
       isFavorite: isFavorite,
     );
     try {
@@ -62,12 +74,19 @@ class CloudApiCredentialsDataSourceImpl
       final data = doc.data();
       if (doc.exists) {
         if (data != null) {
-          final applicationDeveloperKey = data['applicationDeveloperKey'];
-          final basicKey = data['basicKey'];
+          final key = _dataCrypto.generateKey(userId: id);
+          final decryptedApplicationDeveloperKey = _dataCrypto.decrypt(
+            cipherText: data['applicationDeveloperKey'],
+            key: key,
+          );
+          final decryptedBasicKey = _dataCrypto.decrypt(
+            cipherText: data['basicKey'],
+            key: key,
+          );
           final isFavorite = data['isFavorite'];
           return BBApiCredentialsModel(
-            applicationDeveloperKey: applicationDeveloperKey,
-            basicKey: basicKey,
+            applicationDeveloperKey: decryptedApplicationDeveloperKey,
+            basicKey: decryptedBasicKey,
             isFavorite: isFavorite,
           );
         } else {
@@ -95,9 +114,18 @@ class CloudApiCredentialsDataSourceImpl
     required String basicKey,
     required bool isFavorite,
   }) async {
+    final key = _dataCrypto.generateKey(userId: id);
+    final encyptedApplicationDeveloperKey = _dataCrypto.encrypt(
+      plainText: applicationDeveloperKey,
+      key: key,
+    );
+    final encyptedBasicKey = _dataCrypto.encrypt(
+      plainText: basicKey,
+      key: key,
+    );
     final bbCredentials = BBApiCredentialsModel(
-      applicationDeveloperKey: applicationDeveloperKey,
-      basicKey: basicKey,
+      applicationDeveloperKey: encyptedApplicationDeveloperKey,
+      basicKey: encyptedBasicKey,
       isFavorite: isFavorite,
     );
     try {
@@ -146,10 +174,23 @@ class CloudApiCredentialsDataSourceImpl
     required String certificateBase64String,
     required bool isFavorite,
   }) async {
+    final key = _dataCrypto.generateKey(userId: id);
+    final encryptedClientID = _dataCrypto.encrypt(
+      plainText: clientID,
+      key: key,
+    );
+    final encryptedCertificateBase64String = _dataCrypto.encrypt(
+      plainText: certificateBase64String,
+      key: key,
+    );
+    final encryptedCertificatePassword = _dataCrypto.encrypt(
+      plainText: certificatePassword,
+      key: key,
+    );
     final sicoobCredentials = SicoobApiCredentialsModel(
-      clientID: clientID,
-      certificateBase64String: certificateBase64String,
-      certificatePassword: certificatePassword,
+      clientID: encryptedClientID,
+      certificateBase64String: encryptedCertificateBase64String,
+      certificatePassword: encryptedCertificatePassword,
       isFavorite: isFavorite,
     );
     try {
@@ -181,9 +222,22 @@ class CloudApiCredentialsDataSourceImpl
       final data = doc.data();
       if (doc.exists) {
         if (data != null) {
-          final clientID = data['clientID'];
-          final certificatePassword = data['certificatePassword'];
-          final certificateBase64String = data['certificateBase64String'];
+          final key = _dataCrypto.generateKey(userId: id);
+          final decryptedClientID = _dataCrypto.decrypt(
+            cipherText: data['clientID'],
+            key: key,
+          );
+          final decryptedCertificateBase64String = _dataCrypto.decrypt(
+            cipherText: data['certificateBase64String'],
+            key: key,
+          );
+          final decryptedCertificatePassword = _dataCrypto.decrypt(
+            cipherText: data['certificatePassword'],
+            key: key,
+          );
+          final clientID = decryptedClientID;
+          final certificatePassword = decryptedCertificatePassword;
+          final certificateBase64String = decryptedCertificateBase64String;
           final isFavorite = data['isFavorite'];
           return SicoobApiCredentialsModel(
             clientID: clientID,
@@ -217,10 +271,23 @@ class CloudApiCredentialsDataSourceImpl
     required String certificateBase64String,
     required bool isFavorite,
   }) async {
+    final key = _dataCrypto.generateKey(userId: id);
+    final encryptedClientID = _dataCrypto.encrypt(
+      plainText: clientID,
+      key: key,
+    );
+    final encryptedCertificateBase64String = _dataCrypto.encrypt(
+      plainText: certificateBase64String,
+      key: key,
+    );
+    final encryptedCertificatePassword = _dataCrypto.encrypt(
+      plainText: certificatePassword,
+      key: key,
+    );
     final sicoobCredentials = SicoobApiCredentialsModel(
-      clientID: clientID,
-      certificateBase64String: certificateBase64String,
-      certificatePassword: certificatePassword,
+      clientID: encryptedClientID,
+      certificateBase64String: encryptedCertificateBase64String,
+      certificatePassword: encryptedCertificatePassword,
       isFavorite: isFavorite,
     );
     try {

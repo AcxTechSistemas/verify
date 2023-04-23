@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/cloud_api_credentials_datasource_impl.dart';
 import 'package:verify/app/modules/database/infra/datasource/cloud_api_credentials_datasource.dart';
+import 'package:verify/app/modules/database/utils/data_crypto.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
@@ -55,6 +56,7 @@ void main() {
       firebaseFirestoreErrorHandler,
       registerLog,
       sendLogsToWeb,
+      DataCryptoImpl(),
     );
 
     documentSnapshot = MockDocumentSnapshot();
@@ -105,8 +107,9 @@ void main() {
         const id = '123';
 
         final bbCredentials = BBApiCredentialsModel(
-          applicationDeveloperKey: 'appDevKey',
-          basicKey: 'basicKey',
+          applicationDeveloperKey:
+              'a+5H2oLePtd2TRs2MtCPxA==|AAAAAAAAAAAAAAAAAAAAAA==',
+          basicKey: 'a+5H2oLePtd2TRs2MtCPxA==|AAAAAAAAAAAAAAAAAAAAAA==',
           isFavorite: true,
         );
 

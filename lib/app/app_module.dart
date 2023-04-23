@@ -16,6 +16,7 @@ import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credential
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/update_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/remove_user_theme_mode_preference_usecase.dart';
 import 'package:verify/app/modules/database/external/datasource/local_datasource_impl/local_api_credentials_data_source_impl.dart';
+import 'package:verify/app/modules/database/utils/data_crypto.dart';
 import 'package:verify/app/modules/home/home_module.dart';
 import 'package:verify/app/modules/timeline/timeline_module.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
@@ -86,6 +87,8 @@ class AppModule extends Module {
         // External
         AutoBind.instance<FirebaseAuth>(FirebaseAuth.instance),
         AutoBind.instance<GoogleSignIn>(GoogleSignIn()),
+        //Utils
+        AutoBind.factory<DataCrypto>(DataCryptoImpl.new),
         //DataSource
         AutoBind.singleton<AuthDataSource>(FirebaseDataSourceImpl.new),
         //Repository
