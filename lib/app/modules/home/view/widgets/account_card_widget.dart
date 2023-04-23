@@ -32,8 +32,8 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
             Visibility(
               visible: !widget.hasCredentials,
               child: SizedBox(
-                width: constraints.maxWidth * 0.9,
-                height: constraints.maxHeight,
+                width: constraints.maxWidth * 1.3,
+                height: constraints.maxHeight * 0.9,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -43,11 +43,12 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
                       style: textTheme.titleMedium!.copyWith(
                         fontWeight: FontWeight.w900,
                         color: colorScheme.primary,
+                        fontSize: constraints.maxHeight * 0.09,
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.touch_app,
-                      size: 32,
+                      size: constraints.maxHeight * 0.15,
                     ),
                   ],
                 ),
@@ -73,7 +74,9 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
                     widget.isFavorite
                         ? Icons.favorite
                         : Icons.favorite_border_outlined,
-                    color: const Color(0xFF91D888),
+                    color: widget.isFavorite
+                        ? Colors.red
+                        : colorScheme.onInverseSurface,
                     size: constraints.maxHeight * 0.16,
                   ),
                 ),

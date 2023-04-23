@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:pix_sicoob/pix_sicoob.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/auth/domain/usecase/get_logged_user_usecase.dart';
 import 'package:verify/app/modules/config/presenter/sicoob_settings/store/sicoob_settings_store.dart';
 import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentials_entity.dart';
@@ -27,6 +28,8 @@ class SicoobSettingsPageController {
   final clientIDFocus = FocusNode();
   final certificatePasswordFocus = FocusNode();
   final formKey = GlobalKey<FormState>();
+
+  final apiStore = Modular.get<ApiCredentialsStore>();
 
   SicoobSettingsPageController(
     this._pixSicoobService,
@@ -103,14 +106,26 @@ class SicoobSettingsPageController {
   }
 
   Future<String?> validateCredentials() async {
+    String? errorValidating;
     _store.validatingCredentials(true);
-    final response = await _pixSicoobService.validateCredentials(
+    errorValidating = await _pixSicoobService.validateCredentials(
       clientID: clientIDController.text,
       certificateBase64String: certificateString,
       certificatePassword: certificatePasswordController.text,
     );
+
+    errorValidating = await saveCredentials();
+
     _store.validatingCredentials(false);
-    return response;
+    return errorValidating;
+  }
+
+  Future<String?> saveCredentials() async {
+    String? errorInSaving;
+    errorInSaving = await saveCredentialsinCloud();
+    errorInSaving = await saveCredentialsinLocal();
+    await apiStore.loadData();
+    return errorInSaving;
   }
 
   Future<String?> saveCredentialsinCloud() async {
@@ -150,6 +165,14 @@ class SicoobSettingsPageController {
     }
   }
 
+  Future<String?> removeCredentials() async {
+    String? errorInRemoving;
+    errorInRemoving = await removeCredentialsinCloud();
+    errorInRemoving = await removeCredentialsinLocal();
+    await apiStore.loadData();
+    return errorInRemoving;
+  }
+
   Future<String?> removeCredentialsinCloud() async {
     _store.savingInCloud(true);
     final message = await _removeCredentialsOnDatabase(Database.cloud);
@@ -169,11 +192,11 @@ class SicoobSettingsPageController {
     if (user == null) {
       return 'Sua sessão expirou.\nPor favor, faça login novamente.';
     } else {
-      final saved = await _removeSicoobApiCredentialsUseCase(
+      final removed = await _removeSicoobApiCredentialsUseCase(
         database: database,
         id: user.id,
       );
-      saved.fold(
+      removed.fold(
         (success) => null,
         (failure) => failure.message,
       );

@@ -200,52 +200,28 @@ class _SicoobSettingsPageState extends State<SicoobSettingsPage> {
           type: SnackBarType.error,
         );
       } else {
-        final errorSaving = await _saveCredentials();
-        if (errorSaving != null) {
-          _showSnackBar(
-            errorMessage: errorSaving,
-            type: SnackBarType.error,
-          );
-        } else {
-          _showSnackBar(
-            errorMessage: 'Credenciais validadas com sucesso!',
-            type: SnackBarType.success,
-          );
-        }
+        _showSnackBar(
+          errorMessage: 'Credenciais validadas com sucesso!',
+          type: SnackBarType.success,
+        );
       }
     });
   }
 
-  Future<String?> _saveCredentials() async {
-    String? errorInSaving;
-    await controller.saveCredentialsinCloud().then(
-      (errorSavingCloud) {
-        errorInSaving = errorSavingCloud;
-      },
-    );
-    await controller.saveCredentialsinLocal().then(
-      (errorLocalSaving) {
-        errorInSaving = errorLocalSaving;
-      },
-    );
-    await apiStore.loadData();
-    return errorInSaving;
-  }
-
-  Future<String?> _removeCredentials() async {
-    String? errorInRemoving;
-    await controller.removeCredentialsinCloud().then(
-      (errorSavingCloud) {
-        errorInRemoving = errorSavingCloud;
-      },
-    );
-    await controller.removeCredentialsinLocal().then(
-      (errorLocalSaving) {
-        errorInRemoving = errorLocalSaving;
-      },
-    );
-    await apiStore.loadData();
-    return errorInRemoving;
+  _removeCredentials() async {
+    controller.removeCredentials().then((errorMessage) async {
+      if (errorMessage != null) {
+        _showSnackBar(
+          errorMessage: errorMessage,
+          type: SnackBarType.error,
+        );
+      } else {
+        _showSnackBar(
+          errorMessage: 'Credenciais removidas com sucesso!',
+          type: SnackBarType.success,
+        );
+      }
+    });
   }
 
   _showSnackBar({

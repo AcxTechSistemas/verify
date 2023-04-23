@@ -73,8 +73,8 @@ class LoginController {
           return 'Confirme seu email no link enviado';
         }
         authStore.setUser(user);
-        _loginStore.loggingInWithEmailInProgress(false);
         await _fetchCloudApiCredentials(user);
+        _loginStore.loggingInWithEmailInProgress(false);
         Modular.to.pushReplacementNamed('/home/');
         return null;
       },

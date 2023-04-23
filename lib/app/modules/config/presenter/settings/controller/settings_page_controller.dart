@@ -24,10 +24,17 @@ class SettingsPageController {
   );
 
   Future<void> goToInstagram() async {
-    final instagramUrl = Uri.parse(
-      'instagram://user?username=alefe.dev',
+    final instagramAppUrl = Uri.parse(
+      'instagram://user?username=acxtechsistemas',
     );
-    await launchUrl(instagramUrl);
+    final launched = await canLaunchUrl(instagramAppUrl);
+
+    if (!launched) {
+      final instagramUrl = Uri.parse(
+        'https://www.instagram.com/acxtechsistemas/',
+      );
+      await launchUrl(instagramUrl);
+    }
   }
 
   Future<void> goToWhatsapp() async {

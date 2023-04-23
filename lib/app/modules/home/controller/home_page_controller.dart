@@ -8,7 +8,8 @@ import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_us
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/update_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/utils/database_enums.dart';
 import 'package:verify/app/modules/home/store/home_store.dart';
-import 'package:verify/app/shared/extensions/string_capitalize.dart';
+import 'package:verify/app/shared/extensions/date_time.dart';
+import 'package:verify/app/shared/extensions/string.dart';
 import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/bb_pix_api_service.dart';
 import 'package:verify/app/shared/services/pix_services/models/verify_pix_model.dart';
 import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
@@ -28,7 +29,7 @@ class HomePageController {
     initialPage: 0,
   );
 
-  DateTime currentDate = DateTime.now();
+  DateTime currentDate = DateTime.now().toBrazilianTimeZone();
 
   refreshCurrentDate() {
     currentDate = DateTime.now();
@@ -114,8 +115,8 @@ class HomePageController {
         bbApiCredentialsEntity: bbCredentials,
       );
       return result.fold(
-        (success) {
-          apiStore.loadData();
+        (success) async {
+          await apiStore.loadData();
           return null;
         },
         (failure) => failure.message,
@@ -126,7 +127,7 @@ class HomePageController {
   }
 
   Future<String?> setSicoobFavorite() async {
-    if (apiStore.bbApiCredentialsEntity != null) {
+    if (apiStore.sicoobApiCredentialsEntity != null) {
       final currentCredentials = apiStore.sicoobApiCredentialsEntity!;
       final sicoobCredentials = SicoobApiCredentialsEntity(
         clientID: currentCredentials.clientID,

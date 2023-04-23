@@ -21,6 +21,8 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final user = await _authDataSource.loginWithGoogle();
       return Success(user);
+    } on ErrorGoogleLogin catch (e) {
+      return Failure(e);
     } catch (e) {
       return Failure(ErrorGoogleLogin(
         message: 'Ocorreu um erro ao realizar o login. Tente novamente',

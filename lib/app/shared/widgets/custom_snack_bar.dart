@@ -21,9 +21,17 @@ class CustomSnackBar extends SnackBar {
     required this.message,
     required this.snackBarType,
   }) : super(
-          content: Text(
-            message,
-            style: const TextStyle().copyWith(color: snackBarType.textColor),
+          behavior: SnackBarBehavior.floating,
+          content: Semantics(
+            label: message,
+            child: Text(
+              message,
+              style: const TextStyle().copyWith(
+                color: snackBarType.textColor,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
           backgroundColor: snackBarType.backgroundColor,
         );
