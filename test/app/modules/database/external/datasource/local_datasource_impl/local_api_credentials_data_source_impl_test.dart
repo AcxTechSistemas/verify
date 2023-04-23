@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:verify/app/modules/database/external/datasource/local_datasource_impl/local_api_credentials_data_source_impl.dart';
+import 'package:verify/app/modules/database/infra/datasource/local_api_credentials_datasource.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
 import 'package:verify/app/shared/error_registrator/send_logs_to_web.dart';
 import 'package:verify/app/modules/database/domain/errors/api_credentials_error.dart';
-import 'package:verify/app/modules/database/domain/errors/user_preferences_error.dart';
-import 'package:verify/app/modules/database/external/datasource/local_datasource_impl/shared_preferences_local_datasource_impl.dart';
 import 'package:verify/app/modules/database/infra/models/bb_api_credentials_model.dart';
 import 'package:verify/app/modules/database/infra/models/sicoob_api_credentials_model.dart';
 import 'package:verify/app/modules/database/utils/database_enums.dart';
 
-class MockSharedPreferences extends Mock implements SharedPreferences {}
+class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
 class MockRegisterLog extends Mock implements RegisterLog {}
 
@@ -19,19 +18,19 @@ class MockSendLogsToWeb extends Mock implements SendLogsToWeb {}
 
 void main() {
   // Declaração das variáveis utilizadas nos testes
-  late SharedPreferencesLocalDataSourceImpl dataSource;
-  late SharedPreferences sharedPreferences;
+  late LocalApiCredentialsDataSource localApiCredentialsDataSource;
   late RegisterLog registerLog;
   late SendLogsToWeb sendLogsToWeb;
+  late FlutterSecureStorage flutterSecureStorage;
 
   setUp(() {
     registerLog = MockRegisterLog();
     sendLogsToWeb = MockSendLogsToWeb();
-    sharedPreferences = MockSharedPreferences();
+    flutterSecureStorage = MockFlutterSecureStorage();
 
     // Inicialização da classe que será testada com as variáveis mockadas
-    dataSource = SharedPreferencesLocalDataSourceImpl(
-      sharedPreferences,
+    localApiCredentialsDataSource = LocalApiCredentialsDataSourceImpl(
+      flutterSecureStorage,
       registerLog,
       sendLogsToWeb,
     );
@@ -39,7 +38,7 @@ void main() {
   });
 
   // Agrupamento dos testes relacionados ao SharedPreferencesLocalDataSourceImpl
-  group('SharedPreferencesImpl: ', () {
+  group('LocalApiCredentialsDataSource: ', () {
     // Agrupamento dos testes relacionados à funcionalidade de salvar credenciais da BBApi
     group('BBApiCredentials: ', () {
       // Teste que verifica se o método saveBBApiCredentials() salva as credenciais corretamente
@@ -50,30 +49,33 @@ void main() {
           basicKey: 'basicKey',
           isFavorite: true,
         );
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
-          (_) async => true,
-        );
 
-        await dataSource.saveBBApiCredentials(
+        when(() => flutterSecureStorage.write(
+              key: any(named: 'key'),
+              value: any(named: 'value'),
+            )).thenAnswer((_) async => true);
+
+        await localApiCredentialsDataSource.saveBBApiCredentials(
           id: '123',
           applicationDeveloperKey: bbCredentials.applicationDeveloperKey,
           basicKey: bbCredentials.basicKey,
           isFavorite: bbCredentials.isFavorite,
         );
-        verify(() => sharedPreferences.setString(
-              DocumentName.bbApiCredential.name,
-              bbCredentials.toJson(),
+        verify(() => flutterSecureStorage.write(
+              key: DocumentName.bbApiCredential.name,
+              value: bbCredentials.toJson(),
             )).called(1);
       });
 
       // Teste que verifica se o método saveBBApiCredentials() lança uma exceção caso o salvamento falhe
       test('Should throws ErrorSavingApiCredentials if return false', () async {
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
-          (_) async => false,
-        );
+        when(() => flutterSecureStorage.write(
+              key: any(named: 'key'),
+              value: any(named: 'value'),
+            )).thenAnswer((_) async => false);
 
         try {
-          await dataSource.saveBBApiCredentials(
+          await localApiCredentialsDataSource.saveBBApiCredentials(
             id: '123',
             applicationDeveloperKey: 'appDevKey',
             basicKey: 'basicKey',
@@ -86,10 +88,13 @@ void main() {
 
       // Teste que verifica se o método saveBBApiCredentials() lança uma exceção caso ocorra uma falha inesperada
       test('Should throws ErrorSavingApiCredentials if failure', () async {
-        when(() => sharedPreferences.setString(any(), any()))
-            .thenThrow(Exception());
+        when(() => flutterSecureStorage.write(
+              key: any(named: 'key'),
+              value: any(named: 'value'),
+            )).thenThrow(Exception());
+
         try {
-          await dataSource.saveBBApiCredentials(
+          await localApiCredentialsDataSource.saveBBApiCredentials(
             id: '123',
             applicationDeveloperKey: 'appDevKey',
             basicKey: 'basicKey',
@@ -106,11 +111,12 @@ void main() {
           basicKey: 'basicKey',
           isFavorite: false,
         );
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => bbCredentials.toJson(),
-        );
+        when(() => flutterSecureStorage.read(
+              key: any(named: 'key'),
+            )).thenAnswer((_) async => bbCredentials.toJson());
 
-        final bbApiCredentials = await dataSource.readBBApiCredentials(
+        final bbApiCredentials =
+            await localApiCredentialsDataSource.readBBApiCredentials(
           id: '123',
         );
 
@@ -119,20 +125,24 @@ void main() {
       });
 
       test('Should return null if doccument not exists', () async {
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => null,
-        );
+        when(() => flutterSecureStorage.read(
+              key: any(named: 'key'),
+            )).thenAnswer((_) async => null);
 
-        final bbApiCredentials = await dataSource.readBBApiCredentials(
+        final bbApiCredentials =
+            await localApiCredentialsDataSource.readBBApiCredentials(
           id: '123',
         );
 
         expect(bbApiCredentials, isNull);
       });
       test('Should throws ErrorReadingApiCredentials if failure', () async {
-        when(() => sharedPreferences.getString(any())).thenThrow(Exception());
+        when(() => flutterSecureStorage.read(
+              key: any(named: 'key'),
+            )).thenThrow(Exception());
+
         try {
-          await dataSource.readBBApiCredentials(id: '123');
+          await localApiCredentialsDataSource.readBBApiCredentials(id: '123');
         } catch (e) {
           expect(e, isA<ErrorReadingApiCredentials>());
         }
@@ -144,23 +154,24 @@ void main() {
           basicKey: 'newBasicKey',
           isFavorite: true,
         );
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => bbCredentials.toJson(),
-        );
+        when(() => flutterSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => bbCredentials.toJson());
 
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
-          (_) async => true,
-        );
-        await dataSource.updateBBApiCredentials(
+        when(() => flutterSecureStorage.write(
+              key: any(named: 'key'),
+              value: any(named: 'value'),
+            )).thenAnswer((_) async => true);
+
+        await localApiCredentialsDataSource.updateBBApiCredentials(
           id: '123',
           applicationDeveloperKey: 'newApplicationDeveloperKey',
           basicKey: 'newBasicKey',
           isFavorite: true,
         );
 
-        verify(() => sharedPreferences.setString(
-              DocumentName.bbApiCredential.name,
-              BBApiCredentialsModel(
+        verify(() => flutterSecureStorage.write(
+              key: DocumentName.bbApiCredential.name,
+              value: BBApiCredentialsModel(
                 applicationDeveloperKey: 'newApplicationDeveloperKey',
                 basicKey: 'newBasicKey',
                 isFavorite: true,
@@ -170,16 +181,16 @@ void main() {
       test(
           'Should throws ErrorReadingApiCredentials if Credentials to update does not exists',
           () async {
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => null,
-        );
+        when(() => flutterSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => null);
 
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
-          (_) async => true,
-        );
+        when(() => flutterSecureStorage.write(
+              key: any(named: 'key'),
+              value: any(named: 'value'),
+            )).thenAnswer((_) async => true);
 
         try {
-          await dataSource.updateBBApiCredentials(
+          await localApiCredentialsDataSource.updateBBApiCredentials(
             id: '123',
             applicationDeveloperKey: 'newApplicationDeveloperKey',
             basicKey: 'newBasicKey',
@@ -196,15 +207,16 @@ void main() {
           basicKey: 'newBasicKey',
           isFavorite: true,
         );
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => bbCredentials.toJson(),
-        );
+        when(() => flutterSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => bbCredentials.toJson());
 
-        when(() => sharedPreferences.setString(any(), any()))
-            .thenThrow(Exception());
+        when(() => flutterSecureStorage.write(
+              key: any(named: 'key'),
+              value: any(named: 'value'),
+            )).thenThrow(Exception());
 
         try {
-          await dataSource.updateBBApiCredentials(
+          await localApiCredentialsDataSource.updateBBApiCredentials(
             id: '123',
             applicationDeveloperKey: 'newApplicationDeveloperKey',
             basicKey: 'newBasicKey',
@@ -217,33 +229,33 @@ void main() {
 
       test('Should remove BBApiCredentials on SharedPreferencesDataBase',
           () async {
-        when(() => sharedPreferences.remove(any())).thenAnswer(
-          (_) async => true,
-        );
+        when(() => flutterSecureStorage.delete(key: any(named: 'key')))
+            .thenAnswer((_) async => true);
 
-        await dataSource.deleteBBApiCredentials(id: '');
+        await localApiCredentialsDataSource.deleteBBApiCredentials(id: '');
 
-        verify(() => sharedPreferences.remove(
-              DocumentName.bbApiCredential.name,
+        verify(() => flutterSecureStorage.delete(
+              key: DocumentName.bbApiCredential.name,
             )).called(1);
       });
 
       test(
           'Should throws ErrorRemovingApiCredentials if return false on remove',
           () async {
-        when(() => sharedPreferences.remove(any())).thenAnswer(
-          (_) async => false,
-        );
+        when(() => flutterSecureStorage.delete(key: any(named: 'key')))
+            .thenAnswer((_) async => false);
         try {
-          await dataSource.deleteBBApiCredentials(id: '');
+          await localApiCredentialsDataSource.deleteBBApiCredentials(id: '');
         } catch (e) {
           expect(e, isA<ErrorRemovingApiCredentials>());
         }
       });
       test('Should throws ErrorRemovingApiCredentials on failure', () async {
-        when(() => sharedPreferences.remove(any())).thenThrow(Exception());
+        when(() => flutterSecureStorage.delete(key: any(named: 'key')))
+            .thenThrow(Exception());
+
         try {
-          await dataSource.deleteBBApiCredentials(id: '');
+          await localApiCredentialsDataSource.deleteBBApiCredentials(id: '');
         } catch (e) {
           expect(e, isA<ErrorRemovingApiCredentials>());
         }
@@ -258,31 +270,33 @@ void main() {
           clientID: 'clientID',
           isFavorite: true,
         );
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
+        when(() => flutterSecureStorage.write(
+            key: any(named: 'key'), value: any(named: 'value'))).thenAnswer(
           (_) async => true,
         );
 
-        await dataSource.saveSicoobApiCredentials(
+        await localApiCredentialsDataSource.saveSicoobApiCredentials(
           id: '123',
           certificateBase64String: 'certString',
           certificatePassword: 'certPassword',
           clientID: 'clientID',
           isFavorite: true,
         );
-        verify(() => sharedPreferences.setString(
-              DocumentName.sicoobApiCredential.name,
-              sicoobCredentials.toJson(),
+        verify(() => flutterSecureStorage.write(
+              key: DocumentName.sicoobApiCredential.name,
+              value: sicoobCredentials.toJson(),
             )).called(1);
       });
 
       // Teste que verifica se o método saveBBApiCredentials() lança uma exceção caso o salvamento falhe
       test('Should throws ErrorSavingApiCredentials if return false', () async {
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
+        when(() => flutterSecureStorage.write(
+            key: any(named: 'key'), value: any(named: 'value'))).thenAnswer(
           (_) async => false,
         );
 
         try {
-          await dataSource.saveSicoobApiCredentials(
+          await localApiCredentialsDataSource.saveSicoobApiCredentials(
             id: '123',
             certificateBase64String: 'certString',
             certificatePassword: 'certPassword',
@@ -296,10 +310,11 @@ void main() {
 
       // Teste que verifica se o método saveBBApiCredentials() lança uma exceção caso ocorra uma falha inesperada
       test('Should throws ErrorSavingApiCredentials if failure', () async {
-        when(() => sharedPreferences.setString(any(), any()))
-            .thenThrow(Exception());
+        when(() => flutterSecureStorage.write(
+            key: any(named: 'key'),
+            value: any(named: 'value'))).thenThrow(Exception());
         try {
-          await dataSource.saveSicoobApiCredentials(
+          await localApiCredentialsDataSource.saveSicoobApiCredentials(
             id: '123',
             certificateBase64String: 'certString',
             certificatePassword: 'certPassword',
@@ -319,11 +334,13 @@ void main() {
           clientID: 'clientID',
           isFavorite: false,
         );
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => sicoobCredentials.toJson(),
+        when(() => flutterSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer(
+          (_) async => sicoobCredentials.toJson(),
         );
 
-        final bbApiCredentials = await dataSource.readSicoobApiCredentials(
+        final bbApiCredentials =
+            await localApiCredentialsDataSource.readSicoobApiCredentials(
           id: '123',
         );
 
@@ -332,20 +349,24 @@ void main() {
       });
 
       test('Should return null if doccument not exists', () async {
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => null,
+        when(() => flutterSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer(
+          (_) async => null,
         );
 
-        final bbApiCredentials = await dataSource.readSicoobApiCredentials(
+        final bbApiCredentials =
+            await localApiCredentialsDataSource.readSicoobApiCredentials(
           id: '123',
         );
 
         expect(bbApiCredentials, isNull);
       });
       test('Should throws ErrorReadingApiCredentials if failure', () async {
-        when(() => sharedPreferences.getString(any())).thenThrow(Exception());
+        when(() => flutterSecureStorage.read(key: any(named: 'key')))
+            .thenThrow(Exception());
         try {
-          await dataSource.readSicoobApiCredentials(id: '123');
+          await localApiCredentialsDataSource.readSicoobApiCredentials(
+              id: '123');
         } catch (e) {
           expect(e, isA<ErrorReadingApiCredentials>());
         }
@@ -359,14 +380,16 @@ void main() {
           clientID: 'clientID',
           isFavorite: true,
         );
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => sicoobCredentials.toJson(),
+        when(() => flutterSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer(
+          (_) async => sicoobCredentials.toJson(),
         );
 
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
+        when(() => flutterSecureStorage.write(
+            key: any(named: 'key'), value: any(named: 'value'))).thenAnswer(
           (_) async => true,
         );
-        await dataSource.updateSicoobApiCredentials(
+        await localApiCredentialsDataSource.updateSicoobApiCredentials(
           id: '123',
           certificateBase64String: 'newCertificateBase64String',
           certificatePassword: 'newCertificatePassword',
@@ -374,9 +397,9 @@ void main() {
           isFavorite: true,
         );
 
-        verify(() => sharedPreferences.setString(
-              DocumentName.sicoobApiCredential.name,
-              SicoobApiCredentialsModel(
+        verify(() => flutterSecureStorage.write(
+              key: DocumentName.sicoobApiCredential.name,
+              value: SicoobApiCredentialsModel(
                 certificateBase64String: 'newCertificateBase64String',
                 certificatePassword: 'newCertificatePassword',
                 clientID: 'newClientID',
@@ -387,16 +410,18 @@ void main() {
       test(
           'Should throws ErrorReadingApiCredentials if Credentials to update does not exists',
           () async {
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => null,
+        when(() => flutterSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer(
+          (_) async => null,
         );
 
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
+        when(() => flutterSecureStorage.write(
+            key: any(named: 'key'), value: any(named: 'value'))).thenAnswer(
           (_) async => true,
         );
 
         try {
-          await dataSource.updateSicoobApiCredentials(
+          await localApiCredentialsDataSource.updateSicoobApiCredentials(
             id: '123',
             certificateBase64String: 'newCertificateBase64String',
             certificatePassword: 'newCertificatePassword',
@@ -415,15 +440,17 @@ void main() {
           clientID: 'clientID',
           isFavorite: true,
         );
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => sicoobCredentials.toJson(),
+        when(() => flutterSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer(
+          (_) async => sicoobCredentials.toJson(),
         );
 
-        when(() => sharedPreferences.setString(any(), any()))
-            .thenThrow(Exception());
+        when(() => flutterSecureStorage.write(
+            key: any(named: 'key'),
+            value: any(named: 'value'))).thenThrow(Exception());
 
         try {
-          await dataSource.updateSicoobApiCredentials(
+          await localApiCredentialsDataSource.updateSicoobApiCredentials(
             id: '123',
             certificateBase64String: 'newCertificateBase64String',
             certificatePassword: 'newCertificatePassword',
@@ -437,120 +464,38 @@ void main() {
 
       test('Should remove BBApiCredentials on SharedPreferencesDataBase',
           () async {
-        when(() => sharedPreferences.remove(any())).thenAnswer(
-          (_) async => true,
-        );
+        when(() => flutterSecureStorage.delete(
+              key: any(named: 'key'),
+            )).thenAnswer((_) async => true);
 
-        await dataSource.deleteSicoobApiCredentials(id: '');
+        await localApiCredentialsDataSource.deleteSicoobApiCredentials(id: '');
 
-        verify(() => sharedPreferences.remove(
-              DocumentName.sicoobApiCredential.name,
+        verify(() => flutterSecureStorage.delete(
+              key: DocumentName.sicoobApiCredential.name,
             )).called(1);
       });
 
       test(
           'Should throws ErrorRemovingApiCredentials if return false on remove',
           () async {
-        when(() => sharedPreferences.remove(any())).thenAnswer(
+        when(() => flutterSecureStorage.delete(key: any(named: 'key')))
+            .thenAnswer(
           (_) async => false,
         );
         try {
-          await dataSource.deleteSicoobApiCredentials(id: '');
+          await localApiCredentialsDataSource.deleteSicoobApiCredentials(
+              id: '');
         } catch (e) {
           expect(e, isA<ErrorRemovingApiCredentials>());
         }
       });
       test('Should throws ErrorRemovingApiCredentials on failure', () async {
-        when(() => sharedPreferences.remove(any())).thenThrow(Exception());
+        when(() => flutterSecureStorage.delete(key: any(named: 'key')))
+            .thenThrow(Exception());
         try {
-          await dataSource.deleteBBApiCredentials(id: '');
+          await localApiCredentialsDataSource.deleteBBApiCredentials(id: '');
         } catch (e) {
           expect(e, isA<ErrorRemovingApiCredentials>());
-        }
-      });
-    });
-    group('UserThemePreferences: ', () {
-      test('Should save UserThemePreference on SharedPreferencesDataBase ',
-          () async {
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
-          (_) async => true,
-        );
-        await dataSource.saveUserThemePreference(
-          themeMode: ThemeMode.dark,
-        );
-        verify(() => sharedPreferences.setString(
-              DocumentName.userThemePreference.name,
-              ThemeMode.dark.name,
-            )).called(1);
-      });
-
-      test('Should return user theme preference on SharedPreferencesDataBase',
-          () async {
-        when(() => sharedPreferences.getString(any())).thenReturn('dark');
-        final themeMode = await dataSource.readUserThemePreference();
-        expect(themeMode, equals(ThemeMode.dark));
-      });
-      test('Should throws ErrorReadUserThemePreference if failure', () async {
-        when(() => sharedPreferences.getString(any())).thenThrow(Exception());
-        try {
-          await dataSource.readUserThemePreference();
-        } catch (e) {
-          expect(e, isA<ErrorReadUserThemePreference>());
-        }
-      });
-      test('Should update UserThemePreference on SharedPreferencesDataBase',
-          () async {
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => 'dark',
-        );
-
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
-          (_) async => true,
-        );
-        await dataSource.updateUserThemePreference(
-          themeMode: ThemeMode.system,
-        );
-
-        verify(() => sharedPreferences.setString(
-              DocumentName.userThemePreference.name,
-              ThemeMode.system.name,
-            )).called(1);
-      });
-      test(
-          'Should throws ErrorUpdateUserThemePreference if document to update does not exists',
-          () async {
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => null,
-        );
-
-        when(() => sharedPreferences.setString(any(), any())).thenAnswer(
-          (_) async => true,
-        );
-
-        try {
-          await dataSource.updateUserThemePreference(
-            themeMode: ThemeMode.dark,
-          );
-        } catch (e) {
-          expect(e, isA<ErrorUpdateUserThemePreference>());
-        }
-      });
-
-      test('Should throws UserThemePreferenceError if failure on update',
-          () async {
-        when(() => sharedPreferences.getString(any())).thenAnswer(
-          (_) => 'dark',
-        );
-
-        when(() => sharedPreferences.setString(any(), any()))
-            .thenThrow(Exception());
-
-        try {
-          await dataSource.updateUserThemePreference(
-            themeMode: ThemeMode.light,
-          );
-        } catch (e) {
-          expect(e, isA<ErrorUpdateUserThemePreference>());
         }
       });
     });

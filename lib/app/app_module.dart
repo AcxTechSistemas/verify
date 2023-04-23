@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
@@ -14,6 +15,7 @@ import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credential
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/remove_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/update_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/remove_user_theme_mode_preference_usecase.dart';
+import 'package:verify/app/modules/database/external/datasource/local_datasource_impl/local_api_credentials_data_source_impl.dart';
 import 'package:verify/app/modules/home/home_module.dart';
 import 'package:verify/app/modules/timeline/timeline_module.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
@@ -37,8 +39,8 @@ import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credential
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/read_user_theme_mode_preference_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/user_preferences_usecases/save_user_theme_mode_preference_usecase.dart';
 import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/error_handler/firebase_firestore_error_handler.dart';
-import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/firestore_cloud_datasource_impl.dart';
-import 'package:verify/app/modules/database/external/datasource/local_datasource_impl/shared_preferences_local_datasource_impl.dart';
+import 'package:verify/app/modules/database/external/datasource/cloud_datasource_impl/cloud_api_credentials_datasource_impl.dart';
+import 'package:verify/app/modules/database/external/datasource/local_datasource_impl/user_preferences_datasource_impl.dart';
 import 'package:verify/app/modules/database/infra/datasource/cloud_api_credentials_datasource.dart';
 import 'package:verify/app/modules/database/infra/datasource/local_api_credentials_datasource.dart';
 import 'package:verify/app/modules/database/infra/datasource/user_preferences_datasource.dart';
@@ -112,14 +114,15 @@ class AppModule extends Module {
         //Datasources
         AutoBind.instance<FirebaseFirestore>(FirebaseFirestore.instance),
         AutoBind.factory<CloudApiCredentialsDataSource>(
-          FireStoreCloudDataSourceImpl.new,
+          CloudApiCredentialsDataSourceImpl.new,
+        ),
+        AutoBind.instance<FlutterSecureStorage>(const FlutterSecureStorage()),
+        AutoBind.factory<LocalApiCredentialsDataSource>(
+          LocalApiCredentialsDataSourceImpl.new,
         ),
         AutoBind.instance<SharedPreferences>(sharedPreferences),
-        AutoBind.factory<LocalApiCredentialsDataSource>(
-          SharedPreferencesLocalDataSourceImpl.new,
-        ),
         AutoBind.factory<UserPreferencesDataSource>(
-          SharedPreferencesLocalDataSourceImpl.new,
+          UserPreferencesLocalDataSourceImpl.new,
         ),
         // Use Cases
         AutoBind.factory<SaveUserThemeModePreferencesUseCase>(

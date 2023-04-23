@@ -8,13 +8,14 @@ import 'package:verify/app/modules/database/infra/models/sicoob_api_credentials_
 import 'package:verify/app/modules/database/infra/models/bb_api_credentials_model.dart';
 import 'package:verify/app/modules/database/utils/database_enums.dart';
 
-class FireStoreCloudDataSourceImpl implements CloudApiCredentialsDataSource {
+class CloudApiCredentialsDataSourceImpl
+    implements CloudApiCredentialsDataSource {
   final FirebaseFirestore _firestore;
   final FirebaseFirestoreErrorHandler _firebaseFirestoreErrorHandler;
   final RegisterLog _registerLog;
   final SendLogsToWeb _sendLogsToWeb;
 
-  FireStoreCloudDataSourceImpl(
+  CloudApiCredentialsDataSourceImpl(
     this._firestore,
     this._firebaseFirestoreErrorHandler,
     this._registerLog,
