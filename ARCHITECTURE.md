@@ -25,10 +25,14 @@ Points to consider before introducing a new feature:
 
 # External packages
 
+- pix_bb: A Package for consulting pix related transactions
+- pix_sicoob: A Package for consulting pix related transactions
 - flutter_modular: A module-based architecture framework for Flutter
-- firebase_auth: A Flutter package that provides Firebase Authentication integration
+- mobx_codegen: A code generator for MobX state-management library.
+- build_runner: A command-line tool for generating code and running tasks in a Dart package
+- firebase_auth: A Flutter package for Firebase Authentication integration
 - google_sign_in: A Flutter plugin for Google Sign-In integration
-- firebase_core: A Flutter plugin that provides Firebase Core functionality
+- firebase_core: A Flutter plugin providing Firebase Core functionality
 - equatable: A Dart package for simple and efficient value equality checks
 - result_dart: A Dart package for returning results in a standardized Failure or Success format
 - mocktail: A Dart package for creating mock objects during unit tests
@@ -36,4 +40,15 @@ Points to consider before introducing a new feature:
 - flutter_mobx: A Flutter integration of the mobx state-management library
 - flutter_svg: A Flutter plugin for rendering SVG files
 - google_fonts: A Flutter package for easy integration of Google Fonts
-- build_runner: A command-line tool for generating code and running tasks in a Dart package
+- cloud_firestore: A Flutter plugin for Cloud Firestore integration
+- shared_preferences: A Flutter plugin for persisting key-value data on disk
+- intl: A Flutter package providing internationalization and localization utilities
+- url_launcher: A Flutter plugin for launching URLs
+- file_picker: A Flutter plugin for picking files from the filesystem
+- dio: A powerful HTTP client for Dart and Flutter
+- lottie: A Flutter plugin for displaying and playing Lottie animations
+- brasil_fields: A package providing Brazilian-specific formatters and validators
+- community_material_icon: A Flutter package providing access to the Community Material Icons font
+- flutter_secure_storage: A Flutter plugin for storing sensitive data securely
+- encrypt: A library for encrypting and decrypting data in Dart
+- crypto: A package containing cryptographic algorithms in Dart
