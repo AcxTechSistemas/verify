@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/auth/domain/usecase/get_logged_user_usecase.dart';
-import 'package:verify/app/modules/config/presenter/sicoob_settings/store/sicoob_settings_store.dart';
+import 'package:verify/app/modules/config/sicoob_settings/store/sicoob_settings_store.dart';
 import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentials_entity.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/remove_sicoob_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/save_sicoob_api_credentials_usecase.dart';
@@ -38,16 +38,7 @@ class SicoobSettingsPageController {
     this._getLoggedUserUseCase,
     this._removeSicoobApiCredentialsUseCase,
   );
-  void popPage() async {
-    clientIDFocus.unfocus();
-    certificatePasswordFocus.unfocus();
-    certificateString = '';
-    certificatePasswordController.clear();
-    clientIDController.clear();
-    clearStore();
-    await Future.delayed(const Duration(milliseconds: 200));
-    Modular.to.pop();
-  }
+  void popPage() => Modular.to.pop();
 
   Future<void> goToSicoobDevelopersPortal() async {
     final sicoobDeveloperUrl = Uri.parse(
@@ -204,7 +195,12 @@ class SicoobSettingsPageController {
     }
   }
 
-  void clearStore() {
+  void dispose() {
+    clientIDFocus.unfocus();
+    certificatePasswordFocus.unfocus();
+    certificateString = '';
+    certificatePasswordController.clear();
+    clientIDController.clear();
     _store.savingInCloud(false);
     _store.savingInLocal(false);
     _store.validatingCredentials(false);

@@ -87,11 +87,7 @@ class SettingsPageController {
     );
     await _removeUserThemeModePreferencesUseCase();
     final appStore = Modular.get<AppStore>();
-    final authStore = Modular.get<AuthStore>();
-    final apiStore = Modular.get<ApiCredentialsStore>();
     appStore.dispose();
-    authStore.dispose();
-    apiStore.dispose();
   }
 
   void changeTheme(ThemeMode? themeMode) async {

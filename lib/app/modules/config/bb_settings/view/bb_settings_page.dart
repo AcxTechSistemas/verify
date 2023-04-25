@@ -3,9 +3,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/auth/presenter/shared/widgets/auth_action_button.dart';
-import 'package:verify/app/modules/config/presenter/bb_settings/controller/bb_settings_page_controller.dart';
-import 'package:verify/app/modules/config/presenter/bb_settings/store/bb_settings_store.dart';
-import 'package:verify/app/modules/config/presenter/shared/widgets/setup_field_widget.dart';
+import 'package:verify/app/modules/config/bb_settings/controller/bb_settings_page_controller.dart';
+import 'package:verify/app/modules/config/bb_settings/store/bb_settings_store.dart';
+import 'package:verify/app/modules/config/shared/widgets/setup_field_widget.dart';
 import 'package:verify/app/shared/widgets/custom_snack_bar.dart';
 
 class BBSettingsPage extends StatefulWidget {
@@ -21,16 +21,18 @@ class _BBSettingsPageState extends State<BBSettingsPage> {
   final apiStore = Modular.get<ApiCredentialsStore>();
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: controller.popPage,
-          icon: const Icon(Icons.arrow_back),
-        ),
         title: const Text(
           'Banco do Brasil',
         ),
