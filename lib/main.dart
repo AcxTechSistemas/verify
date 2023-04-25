@@ -34,6 +34,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  MobileAds.instance.initialize();
 
   final sharedPreferences = await SharedPreferences.getInstance();
 

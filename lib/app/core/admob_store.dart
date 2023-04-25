@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mobx/mobx.dart';
 import 'package:verify/app/shared/error_registrator/register_log.dart';
@@ -8,14 +9,11 @@ part 'admob_store.g.dart';
 class AdMobStore = AdMobStoreBase with _$AdMobStore;
 
 abstract class AdMobStoreBase with Store {
-  final RegisterLog _registerLog;
-  final SendLogsToWeb _sendLogsToWeb;
+  @observable
   BannerAd? bannerAd;
 
-  AdMobStoreBase(
-    this._registerLog,
-    this._sendLogsToWeb,
-  );
+  @computed
+  bool get hasBannerAd => bannerAd != null;
 
   @computed
   String get bannerAdUnitId {
@@ -36,8 +34,13 @@ abstract class AdMobStoreBase with Store {
   }
 
   @action
-  Future<void> initAdMob() async {
-    BannerAd(
+  Future<InitializationStatus> initAdMob() {
+    return MobileAds.instance.initialize();
+  }
+
+  @action
+  Future<void> loadBannerAd() async {
+    await BannerAd(
       adUnitId: bannerAdUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
@@ -46,10 +49,12 @@ abstract class AdMobStoreBase with Store {
           bannerAd = ad as BannerAd;
         },
         onAdFailedToLoad: (ad, error) async {
+          final registerLog = Modular.get<RegisterLog>();
+          final sendLogsToWeb = Modular.get<SendLogsToWeb>();
           final message =
               'Ad load failed (code=${error.code} message=${error.message})';
-          _registerLog(message);
-          await _sendLogsToWeb(message);
+          registerLog(message);
+          await sendLogsToWeb(message);
         },
       ),
     ).load();
