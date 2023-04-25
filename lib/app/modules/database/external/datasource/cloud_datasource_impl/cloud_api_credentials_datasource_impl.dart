@@ -47,7 +47,9 @@ class CloudApiCredentialsDataSourceImpl
     );
     try {
       await _firestore
-          .collection(id)
+          .collection('users')
+          .doc(id)
+          .collection('apiCredentials')
           .doc(DocumentName.bbApiCredential.name)
           .set(bbCredentials.toMap());
     } on FirebaseException catch (e) {
@@ -68,7 +70,9 @@ class CloudApiCredentialsDataSourceImpl
   }) async {
     try {
       final doc = await _firestore
-          .collection(id)
+          .collection('users')
+          .doc(id)
+          .collection('apiCredentials')
           .doc(DocumentName.bbApiCredential.name)
           .get();
       final data = doc.data();
@@ -130,7 +134,9 @@ class CloudApiCredentialsDataSourceImpl
     );
     try {
       await _firestore
-          .collection(id)
+          .collection('users')
+          .doc(id)
+          .collection('apiCredentials')
           .doc(DocumentName.bbApiCredential.name)
           .update(bbCredentials.toMap());
     } on FirebaseException catch (e) {
@@ -151,7 +157,9 @@ class CloudApiCredentialsDataSourceImpl
   }) async {
     try {
       await _firestore
-          .collection(id)
+          .collection('users')
+          .doc(id)
+          .collection('apiCredentials')
           .doc(DocumentName.bbApiCredential.name)
           .delete();
     } on FirebaseException catch (e) {
@@ -195,7 +203,9 @@ class CloudApiCredentialsDataSourceImpl
     );
     try {
       await _firestore
-          .collection(id)
+          .collection('users')
+          .doc(id)
+          .collection('apiCredentials')
           .doc(DocumentName.sicoobApiCredential.name)
           .set(sicoobCredentials.toMap());
     } on FirebaseException catch (e) {
@@ -216,7 +226,9 @@ class CloudApiCredentialsDataSourceImpl
   }) async {
     try {
       final doc = await _firestore
-          .collection(id)
+          .collection('users')
+          .doc(id)
+          .collection('apiCredentials')
           .doc(DocumentName.sicoobApiCredential.name)
           .get();
       final data = doc.data();
@@ -292,8 +304,10 @@ class CloudApiCredentialsDataSourceImpl
     );
     try {
       await _firestore
-          .collection(id)
-          .doc(DocumentName.bbApiCredential.name)
+          .collection('users')
+          .doc(id)
+          .collection('apiCredentials')
+          .doc(DocumentName.sicoobApiCredential.name)
           .update(sicoobCredentials.toMap());
     } on FirebaseException catch (e) {
       final errorMessage = await _firebaseFirestoreErrorHandler(e);
@@ -313,7 +327,9 @@ class CloudApiCredentialsDataSourceImpl
   }) async {
     try {
       await _firestore
-          .collection(id)
+          .collection('users')
+          .doc(id)
+          .collection('apiCredentials')
           .doc(DocumentName.sicoobApiCredential.name)
           .delete();
     } on FirebaseException catch (e) {

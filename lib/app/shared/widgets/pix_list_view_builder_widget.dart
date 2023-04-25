@@ -43,21 +43,6 @@ class _PixListViewBuilderState extends State<PixListViewBuilder> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Observer(
-          builder: (context) {
-            return Visibility(
-              visible: adMobStore.bannerAd != null,
-              child: Container(
-                width: adMobStore.bannerAd?.size.width.toDouble(),
-                height: 72.0,
-                alignment: Alignment.center,
-                child: adMobStore.hasBannerAd
-                    ? AdWidget(ad: adMobStore.bannerAd!)
-                    : null,
-              ),
-            );
-          },
-        ),
         Expanded(
           child: FutureBuilder(
             future: widget.future,
@@ -108,6 +93,21 @@ class _PixListViewBuilderState extends State<PixListViewBuilder> {
               }
             },
           ),
+        ),
+        Observer(
+          builder: (context) {
+            return Visibility(
+              visible: adMobStore.bannerAd != null,
+              child: Container(
+                width: adMobStore.bannerAd?.size.width.toDouble(),
+                height: 72.0,
+                alignment: Alignment.center,
+                child: adMobStore.hasBannerAd
+                    ? AdWidget(ad: adMobStore.bannerAd!)
+                    : null,
+              ),
+            );
+          },
         ),
       ],
     );
