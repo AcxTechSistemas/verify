@@ -7,6 +7,7 @@ import 'package:verify/app/core/admob_store.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/core/auth_store.dart';
+
 import 'package:verify/app/shared/themes/theme.dart';
 import 'package:verify/app/splash_screen_widget.dart';
 
@@ -32,6 +33,7 @@ class _AppWidgetState extends State<AppWidget> {
     await authStore.loadData();
     await apiCredentialsStore.loadData();
     await adMobStore.initAdMob();
+
     if (mounted) {
       setState(() {
         intialized = true;

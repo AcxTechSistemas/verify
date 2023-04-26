@@ -13,12 +13,12 @@ class VersionModel extends Equatable {
   final VersionStatus status;
   final String? title;
   final String? body;
-  final List<String> news;
+  final List<String>? news;
   const VersionModel({
     required this.status,
-    required this.news,
-    required this.title,
-    required this.body,
+    this.news,
+    this.title,
+    this.body,
   });
 
   @override

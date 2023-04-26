@@ -2,21 +2,21 @@ import 'package:verify/app/shared/services/version_service.dart/models/version_m
 import 'package:versionarte/versionarte.dart';
 
 abstract class VersionService {
-  Future<VersionModel?> call();
+  Future<VersionModel> call();
 }
 
 class VersionArteService implements VersionService {
   @override
-  Future<VersionModel?> call() async {
+  Future<VersionModel> call() async {
     final result = await Versionarte.check(
       versionarteProvider: const RemoteConfigVersionarteProvider(
-        initializeInternally: false,
+        initializeInternally: true,
       ),
     );
     switch (result.status) {
       case VersionarteStatus.upToDate:
       case VersionarteStatus.unknown:
-        return null;
+        return const VersionModel(status: VersionStatus.upToDate);
       case VersionarteStatus.shouldUpdate:
         return VersionModel(
           status: VersionStatus.optionalUpdate,
