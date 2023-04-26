@@ -82,8 +82,15 @@ class BBSettingsPageController {
       applicationDeveloperKey: appDevKeyController.text,
       basicKey: basicKeyController.text,
     );
-
+    if (errorValidating != null) {
+      _store.validatingCredentials(false);
+      return errorValidating;
+    }
     errorValidating = await saveCredentials();
+    if (errorValidating != null) {
+      _store.validatingCredentials(false);
+      return errorValidating;
+    }
     _store.validatingCredentials(false);
     return errorValidating;
   }
@@ -91,7 +98,13 @@ class BBSettingsPageController {
   Future<String?> saveCredentials() async {
     String? errorInSaving;
     errorInSaving = await saveCredentialsinCloud();
+    if (errorInSaving != null) {
+      return errorInSaving;
+    }
     errorInSaving = await saveCredentialsinLocal();
+    if (errorInSaving != null) {
+      return errorInSaving;
+    }
     await apiStore.loadData();
     return errorInSaving;
   }
@@ -135,7 +148,13 @@ class BBSettingsPageController {
   Future<String?> removeCredentials() async {
     String? errorInRemoving;
     errorInRemoving = await removeCredentialsinCloud();
+    if (errorInRemoving != null) {
+      return errorInRemoving;
+    }
     errorInRemoving = await removeCredentialsinLocal();
+    if (errorInRemoving != null) {
+      return errorInRemoving;
+    }
     await apiStore.loadData();
     return errorInRemoving;
   }

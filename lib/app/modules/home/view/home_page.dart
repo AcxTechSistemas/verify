@@ -6,8 +6,6 @@ import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/home/controller/home_page_controller.dart';
 import 'package:verify/app/modules/home/store/home_store.dart';
 import 'package:verify/app/modules/home/view/widgets/account_card_page_view.dart';
-import 'package:verify/app/shared/services/version_service.dart/models/version_model.dart';
-import 'package:verify/app/shared/services/version_service.dart/version_service.dart';
 import 'package:verify/app/shared/widgets/pix_list_view_builder_widget.dart';
 import 'package:verify/app/shared/widgets/custom_navigation_bar.dart';
 import 'package:verify/app/shared/widgets/empty_account_widget.dart';
