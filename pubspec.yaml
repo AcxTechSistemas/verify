@@ -60,6 +60,7 @@ dependencies:
   encrypt: ^5.0.1
   crypto: ^3.0.2
   google_mobile_ads: ^3.0.0
+  versionarte: ^0.8.7
 
 dev_dependencies:
   flutter_test:
