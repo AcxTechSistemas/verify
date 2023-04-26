@@ -27,6 +27,7 @@ Points to consider before introducing a new feature:
 
 - pix_bb: A Package for consulting pix related transactions
 - pix_sicoob: A Package for consulting pix related transactions
+- google_mobile_ads: Ads provider
 - flutter_modular: A module-based architecture framework for Flutter
 - mobx_codegen: A code generator for MobX state-management library.
 - build_runner: A command-line tool for generating code and running tasks in a Dart package

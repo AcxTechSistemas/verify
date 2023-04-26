@@ -11,10 +11,7 @@ class DioClientService implements ClientService {
     required Object body,
   }) async {
     try {
-      await dio.post(
-        url,
-        data: body,
-      );
+      await dio.post(url, data: body);
     } catch (e) {
       log(e.toString());
     }

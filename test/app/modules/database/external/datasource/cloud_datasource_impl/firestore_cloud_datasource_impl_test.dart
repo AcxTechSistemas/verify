@@ -65,17 +65,29 @@ void main() {
     when(() => firestoreMock.collection(any())).thenReturn(collectionMock);
     when(() => collectionMock.doc(any())).thenReturn(documentMock);
   });
-  group('FireStoreCloudDataSourceImpl: ', () {
+  group('FireStoreCloudDataSourceImpl: Collection {Users}', () {
+    final userCollectionMock = MockCollectionReference();
+    final apiCredentialsDocummentMock = MockDocumentReference();
+    const id = 'userID';
+    setUp(() {
+      when(() => documentMock.collection(any())).thenReturn(userCollectionMock);
+      when(() => userCollectionMock.doc(any()))
+          .thenReturn(apiCredentialsDocummentMock);
+    });
     group('BBApiCredentials: ', () {
       test('should save BBApiCredentials to Firestore', () async {
-        when(() => documentMock.set(any())).thenAnswer((_) async => {});
+        when(() => apiCredentialsDocummentMock.set(any()))
+            .thenAnswer((_) async => {});
+
         await fireStoreCloudDataSource.saveBBApiCredentials(
-          id: '123',
+          id: id,
           applicationDeveloperKey: 'appDevKey',
           basicKey: 'basicKey',
           isFavorite: true,
         );
         verify(() => collectionMock
+            .doc(id)
+            .collection('apiCredentials')
             .doc(DocumentName.bbApiCredential.name)
             .set(any())).called(1);
       });
@@ -86,7 +98,7 @@ void main() {
           plugin: '',
         );
         when(() => registerLog(any())).thenAnswer((_) async {});
-        when(() => documentMock.set(any())).thenThrow(exception);
+        when(() => apiCredentialsDocummentMock.set(any())).thenThrow(exception);
 
         try {
           await fireStoreCloudDataSource.saveBBApiCredentials(
@@ -102,7 +114,7 @@ void main() {
       });
       test('should return BBApiCredentialsModel on readBBApiCredentials',
           () async {
-        when(() => documentMock.get(any()))
+        when(() => apiCredentialsDocummentMock.get(any()))
             .thenAnswer((_) async => documentSnapshot);
 
         const id = '123';
@@ -136,7 +148,7 @@ void main() {
       });
 
       test('should return null if documment not exists', () async {
-        when(() => documentMock.get(any()))
+        when(() => apiCredentialsDocummentMock.get(any()))
             .thenAnswer((_) async => documentSnapshot);
 
         const id = '123';
@@ -149,7 +161,7 @@ void main() {
         expect(bbApiCredentials, isNull);
       });
       test('should return null if documment is empty', () async {
-        when(() => documentMock.get(any()))
+        when(() => apiCredentialsDocummentMock.get(any()))
             .thenAnswer((_) async => documentSnapshot);
 
         const id = '123';
@@ -163,7 +175,8 @@ void main() {
         expect(bbApiCredentials, isNull);
       });
       test('should throws ErrorReadingApiCredentials if failure', () async {
-        when(() => documentMock.get(any())).thenThrow(Exception());
+        when(() => apiCredentialsDocummentMock.get(any()))
+            .thenThrow(Exception());
 
         const id = '123';
         when(() => documentSnapshot.exists).thenReturn(true);
@@ -179,7 +192,8 @@ void main() {
       });
 
       test('should update BBApiCredentials on firestore', () async {
-        when(() => documentMock.update(any())).thenAnswer((_) async => {});
+        when(() => apiCredentialsDocummentMock.update(any()))
+            .thenAnswer((_) async => {});
 
         await fireStoreCloudDataSource.updateBBApiCredentials(
           id: '123',
@@ -197,7 +211,8 @@ void main() {
           plugin: '',
         );
         when(() => registerLog(any())).thenAnswer((_) async {});
-        when(() => documentMock.update(any())).thenThrow(exception);
+        when(() => apiCredentialsDocummentMock.update(any()))
+            .thenThrow(exception);
         const id = '123';
         const applicationDeveloperKey = 'appDevKey';
         const basicKey = 'basicKey';
@@ -217,14 +232,15 @@ void main() {
       });
 
       test('should remove BBApiCredentials in Firestore', () async {
-        when(() => documentMock.delete()).thenAnswer((_) async => {});
+        when(() => apiCredentialsDocummentMock.delete())
+            .thenAnswer((_) async => {});
         await fireStoreCloudDataSource.deleteBBApiCredentials(
           id: '123',
         );
         verify(() => collectionMock.doc(any()).delete()).called(1);
       });
       test('should throws ErrorRemovingApiCredentials if Failure', () async {
-        when(() => documentMock.delete()).thenThrow(Exception());
+        when(() => apiCredentialsDocummentMock.delete()).thenThrow(Exception());
         try {
           await fireStoreCloudDataSource.deleteBBApiCredentials(
             id: '123',
@@ -238,15 +254,18 @@ void main() {
 
     group('SicoobApiCredentials: ', () {
       test('should save SicoobApiCredentials to Firestore', () async {
-        when(() => documentMock.set(any())).thenAnswer((_) async => {});
+        when(() => apiCredentialsDocummentMock.set(any()))
+            .thenAnswer((_) async => {});
         await fireStoreCloudDataSource.saveSicoobApiCredentials(
-          id: '123',
+          id: id,
           certificateBase64String: 'certString',
           certificatePassword: 'certPassword',
           clientID: 'clientID',
           isFavorite: true,
         );
         verify(() => collectionMock
+            .doc(id)
+            .collection('apiCredentials')
             .doc(DocumentName.sicoobApiCredential.name)
             .set(any())).called(1);
       });
@@ -257,11 +276,11 @@ void main() {
           plugin: '',
         );
         when(() => registerLog(any())).thenAnswer((_) async {});
-        when(() => documentMock.set(any())).thenThrow(exception);
+        when(() => apiCredentialsDocummentMock.set(any())).thenThrow(exception);
 
         try {
           await fireStoreCloudDataSource.saveSicoobApiCredentials(
-            id: '123',
+            id: id,
             certificateBase64String: 'certString',
             certificatePassword: 'certPassword',
             clientID: 'clientID',
@@ -275,10 +294,8 @@ void main() {
       test(
           'should return SicoobApiCredentialsModel on readSicoobApiCredentials',
           () async {
-        when(() => documentMock.get(any()))
+        when(() => apiCredentialsDocummentMock.get(any()))
             .thenAnswer((_) async => documentSnapshot);
-
-        const id = '123';
 
         final key = dataCrypto.generateKey(userId: id);
         final certificateBase64String = dataCrypto.encrypt(
@@ -312,10 +329,9 @@ void main() {
         expect(sicoobApiCredentials!.clientID, equals('clientID'));
       });
       test('should return null if documment not exists', () async {
-        when(() => documentMock.get(any()))
+        when(() => apiCredentialsDocummentMock.get(any()))
             .thenAnswer((_) async => documentSnapshot);
 
-        const id = '123';
         when(() => documentSnapshot.exists).thenReturn(false);
 
         final sicoobApiCredentials =
@@ -325,10 +341,9 @@ void main() {
         expect(sicoobApiCredentials, isNull);
       });
       test('should return null if documment is empty', () async {
-        when(() => documentMock.get(any()))
+        when(() => apiCredentialsDocummentMock.get(any()))
             .thenAnswer((_) async => documentSnapshot);
 
-        const id = '123';
         when(() => documentSnapshot.exists).thenReturn(true);
         when(() => documentSnapshot.data()).thenReturn(null);
 
@@ -339,9 +354,9 @@ void main() {
         expect(sicoobApiCredentials, isNull);
       });
       test('should throws ErrorReadingApiCredentials if failure', () async {
-        when(() => documentMock.get(any())).thenThrow(Exception());
+        when(() => apiCredentialsDocummentMock.get(any()))
+            .thenThrow(Exception());
 
-        const id = '123';
         when(() => documentSnapshot.exists).thenReturn(true);
         when(() => documentSnapshot.data()).thenReturn(null);
         try {
@@ -354,10 +369,11 @@ void main() {
         }
       });
       test('should update SicoobApiCredentials on firestore', () async {
-        when(() => documentMock.update(any())).thenAnswer((_) async => {});
+        when(() => apiCredentialsDocummentMock.update(any()))
+            .thenAnswer((_) async => {});
 
         await fireStoreCloudDataSource.updateSicoobApiCredentials(
-          id: '123',
+          id: id,
           certificateBase64String: 'certString',
           certificatePassword: 'certPassword',
           clientID: 'clientID',
@@ -373,8 +389,8 @@ void main() {
           plugin: '',
         );
         when(() => registerLog(any())).thenAnswer((_) async {});
-        when(() => documentMock.update(any())).thenThrow(exception);
-        const id = '123';
+        when(() => apiCredentialsDocummentMock.update(any()))
+            .thenThrow(exception);
 
         try {
           await fireStoreCloudDataSource.updateSicoobApiCredentials(
@@ -391,17 +407,18 @@ void main() {
       });
 
       test('should remove SicoobApiCredentials in Firestore', () async {
-        when(() => documentMock.delete()).thenAnswer((_) async => {});
+        when(() => apiCredentialsDocummentMock.delete())
+            .thenAnswer((_) async => {});
         await fireStoreCloudDataSource.deleteSicoobApiCredentials(
-          id: '123',
+          id: id,
         );
         verify(() => collectionMock.doc(any()).delete()).called(1);
       });
       test('should throws ErrorRemovingApiCredentials if Failure', () async {
-        when(() => documentMock.delete()).thenThrow(Exception());
+        when(() => apiCredentialsDocummentMock.delete()).thenThrow(Exception());
         try {
           await fireStoreCloudDataSource.deleteSicoobApiCredentials(
-            id: '123',
+            id: id,
           );
           fail('These test should throws ErrorRemovingApiCredentials');
         } catch (e) {
