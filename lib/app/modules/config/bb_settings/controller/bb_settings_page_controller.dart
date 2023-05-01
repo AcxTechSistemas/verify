@@ -1,59 +1,45 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:pix_sicoob/pix_sicoob.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/modules/auth/domain/usecase/get_logged_user_usecase.dart';
-import 'package:verify/app/modules/config/presenter/sicoob_settings/store/sicoob_settings_store.dart';
-import 'package:verify/app/modules/database/domain/entities/sicoob_api_credentials_entity.dart';
-import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/remove_sicoob_api_credentials_usecase.dart';
-import 'package:verify/app/modules/database/domain/usecase/sicoob_api_credentials_usecases/save_sicoob_api_credentials_usecase.dart';
+import 'package:verify/app/modules/config/bb_settings/store/bb_settings_store.dart';
+import 'package:verify/app/modules/database/domain/entities/bb_api_credentials_entity.dart';
+import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/remove_bb_api_credentials_usecase.dart';
+import 'package:verify/app/modules/database/domain/usecase/bb_api_credentials_usecases/save_bb_api_credentials_usecase.dart';
 import 'package:verify/app/modules/database/utils/database_enums.dart';
-import 'package:verify/app/shared/services/pix_services/sicoob_pix_api_service/sicoob_pix_api_service.dart';
+import 'package:verify/app/shared/services/pix_services/bb_pix_api_service/bb_pix_api_service.dart';
 
-class SicoobSettingsPageController {
-  final SicoobPixApiService _pixSicoobService;
-  final SicoobSettingsStore _store;
-  final SaveSicoobApiCredentialsUseCase _saveSicoobApiCredentialsUseCase;
-  final RemoveSicoobApiCredentialsUseCase _removeSicoobApiCredentialsUseCase;
+class BBSettingsPageController {
+  final BBPixApiService _bbPixApiService;
+  final BBSettingsStore _store;
+  final SaveBBApiCredentialsUseCase _saveBBApiCredentialsUseCase;
+  final RemoveBBApiCredentialsUseCase _removeBBApiCredentialsUseCase;
   final GetLoggedUserUseCase _getLoggedUserUseCase;
 
   //
-  String certificateString = '';
-  final clientIDController = TextEditingController();
-  final certificatePasswordController = TextEditingController();
-  final clientIDFocus = FocusNode();
-  final certificatePasswordFocus = FocusNode();
+  final appDevKeyController = TextEditingController();
+  final basicKeyController = TextEditingController();
+  final appDevKeyFocus = FocusNode();
+  final basicKeyFocus = FocusNode();
   final formKey = GlobalKey<FormState>();
 
   final apiStore = Modular.get<ApiCredentialsStore>();
 
-  SicoobSettingsPageController(
-    this._pixSicoobService,
+  BBSettingsPageController(
+    this._bbPixApiService,
     this._store,
-    this._saveSicoobApiCredentialsUseCase,
+    this._saveBBApiCredentialsUseCase,
     this._getLoggedUserUseCase,
-    this._removeSicoobApiCredentialsUseCase,
+    this._removeBBApiCredentialsUseCase,
   );
-  void popPage() async {
-    clientIDFocus.unfocus();
-    certificatePasswordFocus.unfocus();
-    certificateString = '';
-    certificatePasswordController.clear();
-    clientIDController.clear();
-    clearStore();
-    await Future.delayed(const Duration(milliseconds: 200));
-    Modular.to.pop();
-  }
+  void popPage() async => Modular.to.pop();
 
-  Future<void> goToSicoobDevelopersPortal() async {
-    final sicoobDeveloperUrl = Uri.parse(
-      'https://developers.sicoob.com.br/portal/#!/',
+  Future<void> goToBBDevelopersPortal() async {
+    final bbDeveloperUrl = Uri.parse(
+      'https://developers.bb.com.br/conheca-o-portal',
     );
-    await launchUrl(sicoobDeveloperUrl);
+    await launchUrl(bbDeveloperUrl);
   }
 
   void validateFields() {
@@ -64,10 +50,10 @@ class SicoobSettingsPageController {
     }
   }
 
-  String? validateClientID(String? input) {
+  String? validateAppDevKey(String? input) {
     if (input != null) {
       if (input.isEmpty) {
-        return 'Insira um client ID';
+        return 'Insira uma AppDevKey';
       } else {
         return null;
       }
@@ -76,46 +62,35 @@ class SicoobSettingsPageController {
     }
   }
 
-  String? validateCertificatePassword(String? input) {
+  String? validateBasicKey(String? input) {
     if (input != null) {
       if (input.isEmpty) {
-        return 'Insira um client ID';
+        return 'Insira uma BasicKey';
       } else {
         return null;
       }
     } else {
       return null;
-    }
-  }
-
-  Future<void> pickCertificate() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pfx', 'cer', 'crt'],
-    );
-
-    if (result != null) {
-      final file = File(result.files.single.path!);
-      final certBase64String = PixSicoob.certFileToBase64String(
-        pkcs12CertificateFile: file,
-      );
-      certificateString = certBase64String;
-      final fileName = file.path.split('/').last;
-      _store.setCertificateFileName(fileName);
     }
   }
 
   Future<String?> validateCredentials() async {
     String? errorValidating;
+
     _store.validatingCredentials(true);
-    errorValidating = await _pixSicoobService.validateCredentials(
-      clientID: clientIDController.text,
-      certificateBase64String: certificateString,
-      certificatePassword: certificatePasswordController.text,
+    errorValidating = await _bbPixApiService.validateCredentials(
+      applicationDeveloperKey: appDevKeyController.text,
+      basicKey: basicKeyController.text,
     );
-
+    if (errorValidating != null) {
+      _store.validatingCredentials(false);
+      return errorValidating;
+    }
     errorValidating = await saveCredentials();
-
+    if (errorValidating != null) {
+      _store.validatingCredentials(false);
+      return errorValidating;
+    }
     _store.validatingCredentials(false);
     return errorValidating;
   }
@@ -123,7 +98,13 @@ class SicoobSettingsPageController {
   Future<String?> saveCredentials() async {
     String? errorInSaving;
     errorInSaving = await saveCredentialsinCloud();
+    if (errorInSaving != null) {
+      return errorInSaving;
+    }
     errorInSaving = await saveCredentialsinLocal();
+    if (errorInSaving != null) {
+      return errorInSaving;
+    }
     await apiStore.loadData();
     return errorInSaving;
   }
@@ -147,13 +128,12 @@ class SicoobSettingsPageController {
     if (user == null) {
       return 'Sua sessão expirou.\nPor favor, faça login novamente.';
     } else {
-      final saved = await _saveSicoobApiCredentialsUseCase(
+      final saved = await _saveBBApiCredentialsUseCase(
         database: database,
         id: user.id,
-        sicoobApiCredentialsEntity: SicoobApiCredentialsEntity(
-          clientID: clientIDController.text,
-          certificatePassword: certificatePasswordController.text,
-          certificateBase64String: certificateString,
+        bbApiCredentialsEntity: BBApiCredentialsEntity(
+          applicationDeveloperKey: appDevKeyController.text,
+          basicKey: basicKeyController.text,
           isFavorite: false,
         ),
       );
@@ -168,7 +148,13 @@ class SicoobSettingsPageController {
   Future<String?> removeCredentials() async {
     String? errorInRemoving;
     errorInRemoving = await removeCredentialsinCloud();
+    if (errorInRemoving != null) {
+      return errorInRemoving;
+    }
     errorInRemoving = await removeCredentialsinLocal();
+    if (errorInRemoving != null) {
+      return errorInRemoving;
+    }
     await apiStore.loadData();
     return errorInRemoving;
   }
@@ -192,11 +178,11 @@ class SicoobSettingsPageController {
     if (user == null) {
       return 'Sua sessão expirou.\nPor favor, faça login novamente.';
     } else {
-      final removed = await _removeSicoobApiCredentialsUseCase(
+      final saved = await _removeBBApiCredentialsUseCase(
         database: database,
         id: user.id,
       );
-      removed.fold(
+      saved.fold(
         (success) => null,
         (failure) => failure.message,
       );
@@ -204,11 +190,14 @@ class SicoobSettingsPageController {
     }
   }
 
-  void clearStore() {
+  void dispose() {
+    appDevKeyFocus.unfocus();
+    basicKeyFocus.unfocus();
+    appDevKeyController.clear();
+    basicKeyController.clear();
     _store.savingInCloud(false);
     _store.savingInLocal(false);
     _store.validatingCredentials(false);
-    _store.setCertificateFileName('');
     _store.setValidFields(false);
   }
 }

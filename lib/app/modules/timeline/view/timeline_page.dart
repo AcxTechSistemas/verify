@@ -102,6 +102,7 @@ class _TimelinePageState extends State<TimelinePage> {
         return Visibility(
           visible: store.showTodayFab,
           child: FloatingActionButton.extended(
+            elevation: 10,
             backgroundColor: colorScheme.secondaryContainer,
             icon: const Icon(Icons.today),
             label: const Text('Hoje'),

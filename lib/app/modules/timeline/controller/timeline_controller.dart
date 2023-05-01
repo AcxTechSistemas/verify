@@ -58,7 +58,7 @@ class TimelineController {
       23,
       59,
       59,
-    );
+    ).add(const Duration(hours: 3));
 
     final transactions = await _bbPixApiService.fetchTransactions(
       dateTimeRange: DateTimeRange(start: initialDate, end: endDate),
@@ -86,7 +86,10 @@ class TimelineController {
       23,
       59,
       59,
-    );
+    ).add(const Duration(hours: 3));
+    if (endDate.month > initialDate.month) {
+      endDate.subtract(const Duration(hours: 3));
+    }
 
     final transactions = await _sicoobPixApiService.fetchTransactions(
       dateTimeRange: DateTimeRange(start: initialDate, end: endDate),

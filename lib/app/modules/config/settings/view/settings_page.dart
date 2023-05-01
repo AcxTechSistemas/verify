@@ -5,8 +5,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:verify/app/core/api_credentials_store.dart';
 import 'package:verify/app/core/app_store.dart';
 import 'package:verify/app/core/auth_store.dart';
-import 'package:verify/app/modules/config/presenter/settings/controller/settings_page_controller.dart';
-import 'package:verify/app/modules/config/presenter/settings/view/widgets/accounts_list_tile_widget.dart';
+import 'package:verify/app/modules/config/settings/controller/settings_page_controller.dart';
+import 'package:verify/app/modules/config/settings/view/widgets/accounts_list_tile_widget.dart';
 import 'package:verify/app/shared/widgets/custom_navigation_bar.dart';
 
 class SettingsPage extends StatefulWidget {

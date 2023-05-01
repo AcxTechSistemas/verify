@@ -1,13 +1,12 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:verify/app/modules/config/presenter/bb_settings/view/bb_settings_page.dart';
-import 'package:verify/app/modules/config/presenter/settings/controller/settings_page_controller.dart';
-import 'package:verify/app/modules/config/presenter/settings/view/settings_page.dart';
-import 'package:verify/app/modules/config/presenter/sicoob_settings/store/sicoob_settings_store.dart';
-import 'package:verify/app/modules/config/presenter/sicoob_settings/view/sicoob_settings_page.dart';
-
-import 'presenter/bb_settings/controller/bb_settings_page_controller.dart';
-import 'presenter/bb_settings/store/bb_settings_store.dart';
-import 'presenter/sicoob_settings/controller/sicoob_settings_page_controller.dart';
+import 'package:verify/app/modules/config/bb_settings/controller/bb_settings_page_controller.dart';
+import 'package:verify/app/modules/config/bb_settings/store/bb_settings_store.dart';
+import 'package:verify/app/modules/config/bb_settings/view/bb_settings_page.dart';
+import 'package:verify/app/modules/config/settings/controller/settings_page_controller.dart';
+import 'package:verify/app/modules/config/settings/view/settings_page.dart';
+import 'package:verify/app/modules/config/sicoob_settings/controller/sicoob_settings_page_controller.dart';
+import 'package:verify/app/modules/config/sicoob_settings/store/sicoob_settings_store.dart';
+import 'package:verify/app/modules/config/sicoob_settings/view/sicoob_settings_page.dart';
 
 class SettingsModule extends Module {
   @override
